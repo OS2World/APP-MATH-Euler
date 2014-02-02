@@ -1,0 +1,47 @@
+>load "child"
+Two problems:
+- Child and toy problem.
+- Man and dog problem.
+Load the child notebook for a demonstration.
+% This notebook demonstrates solutions to the child and toy
+% problem. A child is walking in the plane with a toy at the
+% other end of a long stick. The problem is to determine the
+% path of the toy.
+% 
+% In the first example the child walks once around the unit
+% circle and the stick is one unit long.
+>child("childcircle",[2,0],2*pi); wait(20);
+% If the child continues to walk around the circle the toy
+% will spiral to 0.
+>child("childcircle",[2,0],10*pi); wait(20);
+% However, if the stick is a little longer than the radius
+% of the circle, the child will eventually push the toy forward.
+% This results in a nice picture.
+>child("childcircle",[2.1,0],12*pi); wait(20);
+% If the stick is twice as long as the radius, we get a rosette.
+>child("childcircle",[3,0],16*pi); wait(20);
+% You could easily imply your own path for the child by changing
+% the function, which is passed to the child function.
+>type childcircle
+function childcircle (t)
+    return {[cos(t),sin(t)],[-sin(t),cos(t)]}
+endfunction
+% Here the child walks along a sin curve.
+>type childsin
+function childsin (t)
+    return {[t,sin(t)],[ 1,cos(t)]}
+endfunction
+% Now the child pushes the stick a short distance and then
+% the stick stays behind it.
+>child("childsin",[2,2],4*pi); wait(20);
+% There is a similar problem, which is related to a dog which
+% runs towards a man, following a path. The dog has constant
+% speed. Assume, the man runs once around the circle. What
+% is the path of the dog?
+% 
+% The speed of the man equals the speed of the dog.
+>dog("dogcircle",[2,2],2*pi); wait(20);
+% In the next example the man runs straight along the x-axis.
+>dog("dogline",[0,2],5); wait(20);
+>
+>

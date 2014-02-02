@@ -1,0 +1,7 @@
+LIBRARY     TEST
+
+DESCRIPTION 'TEST.DLL'
+
+EXPORTS
+    WEP                            @1   
+    _TEST                          @2   

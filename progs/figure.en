@@ -1,0 +1,37 @@
+% full window
+>hold off;fullwindow();x=-1:0.05:1;y=x';
+>view(5,1.5,0.8,0.5);huecolor(0);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% top
+>window([0,0,1024,512]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% bottom
+>window([0,512,1024,1024]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% left
+>window([0,0,512,1024]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% right
+>window([512,0,1024,1024]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% top left
+>window([0,0,512,512]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% top right
+>window([512,0,1024,512]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% bottom left
+>window([0,512,512,1024]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);
+% bottom right
+>window([512,512,1024,1024]);framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1);huecolor(1);
+>
+>function sinc(x)
+$  return sin(x)/x;
+$endfunction
+>figure([2,2]);
+>t=-10:0.01:10;t=t*1e-4;x=sinc(t);
+>xplot(t,x);title("sinus cardinal");xlabel("t (s)",1);ylabel("tension v(t)",0);
+>figure(2);
+>t=-2:0.1:2;u=t^2;
+>xplot(t,u);xlabel("t");ylabel("u(t)");
+>figure(3);
+>x=-1:0.05:1; y=x';density(x^2+y^3,1);contour(x^2+y^3,-10:0.1:10);setplot(-1,1,-1,1); xplot();
+>figure(4);
+>view(5,1.5,0.8,0.5);huecolor(0); framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1); huecolor(1);
+>figure(5);mesh(x^2+y^3);
+>figure(6);solid(cos(pi*x)^3*cos(pi*y/2),sin(pi*x)*cos(pi*y/2),sin(pi*y/2));
+>figure(6);wire(cos(pi*x)^3*cos(pi*y/2),sin(pi*x)*cos(pi*y/2),sin(pi*y/2));
+>

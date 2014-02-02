@@ -1,0 +1,415 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Programming Euler</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Programming EULER</H1>
+<P>Another long section explaining
+
+<UL>
+	<LI><A HREF="#EULER%20functions">what EULER functions and function parameters are</A>,
+	<LI><A HREF="#Global%20Variables">how to use global variables in functions</A>,
+	<LI><A HREF="#Parameter%20by%20Value%20or%20Reference%3F">that parameters are passed by reference</A>,
+	<LI><A HREF="#Variable%20Parameter%20Number">variable parameter numbers</A>,
+	<LI><A HREF="#Default%20Values%20for%20Parameters">default parameter values</A>,
+	<LI><A HREF="#Returning%20Multiple%20Values">multiple return values</A>,
+	<LI><A HREF="#Function%20Comments">how to document your functions</A>,
+	<LI><A HREF="#Program%20flow">the control statements of the EULER language (if, for etc.)</A>,
+	<LI><A HREF="#Debugging%20EULER%20programs">how to debug</A>,
+	<LI><A HREF="#Passing%20functions%20as%20parameters">how to pass a function as a parameter to another function</A>,
+	<LI><A HREF="#User%20interface">how to interact with the user</A>.
+	<LI><A HREF="#Hints">some programming hints</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="EULER functions"></A>EULER functions</H2>
+<P>EULER would not be as powerful as it is, if there wasn't the possibility to extend it with user defined functions.
+A function can be entered from the keyboard or better from a file. Since there may be errors in a function, it
+is best to call an editor, edit the function in a file and then load that file.</P>
+<P>Loading a file is done with</P>
+<PRE>    &gt;load &quot;filename&quot;
+</PRE>
+<P>A function is declared by the following commands</P>
+<PRE>    &gt;function name (parameter,...,parameter)
+    &gt;...
+    &gt;endfunction
+</PRE>
+<P>It can have several parameters or none. If the function is entered from the keyboard, the prompt changes to
+&quot;$&quot;. &quot;endfunction&quot; finishes the function definition. An example</P>
+<PRE>    &gt;function cosh (x)
+    $  return (exp(x)+exp(-x))/2
+    $endfunction
+</PRE>
+<P>Every function must have a return statement, which ends the execution of the function and defines the value
+it returns. A function can be used in any expression, just as the built-in functions. If a function is not used
+in an assignment and with suppressed output (followed by &quot;;&quot;), it is used like a procedure and its result
+is evidently lost. However, the function may have had some side effect.</P>
+<P>A function can call itself recursively. In this case, you have to take care that the recursion stops. If a function
+overrides an internal function, you can call the internal function with an underscore _ before its name. Thus a
+function is able to call the internal function, even if it has the same name. This is useful to give enhanced flexibility
+to built-in functions.
+<H2 ALIGN="CENTER"><A NAME="Global Variables"></A>Global Variables</H2>
+<P>Inside a function one cannot access global variables or variables of the function which called the function.
+To use global variables use the command</P>
+<PRE>    &gt;global variablename
+</PRE>
+<P>in the function body. Of course, one can use other functions in expressions inside a function, one can even
+use the function inside itself recursively. All variables defined inside a function are local to that function
+and undefined after the return from the function. There is no way to define global variables or change the type
+or size of global variables from within a function, even if one defines these variables in a &quot;global&quot;
+statement.</P>
+<P>
+<PRE>    &gt;useglobal
+</PRE>
+<P>lets you access all global variables from inside the function. This is only valid for the function containing
+the useglobal command.
+<H2 ALIGN="CENTER"><A NAME="Parameter by Value or Reference?"></A>Parameter by Value or Reference?</H2>
+<P>Variables are passed as references.</P>
+<P>That means that a change of a parameter results in the change of the variable, which was passed as the parameter.
+For example</P>
+<PRE>    &gt;function test(x)
+    $  x=3;
+    $  return x
+    $endfunction
+    &gt;a=5;
+    &gt;test(a);
+    &gt;a
+</PRE>
+<P>prints the value 3. There is an exception to this. A sub-matrix is passed by value. Thus</P>
+<PRE>    &gt;a=[1,2,3];
+    &gt;test(a(1));
+    &gt;a(1)
+</PRE>
+<P>prints the value 1.
+<H2 ALIGN="CENTER"><A NAME="Variable Parameter Number"></A>Variable Parameter Number</H2>
+<P>A function can have a variable number of parameters. The number of parameters passed to a function can be determined
+with the built-in function &quot;argn()&quot;. If the parameters are not named in the function definition, they
+are given the names arg1, arg2 and so on.</P>
+
+<P>You can access the parameters from the n-th parameter on with args(n). This functions returns multiple values
+(argn,...) and these values may be passed to another function as several parameters. 
+args() will return all parameters
+from the first non-named parameter. These additional parameters may be passed to a function. If the parameter list
+in the function call contains a semicolon &quot;;&quot;, args() will return all parameters after the semicolon.
+<H2 ALIGN="CENTER"><A NAME="Default Values for Parameters"></A>Default Values for Parameters</H2>
+<P>Parameters can have default values. The syntax is parameter=value in the parameter definition; e.g.,</P>
+<PRE>    &gt;function f(x=3,y,z=1:10)
+</PRE>
+<P>assigns the default value 3 to x and the vector 1 to 10 to z, if the function is called in the form</P>
+<PRE>    &gt;f(,4,)
+</PRE>
+<P>If the function is called</P>
+<PRE>    &gt;f(1,4)
+</PRE>
+<P>x has the value 1, y the value 4, and z the value 1:10.</P>
+<P>The function can even be given a named parameter. Consider the function</P>
+<PRE>    &gt;function f(x,y,z=4,w=4,t=5)
+</PRE>
+<P>Then</P>
+<PRE>    &gt;f(1,2,t=7)
+</PRE>
+<P>calls the function as if</P>
+<PRE>    &gt;f(1,2,4,4,7)
+</PRE>
+<P>was entered. Actually the name needs not be a parameter name. Thus</P>
+<PRE>    &gt;f(1,2,s=7)
+</PRE>
+<P>defines a local variable s with value 7, valid while the function f is 
+running.<H2 ALIGN="CENTER"><A NAME="Returning Multiple Values"></A>Returning Multiple Values</H2>
+<P>A function can return multiple values. This is done with</P>
+<PRE>    &gt;  return {x,y,...}
+</PRE>
+<P>You can assign all the return values of a function to variables, using</P>
+<PRE>    &gt;{a,b,...}=function(...);
+</PRE>
+<P>If the result of such a function is assigned to a number of variables smaller than the number of returned values,
+only the first values are used. If it is assigned to a larger number of variables, the last value is used more
+than once. Some built-in functions return multiple values.
+<H2 ALIGN="CENTER"><A NAME="Function Comments"></A>Function Comments</H2>
+<P>Comments can be included, starting with ##. Comments are ignored by Euler and do not appear, when you type the
+function body with</P>
+<PRE>    &gt;type function name
+</PRE>
+<P>If the lines immediately after the function header start with ##, then those lines are considered to be help
+text. The help text can be displayed with</P>
+<PRE>    &gt;help functionname
+</PRE>
+<P>This feature is a good way to remember the parameters of the function. Also</P>
+<PRE>    &gt;list
+</PRE>
+<P>can be used to display a list of the names of the user defined functions.</P>
+
+<P>A function or several functions can be removed with</P>
+<PRE>    &gt;forget name,...
+</PRE>
+<P>By the way, a variable can be removed with</P>
+<PRE>    &gt;clear name,...
+</PRE>
+<H2 ALIGN="CENTER"><A NAME="Program flow"></A>Program flow</H2>
+<P>Like in any other programming language, EULER has commands for changing the execution flow. These commands can
+only be used inside user defined functions.</P>
+
+<P>First there is the &quot;if&quot; command.</P>
+<PRE>    &gt;if expression; ...;
+    &gt;else; ....;
+    &gt;endif;
+</PRE>
+<P>The expression is any EULER numerical expression. If it is a non-zero scalar ora a matrix with <EM>all</EM>
+entries different from zero, then the part from the &quot;;&quot; to the &quot;else;&quot; is evaluated. Else the
+part from &quot;else;&quot; to &quot;endif&quot; is evaluated. Of course &quot;...&quot; may spread over several
+lines. To work correctly, keywords like &quot;if&quot;, &quot;else&quot;, &quot;endif&quot; and others should be
+the first nonblank characters in a line, or should be preceded by &quot;,&quot; or &quot;;&quot; (plus blanks or
+TABs). The &quot;else&quot; may be omitted. In this case the evaluation skips behind the &quot;endif&quot;, if
+the matrix contains zero elements (resp. the number is zero).</P>
+
+<P>You may also include one or several elseif commands</P>
+<PRE>    &gt;if expression; ...;
+    &gt;elseif expression; ...;
+    &gt;else; ....;
+    &gt;endif;
+</PRE>
+<P>This is the same as an if command inside the else part. However, you do not have to type several endifs.</P>
+<P>There is the function &quot;any(A)&quot;, which yields 1, if there is any nonzero element in A, 0 otherwise.
+The function is useful in connection with the if statement.</P>
+<P>Next, there are several loops.</P>
+<PRE>    &gt;repeat; ...; end;
+    &gt;loop a to b; ...; end;
+    &gt;for i=a to b step c; ...; end;
+</PRE>
+<P>All loops can be aborted by the break command (usually inside an &quot;if&quot;), especially the seemingly infinite
+&quot;repeat&quot;. &quot;loop&quot; loops are fast long integer loops. The looping index can be accessed with
+the function &quot;index()&quot; or with &quot;#&quot;. In a &quot;for&quot; loop the looping index is the variable
+left of the &quot;=&quot;. The step size can be omitted. Then it is assumed to be 1. As an example, the following
+loops count from 1 to 10</P>
+<PRE>    &gt;  i=1;
+    &gt;  repeat;
+    &gt;    i, i=i+1;
+    &gt;    if i&gt;10; break; endif;
+    &gt;  end;
+</PRE>
+<P>and</P>
+<PRE>    &gt;  loop 1 to 10; #, end;
+</PRE>
+<P>and</P>
+<PRE>    &gt;  for i=1 to 10; i, end;
+</PRE>
+<H2 ALIGN="CENTER"><A NAME="Debugging EULER programs"></A>Debugging EULER programs</H2>
+<P>The command</P>
+<PRE>    &gt;trace on
+</PRE>
+<P>sets tracing of all functions on. Then any new line in a user defined function will be printed with the function
+name before it is executed. The uses has to press a key, before execution continues
+
+<UL>
+	<LI>Control-F1 debugs every function.
+	<LI>Control-F2 debugs no function called in the current line.
+	<LI>Control-F3 will stop debugging until return of the current function.
+	<LI>Control-F4 will prompt for an expression and evaluate it.
+	<LI>Control-F9 aborts execution of the program.
+	<LI>Control-F10 ends tracing for this command.
+</UL>
+
+<P>Any other key will display the available keys. Note that the help key is mapped to the insert key on a PC.</P>
+<PRE>    &gt;trace off
+</PRE>
+<P>switches tracing off.</P>
+<P>Note, that with F4 you can evaluate any expression, even if it contains local variables or subroutine calls.
+Tracing is switched off during evaluation of the expression.</P>
+<P>A single function can be traced with</P>
+<PRE>    &gt;trace function
+</PRE>
+<P>or</P>
+<PRE>    &gt;trace &quot;function&quot;
+</PRE>
+<P>Execution will stop only in this function. The same command switches the trace bit of this function off.</P>
+<PRE>    &gt;trace alloff
+</PRE>
+<P>switches tracing for all functions off.
+<H2 ALIGN="CENTER"><A NAME="Programming style"></A>Programming style</H2>
+<P>All internal EULER functions can handle vector or matrix input. And so should user defined functions. To achieve
+this, sometimes nothing special needs to be done. E.g., the function</P>
+<PRE>    &gt;function kap (r,i,n)
+    &gt;  p=1+i/100;
+    &gt;  return p*r*(p^n-1)/(p-1)
+    &gt;endfunction
+</PRE>
+<P>is automatically capable to handle matrix intput. Thus</P>
+<PRE>    &gt;kap(1000,5:0.1:10,10)
+</PRE>
+<P>will produce a vector of values. However, if the function uses a more complicated algorithm, one needs to take
+extra care. E.g.,</P>
+<PRE>    &gt;function lambda1 (a,b)
+    &gt;  return max(abs(polysolve([1,a,b,1])));
+    &gt;endfunction
+    
+    &gt;function lambda (a,b)
+    &gt;  ## compute the largest zero of 1+ax+bx^2+x^3
+    &gt;  return map(&quot;lambda1&quot;,a,b);
+    &gt;endfunction
+</PRE>
+<P>shows the fastest way to achieve the aim.</P>
+
+<P>Furthermore, as a matter of good style, one should use the help lines extensively. All parameters of the function
+and its result should be explained. This is a good way to remember what the function really does.
+<H2 ALIGN="CENTER"><A NAME="Passing functions as parameters"></A>Passing functions as parameters</H2>
+<P>It is possible to pass functions to a function. E.g., the function &quot;bisect&quot; in UTIL finds the zero
+of a function using bisection. This function works in the following way</P>
+<PRE>    &gt;function f(x)
+    &gt;  return x*x-2
+    &gt;endfunction
+    &gt;bisect(&quot;f&quot;,1,2)
+</PRE>
+<P>The result will be equal to sqrt(2). If &quot;f&quot; needs extra parameters, those can also be passed to &quot;bisect&quot;</P>
+<PRE>    &gt;function f(x,a)
+    &gt;  return x*x-a
+    &gt;endfunction
+    &gt;bisect(&quot;f&quot;,0,a;a)
+</PRE>
+<P>This yields sqrt(a) (for a&gt;=0). The search interval is set to [0,a].</P>
+
+<P>The way to write a function like &quot;bisect&quot; is to use the &quot;args&quot; function.</P>
+<PRE>    &gt;function bisect (function,a,b)
+    &gt;...
+    &gt;  y=function(x,args(4));
+    &gt;...
+    &gt;endfunction
+</PRE>
+<P>Then &quot;function&quot; will be called with the parameter &quot;x&quot; and all parameters from the 4-th on
+(if any) which have been passed to &quot;bisect&quot;. Of course, &quot;function&quot; should be assigned a string,
+containing the name of the function which we want the zero of. It is better to 
+use args(), which uses the parameters after the semicolon.</P>
+
+<P>The function bisect does also accept an expression in the variable &quot;x&quot;. The programmer can use</P>
+<PRE>    &gt;evaluate(expression)</PRE>
+<P>to evaluate an expression. The variable &quot;x&quot; should be defined either globally (then useglobal must
+be used), or in the function bisect itself. To determine, if a string is a function or an expression, the function
+isfunction(&quot;f&quot;) may be used.</P>
+
+<P>Another way to achieve this result is the use of args() without parameter. This will return all parameters from
+the first additional parameter on. If the user calls bisect like this</P>
+<PRE>    &gt;bisect (&quot;f&quot;,a,b;4,5)
+</PRE>
+<P>All parameter after the &quot;;&quot; will be passed to function, when it is called</P>
+<PRE>    &gt;y=function(x,args());
+</PRE>
+<H2 ALIGN="CENTER"><A NAME="User interface"></A>User interface</H2>
+<P>Clearly, EULER is designed to run interactively. The user loads a file containing the functions he needs. The
+file may inform the user of its content by simply printing some messages with commands like</P>
+<PRE>    &gt;&quot;The content of this file is:&quot;,
+    &gt;...
+</PRE>
+<P>Alternatively, the file could contain a comment section.</P>
+<PRE>comment
+Any comment!
+Even in several lines.
+endcomment
+</PRE>
+<P>Then the user can use the help facility to retrieve further information on the functions, its parameters and
+so on. He (or she) then calls the particular function with the parameters he desires.</P>
+<P>However, it is also possible to run a file as a standalone program. If you start EULER from a shell simply put
+the file into the command line.</P>
+<P>If you wish a standalone application, the user will have to enter data. You can prompt him with</P>
+<PRE>    &gt;data=input(&quot;prompt&quot;);
+</PRE>
+<P>The prompt</P>
+<PRE> prompt? &gt;
+</PRE>
+<P>will appear and the user may enter any valid EULER expression, even if it uses variables. Errors are catched
+and force the user to reenter the input. If you wish the user to enter a string, use</P>
+<PRE>    &gt;string=lineinput(&quot;prompt&quot;);
+</PRE>
+<P>The string may then be evaluated with</P>
+<PRE>    &gt;data=interpret(string);
+</PRE>
+<P>and if it does not consist of a valid EULER expression the result is the string &quot;error&quot;. Also</P>
+<PRE>    &gt;errorlevel(string)
+</PRE>
+<P>returns a nonzero number, if there is an error in the string.</P>
+<P>Output is printed to screen. All expressions and assignments produce output unless followed by &quot;;&quot;.
+If formatted output is wanted, use</P>
+<PRE>    &gt;printf(&quot;formatstring&quot;,realdata)
+</PRE>
+<P>The format string obeys the C syntax; e.g., &quot;%15.10f&quot; prints the data on 15 places with 10 digits
+after decimal dot, and &quot;%20.10e&quot; produces the exponential format. You can concatenate strings with |
+to longer output in a single line.</P>
+<P>Output is suppressed globally with</P>
+<PRE>    &gt;output off;
+</PRE>
+<P>and</P>
+<PRE>    &gt;output on;
+</PRE>
+<P>turns the output on again. This is useful if a dump file is defined by</P>
+<PRE>    &gt;dump &quot;filename&quot;;
+</PRE>
+<P>Then all output is echoed into the dump file. The command</P>
+<PRE>    &gt;dump;
+</PRE>
+<P>turns the dump off. Note that the dump is always appended to the file. Furthermore, that file may not be edited
+while dump is on! The utility function</P>
+<PRE>    &gt;varwrite(x,&quot;x&quot;)
+</PRE>
+<P>is defined, which writes x in a format readable by EULER on input. If you omit the name &quot;x&quot;, the name
+of x is used automatically. This is done with the help of the function</P>
+<PRE>    &gt;name(x)
+</PRE>
+<P>which is a string containing the name of x.</P>
+<P>
+<PRE>    &gt;cls;
+</PRE>
+<P>clears the screen.</P>
+<PRE>    &gt;clg;
+</PRE>
+<P>clears the graphics. Also to show graphics to the user, use</P>
+<PRE>    &gt;shg;
+</PRE>
+<P>Subsequent output will switch back to the text screen.</P>
+<P>Finally, an error can be issued with the function</P>
+<PRE>    &gt;error(&quot;error text&quot;)</PRE>
+<H2 ALIGN="CENTER"><A NAME="Hints"></A>Hints</H2>
+<P>One can make all sorts of mistakes in EULER. This section tries to warn you of the more common ones, most of
+which the author has some experience with.</P>
+
+<P>As already mentioned, you should not assign to the parameter of a function. This will generally produce strange
+errors, which are difficult to debug.</P>
+<P>Make sure that every index you use is in range. And use special handling, if there is nothing to do.
+However, you may generate such matrices for the special purpose of appending vectors to it.</P>
+<P>Another subtlety concerns the use of multiple return values. The following simply does not work</P>
+<PRE>    &gt;x=random(1,10); sin(sort(x))
+</PRE>
+<P>The reason is that sort returns not only the sorted array but also the indices of the sorted elements. This
+works as if sin was passed two parameters and EULER will not recognize that use of sin. To work around this either
+assign the sorted array to a variable or put extra brackets around it</P>
+<PRE>    &gt;x=random(1,10); sin((sort(x)))
+</PRE>
+<P>Also a return statement like</P>
+<PRE>    &gt;return {sort(x),y}
+</PRE>
+<P>really returns 3 (or more) values! Use</P>
+<PRE>    &gt;return {(sort(x)),y}
+</PRE>
+<P>One further misfortune results from the use of strings as functions, like in</P>
+<PRE>    &gt;function test(f,x)
+    &gt;    return f(x*x)
+    &gt;endfunction
+    &gt;test(&quot;sin&quot;,4)
+</PRE>
+<P>This works well as long as there is no function by the name of &quot;f&quot;. If there is, this function is
+called rather than the sine function. The only way to avoid this is to use really strange names for function parameters.
+I prefer &quot;test(ffunction,x)&quot; and used it throughout UTIL.</P>
+
+<P>Finally, I like to stress that the user defined functions are searched before the built-in functions. If you
+want to call the built-in function explicitly, you can use it with an underscore &quot;_&quot;.
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,41 @@
+% Let us demonstrate the use of interval methods for the
+% inclusion of a Eigenvalue.
+% 
+% We first generate a random postive definite matrix.
+>A=random(20,20); A=A'.A;
+% Then we compute its Eigenvalues in the usual way.
+>l=sort(re(eigenvalues(A)));
+% We take the first Eigenvalue.
+>longformat; l=l[1]
+      0.003318934192275 
+>{l,x}=xeigenvalue(A,l); l,
+      0.003318934192276 
+% We normalize it in a special way.
+>x=x/x[1];
+% We now set up the function (l,x2,...,xn) -> Ax-lx with
+% x1=1.
+>function f(x,A)
+$n=cols(x); return ((A-x[1]*id(n)).(1|x[2:n])')';
+$endfunction
+% This is the start of our algorithm.
+>lx=l_x[2:cols(A)];
+% We could use the Broyden method to determine the zero
+% of this function.
+>yb=broyden("f",lx';A); yb[1],
+      0.003318934192276 
+% We set up the derivative of f.
+>function f1(x,A)
+$n=cols(x); B=A-x[1]*id(n); B[:,1]=-(1|x[2:n])'; return B;
+$endfunction
+% We expand lx, so that it probably contains a solution
+% of f(x)=0.
+>ilx=expand(~lx~,1000000000);
+% The interval Newton method now proves a guaranteed
+% inclusion of the Eigenvalue.
+>{y,v}=inewton2("f","f1",ilx';A); y[1]
+    ~0.003318934192235,0.003318934192317~ 
+% v=1 means, that the inclusion is verified.
+>v
+                      1 
+>
+>

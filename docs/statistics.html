@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Statistics</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Statistical functions</H1>
+<P>Explains</P>
+
+<UL>
+	<LI><A HREF="#Basic Distributions">how to compute the basic statistical distributions, continuous and discrete</A>,
+	<LI><A HREF="#Statistical Analysis">read data from files and do statistical tests</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Basic Distributions"></A>Basic Distributions</H2>
+<P>EULER supports statistical functions, such as distribution integrals and random variables.</P>
+<P>First of all,</P>
+<PRE>    &gt;random(N,M)
+</PRE>
+<P>(or, as usual, random([N,M])) generates an NxM random matrix with uniformly distributed values in [0,1]. The
+function</P>
+<PRE>    &gt;normal(N,M)
+</PRE>
+<P>returns normally distributed random variables with mean value 0 and standard deviation 1. You should scale the
+function for other mean values or deviations.</P>
+
+<P>You can set a seed for the random number generators with seed(x), where x is in (0,1). There are also faster
+versions, using the doubtful generator of C (fastnormal, fastrandom), which are about two times faster.</P>
+<PRE>&nbsp; &nbsp; &gt;shuffle(v)
+</PRE>
+<P>shuffles the vector v (1xN vector) randomly.</P>
+
+<P>A function for the mean value or the standard deviation is implemented, but it can easily defined in EULER.
+E.g,</P>
+<PRE>    &gt;m=sum(x)/cols(x)
+</PRE>
+<P>is the mean value of the vector x. However, there are the functions mean, dev, and meandev. The latter returns
+the mean value and the deviation simultanuously.</P>
+
+<P>Some distributions are implemented.</P>
+<PRE>    &gt;normaldis(x)
+</PRE>
+<P>returns the probability of a normally distributed random variable being less than x.</P>
+<PRE>    &gt;invnormaldis(p)
+</PRE>
+<P>is the inverse to the above function. These functions are not fully accurate. However, the accuracy is enough
+for practical purposes and improved versions are contained in the file &quot;xdis.e&quot;.</P>
+
+<P>Another distribution is</P>
+<PRE>    &gt;tdis(x,n)
+</PRE>
+<P>It the T-distribution of x with n degrees of freedom; i.e., the probability that n the sum of normally distributed
+random variables scaled with their mean value and standart deviation are less than x.</P>
+<PRE>    &gt;invtdis(p,n)
+</PRE>
+<P>returns the inverse of this function.</P>
+<PRE>    &gt;chidis(x,n)
+</PRE>
+<P>returns the chi^2 distribution; i.e., the distribution of the sum of the squares n normally distributed random
+variables.</P>
+<PRE>    &gt;fdis(x,n,m)
+</PRE>
+<P>returns the f-distribution with n and m degrees of freedom.</P>
+<P>Other functions have been mentioned above, like bin, fak, count, etc., which may be useful for statistical purposes.</P>
+<P>There is also the gamma function and the incomplete gamma function</P>
+<PRE>&nbsp; &nbsp; &gt;gamma(x)
+    &gt;gamma(x,a)
+</PRE>
+<P>and the incomplete gamma function. There is also the Beta function and its incomplete counterpart</P>
+<PRE>&nbsp;   &gt;beta(a,b)
+ &nbsp;&nbsp; &gt;beta(x,a,b)
+</PRE>
+<P>as well as the Bessel functions of the first and second kind besselj, bessely and the modified Bessel functions
+of the first and second kind besseli, besselk</P>
+<PRE>    &gt;besselj(x,a)
+</PRE>
+<P>where a is the order. The parameter x must be positive, and the order must be non-negative.</P>
+<P>A discrete distribution is the binomial distribution</P>
+<PRE>    &gt;binsum(i,n,p)
+</PRE>
+<P>which returns the probability of I or less hits in N trials, if the chance for each hit is p. And</P>
+<PRE>    &gt;hypergeomsum(i1,n1,i,n)
+</PRE>
+<P>returns the probablitly of i1 or less hits, if you choose n1 balls from a bowl of n balls, containing I good
+choices.</P>
+<PRE>    &gt;normalsum(i,n,p)
+</PRE>
+<P>is a fast approximation of binsum for large n and medium p, and</P>
+<PRE>    &gt;invbinsum(x,n,p)
+</PRE>
+<P>is the inverse of binsum. There is also a special function to plot ranges of data in a histogram style. Assume
+you have bounds of ranges r(1),...,r(n+1) and frequencies f(1),...,f(n). You may use</P>
+<PRE>    &gt;xplotrange(r,v)
+</PRE>
+<P>to plot these data.</P>
+<H2 ALIGN="CENTER"><A NAME="Statistical Analysis"></A>Statistical Analysis</H2>
+<P>First of all, we show how to read data from a file. Suppose the file test.dat contains an unknown number (less
+than 1000) of data, separated by any non-digit characters. Then you can read the data with</P>
+<PRE>    &gt;open(&quot;test.dat&quot;,&quot;r&quot;); {a,n}=getvector(1000); close();
+    &gt;a=a[1:n];
+</PRE>
+<P>The utility function</P>
+<PRE>    &gt;A=getmatrix(n,m,filename&quot;);</PRE>
+<P>reads a complete nxm matrix from the file, opening and closing the file properly. If the filename is empty,
+it works like getvector, and the user has to open and close the file himself.</P>
+
+<P>To write a vector a to the file, you can use</P>
+<PRE>    &gt;open(&quot;test.dat&quot;,&quot;w&quot;); printformat(a'); close();
+</PRE>
+<P>This will print the data formatted with the %g format of C. To get a longer output, use printformat with an
+additional parameter &quot;%30.15f&quot;.</P>
+
+<P>You will have to load the statist.e file for most of the functions described here. This is done with the command</P>
+<PRE>    &gt;load statist
+</PRE>
+<P>The first function computes the mean value</P>
+<PRE>    &gt;mean(x)
+    &gt;mean(x,f)
+</PRE>
+<P>where x is a row vector of data and f are optional frequencies for the data (multiplicities). Correspondingly,</P>
+<PRE>    &gt;dev(x)
+    &gt;dev(x,f)
+</PRE>
+<P>computes the standard deviation of a measured sample x. Having computed these values, you may test for a specific
+mean value, using the Student T-test</P>
+<PRE>    &gt;ttest(m,d,n,mu)
+</PRE>
+<P>where the mean m and the deviation d are measured and tested against having the mean mu. N is the number of
+data. This function returns the probability, that the true mean value is mu or more (assuming mu&gt;m). I.e.,
+the error you make, if you reject the hypothesis that the measurement has mean mu or more. Note, that the data
+must be normally distributed for this test to make sense. To make a two sided test, you have to check with m=0
+and use the doubled error probability. You may also test several samples of normally distributed data for equal
+mean with</P>
+<PRE>    &gt;varanalysis(x,y,z,...)
+</PRE>
+<P>where all parameters are row vectors. A small answer means, that you have a low error, if you reject the equal
+mean. Assume, you have measurements, which you assume to obey a discrete probability p. Then</P>
+<PRE>    &gt;chitest(x,p)
+</PRE>
+<P>returns the error that you make, if you reject that x obeys the distribution p. Note, that you have to normalize
+both values before you use this test. E.g., assume you have 600 dice throws with certain results. Test for a false
+dice with</P>
+<PRE>    &gt;chitest([90,103,114,101,103,89],dup(100,6)')
+</PRE>
+<P>This will again return the error probability to reject the hypothesis of a correct dice. Small results mean
+a false dice. Another chi^2 test is the table test for dependence of the entries from the rows.</P>
+<PRE>    &gt;tabletest(A)
+</PRE>
+<P>will return the error that you make if you assume that the entries of A depend on the rows. The first non-parametric
+test in this file is the median test, which test two samples for same distribution.</P>
+<PRE>    &gt;mediantest(a,b)
+</PRE>
+<P>A low answer means, that you may reject the hypothesis of equal distribution. This test uses only the order
+of data. A sharper test is the rank test</P>
+<PRE>    &gt;ranktest(a,b)
+</PRE>
+<P>This test uses the sizes of the data to obtain sharper results. To test if a is form a distribution, which has
+a larger expected value than the distribution of the b, use</P>
+<PRE>    &gt;signtest(a,b)
+</PRE>
+<P>or, if you want to include the sizes of the differences for a sharper test</P>
+<PRE>    &gt;wilcoxon(a,b)
+</PRE>
+<P>A special example is the comparison of two medical treatments, done on the same subject.
+
+</BODY>
+
+</HTML>

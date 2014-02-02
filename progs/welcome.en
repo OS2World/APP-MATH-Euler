@@ -1,0 +1,120 @@
+% Welcome!
+% 
+% This notebook introduces you to the basic facts about
+% EULER. You can execute the commands in this notebook
+% one by one. Just press the Enter key, each time the cursor
+% is on a command. The command will execute, you can see
+% the output and the cursor advances to the next command.
+% 
+% You can page up with the scrollbar or with the page up key,
+% if you want to revisit old output.
+% 
+% EULER works like a calculator. You can enter a formula
+% and it will be evaluated.
+>(1+1/1000)^1000
+% EULER knows of many mathematical functions. Look into
+% the on-line help or the documentation.
+% 
+% You may assign values to variables and use them later.
+>a=1.1; a^3+a/(a-1)
+% If a command is followed by a semicolon (;), EULER
+% does not print its output. You can enter more than one
+% command in a line. There are in fact two basic commands:
+% assignments and expressions. There is a third type:
+% Built-in commands. We will meet this type later.
+% 
+% You can enter a vector into EULER.
+>v=[1;2;3]
+% Or a matrix.
+>M=[1,2,3;4,5,6;7,8,9]
+% You may then multiply the matrix and the vector.
+% EULER used the dot for the matrix product.
+>M.v
+% EULER can handle vectors very well. There are lots of
+% commands, which generate a vector. One of them is
+% the : command.
+>1:10
+% We can use it to generate a table of x values.
+% This time, we surpress the output of the 201
+% entries of the vector x.
+>x=-1:0.01:1;
+% One principle of EULER is that all functions are
+% applied to every element of a vector.
+>sqrt(1:10)
+% So we can easily generate a table of y values.
+>y=x^3-x;
+% This makes it possible to plot the values of the function x^3-x.
+>xplot(x,y);
+% The plot disappears as soon as EULER has to print
+% text to the text window. So press the TAB key to
+% see the plot.
+% 
+% You could set the plot window, or give the plot a
+% title.
+>setplot(-2,2,-2,2); xplot(x,y); title("First plot"); wait(20)
+% You can also use the fplot routine, which takes a function
+% name or an expression in the variable x as first argument.
+>fplot("x^3-x",-1,1);
+% Many other function support this style. fmax finds the
+% point, where the maximum of a convex function in a given
+% interval is obtained.
+>fmax("x^3-x",-1,0)
+% Another examples is the Romberg method, which computes
+% the integral of a function.
+>romberg("x^3-x",0,1)
+% You can also easily program new functions in EULER.
+% Please, enter the following lines one by one.
+>function f(x)
+$return 1/((x-0.3)^2+0.01)+1/((x-0.9)^2+0.04)-6;
+$endfunction
+% We can then plot the function using fplot.
+>fplot("f",0,2); wait(20);
+% It may be easier to use an expression in x. We could
+% assign it to a variable first.
+>expr="1/((x-0.3)^2+0.01)+1/((x-0.9)^2+0.04)-6";
+% The we use this expression string with fplot.
+>fplot(expr,0,2); wait(20);
+% Or we could integrate the function over [0,2] using
+% Romberg's method. We increase the accuracy for this.
+>longformat; romberg("f",0,2)
+% Let us compare the result with another method. We use
+% Gauss quadrature with 10 subintervals and 20 knots in
+% each subinterval.
+>gauss("f",0,2,20)
+% The simpson method if far less efficient.
+>simpson("f",0,2,200)
+% Note that f has a zero close to 1.2. We find this
+% zero with the secant method.
+>secant("f",1,2)
+% Let us use the bisection method and compare the result.
+>bisect("f",1,2)
+% EULER can do a lot of linear algebra. First let us define
+% a matrix with random entries, equally distributed in
+% [0,1].
+>A=random(5,5)
+% We can compute the inverse.
+>inv(A)
+% Let us check it.
+>totalmax(A.inv(A)-id(5))
+% Or the eigenvalues.
+>eigenvalues(A)
+% How about the condition number?
+>max(abs(eigenvalues(A)))/min(abs(eigenvalues(A)))
+% Let us put it into a function.
+>function condition (A)
+$e=abs(eigenvalues(A));
+$return max(e)/min(e);
+$endfunction
+% Test it.
+>condition(A)
+% The condition number of the 5x5 Hilbert matrix.
+>condition(hilb(5))
+% Compute the Eigenvalues and the Eigenvectors.
+>{l,H}=eigen(A);
+% Check if A.h=l*h for each column of H and corresponding
+% l.
+>totalmax(abs(A.H-dup(l,5)*H))
+% Three-dimensional plots can be easily created with f3dplot.
+% Let us call reset, so that the default view is applied.
+>reset; f3dplot("x*y"); wait(20);
+>

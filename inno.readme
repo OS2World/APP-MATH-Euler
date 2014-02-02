@@ -1,0 +1,54 @@
+EULER for Windows 95/98/NT
+Copyright Rene Grothmann
+http://www.rene-grothmann.de/
+
+See the online help for details on the copyright
+of this Freeware program. This is the Windows
+version. To get other version, visit my homepage.
+
+If you are reading this file before installation,
+you may now install EULER by running the euler95i.exe
+(self extracting and installing).
+
+You can de-install EULER with the normal Windows
+de-installer in the control panel.
+
+EULER for Windows is a program to do numerical
+mathematics on a computer. The program does not do
+symbolic things, but does all number crunching
+fast, interactively and reliable. It can handle
+real and complex numbers, vectors and matrices,
+can produce 2D and 3D graphics, and it has a built
+in programming language. Additionally, EULER can
+do interval arithmetic, and has an exact scalar
+product. This version makes extensive use of
+Windows 95, including clipboard and printing.
+
+If you are familiar with other matrix languages
+(Gauss, MatLab, Ox etc.) you will immediately feel
+at home.
+
+To start, you might want to view the on-line help,
+run the demo (type >load "demo" or load
+"autodemo") or simply play around using the
+notebooks. Eventually, you will have to study the
+on-line help to learn about this mighty program.
+
+You may also assign the program to files of type
+*.e or *.en (using the options menu in any
+directory window). For *.e files, I suggest using
+the default EULER icon (use "Browse" in the change
+icon dialog and choose euler95.exe) and for *.en
+files the alternate icon in euler95.exe.
+
+A note for CDROM distributors: You are welcome to
+distribute this program. EULER can be run from
+CDROM and you should install a version on your
+CDROM. You should use this file as a README file
+for user information. Furthermore, you should use
+the setup.exe file as the installation program.
+Please download euler95i.zip for this.
+
+If you have questions, write to
+
+R. Grothmann

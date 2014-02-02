@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>untitled</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1>Yacas</H1>
+
+<p>Yacas is a computer algebra system. It is included in Euler via a dynamically 
+linked library and can be accessed through the command line. Yacas is open 
+source. For information about this project view
+<a target="_blank" href="http://yacas.sourceforge.net/yacas.html">their home page</a>.</p>
+
+<p>The original <a target="_blank" href="yacas/books.html">Yacas documentation</a> is included 
+here. This page will only describe some basic commands and the Euler interface 
+to Yacas.</p>
+
+<p>There is also an introductory Euler notebook for Yacas.</p>
+
+<p>I like to credit Ron Larham for pointing out Yacas to me and doing the first 
+version of the interface. Thanks!</p>
+
+<h2>The yacas command</h2>
+
+<p>The basic command is yacas(), which takes a string, sends it to Yacas, and 
+returns the Yacas output, or an error message.</p>
+<pre>&gt;yacas(&quot;D(x) x^4&quot;)
+4*x^3</pre>
+<p>You see, how Yacas evaluated the string, and computed the derivative. It 
+returned an expression, which can be used in Euler with the evaluate function.</p>
+<pre>&gt;x=2.5; evaluate(yacas(&quot;D(x) x^4&quot;))
+62.5 </pre>
+<p>There is a shortcut for this. The advantage is that you do not have to assign 
+a value to x globally.</p>
+<pre>&gt;yeval(&quot;D(x) x^4&quot;,x=2.5)
+62.5</pre>
+<p>The function yeval() evaluates the Yacas output. You can use assigned 
+parameters to pass values to it. Here is another example.</p>
+<pre>&gt;yeval(&quot;Integrate(x,0,a) x^2&quot;,a=1)
+0.333333</pre>
+<p>You can also get the exact result by using one of the substitution mechanisms 
+of Yacas.</p>
+<pre>&gt;yacas(&quot;Eliminate(a,1,Integrate(x,0,a) x^2)&quot;)
+1/3</pre>
+<p>If you decide now that you want to evaluate this, you can access the last 
+Yacas output (&quot;1/3&quot;) by the % letter.</p>
+<pre>&gt;yeval(&quot;%&quot;)
+0.333333</pre>
+<p>The Yacas session remembers its state. To start a new session, use</p>
+<pre>&gt;yacasclear;</pre>
+<p>You can also store variables in Yacas.</p>
+<pre>&gt;yacas(&quot;Set(A,{{1,1},{1,2}})&quot;)
+True
+&gt;yacas(&quot;A*A&quot;)
+{{2,3},{3,5}}
+&gt;yacas(&quot;A^20&quot;)
+{{63245986,102334155},{102334155,165580141}}</pre>
+<p>Here, we stored a matrix in Yacas form. To store an Euler matrix to Yacas, 
+look into the transfer functions described in the next section.</p>
+<p>Here is some more linear Algebra.</p>
+<pre>&gt;yacas(&quot;Inverse(A)&quot;)
+{{2,-1},{-1,1}}
+&gt;yacas(&quot;%*A&quot;)
+{{1,0},{0,1}}
+&gt;yacas(&quot;MatrixSolve(A,{3,2})&quot;)
+{4,-1}
+&gt;yacas(&quot;CharacteristicEquation(A,x)&quot;)
+(1-x)*(2-x)-1
+&gt;yacas(&quot;Solve(%,x)&quot;)
+{x==(Sqrt(5)+3)/2,x==(3-Sqrt(5))/2}
+&gt;yeval(&quot;%[1][2]&quot;)
+2.61803 </pre>
+<p>Look at the computation of the eigenvalue. The Yacas solver is not very 
+sophisticated yet, but does the job, returning a list of two solutions in form 
+of equations. To access the right hand side of the first solution, you need to 
+index the expression in Yacas.</p>
+<p>You can also store expressions as strings in Euler. Then you will need to 
+create a correct string for new expressions using |. Here is a simple example.
+</p>
+<pre>&gt;expr=&quot;x^x&quot;;
+&gt;&quot;Solve((D(x) &quot;|expr|&quot;)== 0,x)&quot;
+Solve((D(x) x^x)== 0,x)
+&gt;yacas(&quot;Solve((D(x) &quot;|expr|&quot;)== 0,x)&quot;)
+{x==Exp(-1)}
+&gt;yeval(&quot;D(x,2) &quot;|expr,x=exp(-1))
+1.8816 </pre>
+<p>The commands containing &quot;x^x&quot; are built using |.</p>
+<h2>Converting from Euler to Yacas</h2>
+<p>You can convert real and complex Euler numbers, vectors and matrix to Yacas 
+using converty().</p>
+<pre>&gt;A=[1,1;1,2]; inv(A),
+2 -1 
+-1 1 
+&gt;yacas(converty(A)); yacas(&quot;Inverse(%)&quot;)
+{{2,-1},{-1,1}}</pre>
+<p>The output of the inverse matrix is in Yacas form, as you see. However, there 
+is a function to convert it back to Euler.</p>
+<pre>&gt;y2matrix(yacas(&quot;%&quot;))
+2 -1 
+-1 1 </pre>
+<p>Of course yacas(&quot;%&quot;) is used here to access the string &quot;{{2,-1},{-1,1}}&quot; in a 
+fast way. There is also y2vector() for vectors.</p>
+<p>converty() is also used to set a variable in Yacas with the function yset(). 
+Look at this example.</p>
+<pre>&gt;yset(&quot;A&quot;,[1,2;2,1])
+True
+&gt;yacas(&quot;EigenValues(A)&quot;)
+{-1,3}
+&gt;yacas(&quot;EigenVectors(A,%)&quot;)
+{{-k2,k2},{k2,k2}}
+&gt;yacas(&quot;Eliminate(k2,1,%)&quot;)
+{{-1,1},{1,1}}</pre>
+<h2>Using Yacas in Functions</h2>
+<p>Since Yacas is called dynamically, you need to use evaluate() to incorporate 
+Yacas expressions into programs. The following function calls the interval 
+Newton method, which needs a function and a derivative, passing only the 
+function as an expression. The derivative is computed by Yacas.</p>
+<pre>&gt;function yinewton (expr,start)
+$return inewton(expr,yacas(&quot;D(x) &quot;|expr),start);
+$endfunction
+&gt;yinewton(&quot;x^x-2&quot;,~1,2~)
+~1.559610469462368,1.559610469462371~</pre>
+<p>Likewise, you can do all sort of advanced algorithms. </p>
+<p>If the expression is not passed as a parameter, you can call Yacas at compile 
+time with @&quot;...&quot;. Here is an example.</p>
+<pre>&gt;function test(x)
+$return @&quot;D(x) x^x&quot;;
+$endfunction
+&gt;test(2)
+ 6.77259
+&gt;type test
+function test (x)
+return x^x*(Ln(x)+1)<span lang="de">;</span>
+endfunction</pre>
+<p>As you see by the function dump, the trick is that Yacas is only called once, 
+not with every call to &quot;test&quot;. </p>
+
+</BODY>
+
+</HTML>

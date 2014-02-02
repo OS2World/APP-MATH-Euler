@@ -1,0 +1,82 @@
+% This notebook demonstrates 3D graphics.
+% 
+% The simplest form is the use of f3dplot with an expression
+% or with a function f(x,y).
+>reset; f3dplot("x^2+y^3"); wait(20);
+% To plot 3D graphics, we need a matrix of x and y values
+% for points in a rectangular grid. We can simply use a
+% column vector for x and a row vector for y.
+>x=-1:0.05:1; y=x';
+% The simplest form of plot is a mesh grid. The function
+% graph is viewed from a point (-r,r,z), where r is infinity,
+% since mesh uses a very simple projection. The plot scales
+% to the window automatically.
+% 
+% Note that x^2+y^3 evaluates into a matrix.
+>mesh(x^2+y^3); wait(20);
+% The same function can be view with a better projection
+% from any viewpoint using the function solid. It needs
+% three paramters, each a matrix of values, for the
+% x-, y- and z-coordinates of the surface.
+>reset; solid(x,y,x^2+y^3); wait(20);
+% You can change the viewpoint. We go a little closer
+% and a little lower with the eye. The view command
+% needs a distance, a zoom factor, the horizontal angle
+% and the vertical angle. Default is view(5,1.5,0.5,0.5).
+>view(3,1.5,0.8,0); solid(x,y,x^2+y^3); wait(20);
+% Going back a little, we can also draw a frame around
+% the plot.
+>view(5,2,0.8,0.5); framedsolid(x,y,x^2+y^3); wait(20);
+% We could also change the coordinates.
+>framedsolid(x,x^2+y^3,y); wait(20);
+% Therefore, we can also plot surfaces. Let us draw a ball.
+>X=cos(pi*x)*cos(pi*y/2); Y=sin(pi*x)*cos(pi*y/2); Z=sin(pi*y/2);
+>solid(X,Y,Z); wait(20);
+% The function "solidhue" takes the shading as an additional
+% argument.
+>solidhue(X,Y,Z,X+Z,1); wait(20);
+% Distort it a little bit.
+>solid(cos(pi*x)^3*cos(pi*y/2),sin(pi*x)*cos(pi*y/2),sin(pi*y/2)); wait(20);
+% Let us go closer.
+>view(3,2,0.8,0.5);
+% And view a wire frame model.
+>wire(cos(pi*x)^3*cos(pi*y/2),sin(pi*x)*cos(pi*y/2),sin(pi*y/2)); wait(20);
+% There is a utility file, which contains some nice
+% things in this area.
+>load "3dplot.e";
+This file lets you produce nice 3d plots with axes etc.
+You must provide a function f(x,y).
+f3daxis("f"); fcontour("f"); f3daxispolar("f");
+% We first provide our well known function.
+>function f(x,y)
+$return x^2+y^3
+$endfunction
+% f3daxis makes a normal plot with axis. The parameter range
+% is -1 <= x,y <=1.
+>f3daxis("f"); wait(20);
+% We can do the same using an expression in x and y.
+>f3daxis("x^2+y^3"); wait(20);
+% A contour plot of the same data.
+>fcontour("f"); wait(20);
+>fcontour("x^2+y^3"); wait(20);
+% If you want certain contour lines to be thicker, this
+% is also possible. We use the normal contour function
+% with a larger line width. The last plot did not show
+% the contour line of level 0.
+>linewidth(3); hold on; contour(f(x,y),0); hold off; linewidth(1); wait(20);
+% We could also add a grid.
+>setplot(-1,1,-1,1); xplot(); wait(20);
+% And a title.
+>title("x^2+y^3"); wait(20);
+% Here is a density plot of the same functions. It is darker,
+% where the function values are lower.
+>density(x^2+y^3,1); wait(20);
+% We can overlay it with the contour lines.
+>hold on; contour(x^2+y^3,-10:0.1:10); hold off; wait(20);
+% Even with grid lines.
+>setplot(-1,1,-1,1); xplot(); wait(20);
+% This is another use of shading. We can see the function
+% values more clearly.
+>reset; framedsolidhue(x,y,(x^2+y^3),x^2+y^3,2,1); wait(20);
+>
+>

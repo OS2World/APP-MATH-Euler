@@ -1,0 +1,23 @@
+Project files for Visual C++
+
+The current Euler version is compiled with Visual C++. To make a
+project for this compiler, do the following.
+
+- Create a new project "Windows Application" in the euler/source
+directory. Name it "euler".
+- Change to the "Release" version (current project version).
+- In the project settings C++ tab add the compiler definitions
+THREADS,DLL,WAVES,FRAMES
+- Go to "Code Generation" and choose the multi-threaded project.
+- Go to the "Linker" tab and add comctl32.lib and winmm.lib.
+- Add all *.cpp files to the projectbesides sysdept.cpp and
+sysdeppm.cpp (only sysdep95.cpp). 
+- Add euler.res to the project.
+- Compile with F7.
+- Test with CTRL-F5.
+- Compile and test.
+- Copy euler/source/Release/euler.exe to euler/source/euler95.exe.
+
+Success!
+
+Rene Grothman

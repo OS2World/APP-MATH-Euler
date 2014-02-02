@@ -1,0 +1,29 @@
+%
+% J.Breitlow (jbh.bln@foni.net) 11/2000 Demonstration of string sound with EULER% Version 0.9
+%
+% The file shows what influence different starting conditions have 
+% on the sound of a string.
+%
+% Load the functions for wav file generation and playing.
+>load "sound.e"
+% loading some useful funtions...
+>load "user\saite.e"
+% set startind condition f(x)=... with boundary conditions f(0)=f(2*pi)=0
+>function f(x)
+$t=2.0*pi/3.0;
+$return saite(x,t)
+$endfunction
+% Now let's have a look at our function
+>fplot("f",0,2*pi);xlabel("x");ylabel("y"); shg;
+% We calculate the fourier coefficients of the starting conditions.
+>n=1:20; fn=an(n)
+% To compare them they are put into a graph
+%xmark(n,abs(fn));xlabel("order");ylabel("intensity"); shg;
+>plotbar(n,0,0.5,abs(fn));shg;
+% How does the Fourier-Approximation fit the function?
+>calcfuncts(fn); shg;
+% A sound file can be created by overlaying all functions
+>makesound(fn,4,"saite.wav");
+% Let's listen zo the result:
+>playwave("saite.wav");
+>

@@ -1,0 +1,119 @@
+% Hallo!
+% 
+% Da offensichtlich viele deutschsprachige Benutzer von
+% EULER existieren, die nicht genug Englisch beherrschen,
+% um die Hilfe zu verstehen, will ich hier versuchen, eine
+% kurze Einführung in Deutsch zu geben.
+% 
+% Leider lohnt es sich nicht, die Hilfetexte zu übersetzen.
+% Aber vielleicht findet sich da jemand?
+% 
+% Führen Sie die folgenden Kommandos Schritt für Schritt
+% aus.
+>(3+4)*(5+6)/3
+% Neben solchen trivialen Rechnungen, bei denen die üblichen
+% Regeln beacthtet werden, kann EULER die gängigen mathematischen
+% Funktionen berechnen.
+>exp(log(asin(sin(1.2))))
+% Natürlich kann EULER auch Variablen verwenden.
+>a=sin(0.1); b=cos(0.1); a^2+b^2
+% Bei Variablennamen werden Groá- und Kleinbuchstaben unterschieden,
+% und es sind alle Kombinationen aus Buchstaben und Zahlen
+% zulässig.
+>S1=25; alpha=3; alpha*S1
+% Auch komplexe Rechnungen sind möglich.
+>I*I
+% EULER kann Funktionen mit komplexen Argumenten berechnen.
+>z=2+3i; sin(z^2+z)
+% Ein anderer Datentyp ist das Intervall. EULER kann mit
+% Intervallen rechnen. Das Ergebnis ist ein Intervall,
+% das alle möglichen Ergebnisse einschließt.
+>A=~-1,2~; A*A
+% ~-1,2~*~-1,2~ hat als kleinstmögliches Ergebnis -2=-1*2
+% und als größtes Ergebnis 4=2*2. Dies unterscheidet sich
+% von ~-1,2~ zum Quadrat.
+>A^2
+% Falls ein Intervall in einer Operation vorkommt, ist
+% das Ergebnis ein Intervall.
+>~1,1~/3*3
+% Diese Datentypen kann EULER zu Vektoren und Matrizen
+% kombinieren.
+>[1,2,3]
+>[1,2;3,4]
+% Oder komplexe Matrizen.
+>[1,1+1i;3i,2]
+% Es gibt auch Matrizen von Intervallen.
+>[~1,2~,4,5,~6~]
+% Das Matrixprodukt wird mit . ausgeführt.
+>A=[1,2;3,4]; A.A
+% Dagegen werden Operatoren wie * gliedweise ausgeführt.
+>v=[1,2,3,4]; v*v
+% Damit lassen sich leicht Funktionstafeln erstellen. Zunächst
+% erstellen wir einen Vektor t=-1, -0.99, ..., 0.99, 1.
+% Danach werten wir t^3-t in diesen Punkten aus. Das Ergebnis
+% wird mit ; unterdrückt.
+>t=-1:0.01:1; s=t^3-t;
+% Aber wir können es plotten.
+>xplot(t,s); wait(20);
+% fplot macht dasselbe. Wir müssen nur einen Ausdruck in
+% x eingeben.
+>fplot("x^3-x",-1,1); wait(20);
+% Es existieren auch Funktionen, die aus Vektoren Zahlen
+% machen, wie etwa die Summe.
+>sum(1:1000)
+% Man kann sehr leicht über 1/k^2 summieren.
+>sum(1/(1:1000)^2)
+% Der korrekte Wert für n gegen unendlich ist Pi^2/6.
+>pi^2/6
+% Wir erzeugen ein Bild der Summe 1/k^2 für k=1,...,n mit
+% wachsendem n. 
+% 
+% cumsum erzeugt die kumululative Summe eines Vektors.
+>xplot(cumsum(1/(1:500)^2)); wait(20);
+% Dasselbe für die Multiplikation. Dies ergibt die Fakultäten.
+>cumprod(1:10)
+% Z.B. läßt sich die Wachstumsordnung von n! überprüfen.
+>n=1:100; xplot(cumprod(n)/((n/E)^(n+1)/sqrt(n))); wait(20);
+% Analog lassen sich Tafeln von Funktionen mit zwei Variablen
+% erzeugen. Dazu benötigt man zwei Tafeln für die x-, bzw.
+% y-Werte einer Matrix von Punkten. Diese erzeugt man mit
+% field. Die Funktion field gibt zwei Werte zurück, die
+% an x und y zugewiesen werden.
+>l=-1:0.1:1; {x,y}=field(l,l); mesh(x^2+y^2); wait(20);
+% Es geht aber auch einfacher mit f3dplot.
+>f3dplot("x^2+y^3"); wait(20);
+% EULER beherrscht auch lineare Algebra. Wir lösen z.B.
+% ein Gleichungssystem.
+>A=[1,2;3,4]; b=[3;7]; x=A\b
+>A.x
+% Dies funktioniert auch komplexe Systeme oder Intervallsysteme.
+>A=[1i,1+1i;2,3+3i]; fracformat; B=inv(A), shortformat;
+% Bis auf Rundungsfehler berechnet man so die inverse Matrix.
+>B.A
+% EULER hat eine eingebaute Programmiersprache, die eine
+% Art fortschrittlicher Basic-Dialekt ist.
+% 
+% Jede Funktion beginnt mit function name(parameter) und
+% endet mit endfunction.
+>function f(x)
+$return sin(x)*exp(-x)
+$endfunction
+% Man kann nun den Funktionsnamen an verschiedene Funtionen
+% übergeben.
+>fplot("f",0,2*pi); wait(20);
+% Allerdings kann man immer auch einen Ausdruck in x eingeben.
+>fplot("sin(x)*exp(-x)",0,2*pi); wait(20);
+% Die Nullstelle bei 3 ist natürlich pi. Wir berechnen
+% sie mit dem Bisektionsverfahren.
+>bisect("f",3,4)
+% Oder mit dem schnelleren Sekantenverfahren.
+>secant("f",3,4)
+% Mit dem Rombergverfahren läßt sich das Integral numerisch
+% berechnen.
+>romberg("f",0,pi)
+% Dies sollte nur eine Einführung in EULER gewesen sein.
+% Für weitere Information starten Sie bitte die Demo (mit
+% >load "demo") oder laden Sie eines der mitgelieferten
+% Notebooks.
+>
+>

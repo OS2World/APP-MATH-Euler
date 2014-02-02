@@ -1,0 +1,68 @@
+% Let us show some complex mappings. The main tool is "cplot".
+% First we define a complex grid around the unit circle.
+>r=exp(linspace(0.000001,1,20)); phi=linspace(0.0000001,2*pi,120)';
+>z=r*exp(phi*I);
+% The we plot it, and add a x-y-ticks.
+>setplot(-4,4,-4,4); cplot(z); xplot(); wait(20);
+% Press the TAB key to see the graphics, if the text window
+% hides it.
+% 
+% If the plot does not look circular, you should resize
+% the graphics window.
+% 
+% The following is the Joukowski mapping, which maps the
+% outside of the unit circle onto the outside of the unit
+% interval [-1,1] one-to-one.
+>function J(z)
+$return (z+1/z)/2
+$endfunction
+% We map the grid and plot the result.
+>setplot(-1.5,1.5,-1.5,1.5); cplot(J(z)); xplot(); wait(20);
+% This is the inverse of the Joukowski mapping. We have
+% to define cases here.
+>function invJ(z)
+$w=sqrt(z^2-1);
+$return z+(re(z)>0)*w-(re(z)<=0)*w;
+$endfunction
+% Using these functions, we can map the outside of the
+% unit circle to the outside of a cross.
+>setplot(-2,2,-2,2); cplot(J(I*invJ(J(z)*sqrt(2)))); xplot(); wait(20);
+% The following maps the inside of the unit circle to itself,
+% taking 0 to a.
+>function K(z,a)
+$return (z+a)/(1+conj(a)*z)
+$endfunction
+% Let us view the image of our grid, when the outside of
+% the circle is mapped to the inside and then 0 to 0.5.
+>setplot(-1,1,-1,1); cplot(K(1/z,0.5)); xplot(); wait(20);
+% The following function maps the outside of the unit circle
+% to the upper half plane.
+>function H(z)
+$return (1i*z+1)/(1i+z)
+$endfunction
+% We can view the image of our grid. Note that infinity
+% is mapped to i.
+>setplot(-3,3,0,6); cplot(H(z)); xplot(); wait(20);
+% This is the inverse function, mapping the upper half
+% plane to the outside of the unit circle.
+>function invH(z)
+$return (1i*z-1)/(1i-z)
+$endfunction
+% This function maps the outside of the unit circle onto
+% itself, and takes a to infinity.
+>function L(z,a)
+$return (a/conj(a))*(conj(a)*z-1)/(a-z)
+$endfunction
+% In the following picture, 5 goes to infinity.
+>setplot(-6,6,-6,6); cplot(L(z,5)); xplot(); wait(20);
+% Now we map the outside of the unit circle to the outside
+% of the arc with angle Pi.
+>setplot(-2,2,-1.5,2.5); cplot(invH(J(L(z,-invJ(1i))))); xplot(); wait(20);
+>setplot(-2,2,-2,2);
+% The following picture shows the level lines of the Green's
+% function for two intervals and its harmonic conjugate.
+>w=sqrt(J(-z)-J(-exp(1))); cplot(w); hold on; wait(20);
+>w1=sqrt(J(-exp(1)*z)-J(-exp(1))); cplot(w1); cplot(-w); cplot(-w1); hold off; wait(20);
+>xplot(); wait(20);
+>
+>

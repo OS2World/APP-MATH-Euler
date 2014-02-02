@@ -1,0 +1,47 @@
+/*VPDbURL{file:///E|/euler/docs/euler.vpp}*/
+P	 {
+			Margin-Left : 10% ;
+			Margin-Right : 10%
+		}
+P.NotNarrowed	 {
+			Margin-Bottom : 0px     ;
+			Margin-Top : 0px     ;
+			Margin-Left : 0px ;
+			Margin-Right : 0px
+		}
+H1	 {
+			Text-Align : Right
+		}
+H2	 {
+			Text-Align : Left
+		}
+H3	 {
+			Text-Align : Left
+		}
+PRE	 {
+			Margin-Left : 15% ;
+			Font-Family : Courier New, Courier
+		}
+OL	 {
+			Margin-Left : 10%
+		}
+UL	 {
+			Margin-Left : 10%
+		}
+BODY	 {
+			Font-Family : Arial, Helvetica ;
+			Background-Image : url("images/back.gif")
+		}
+:link	 {
+			Color : #993300
+		}
+:active	 {
+			Color : #993300
+		}
+:visited	 {
+			Color : #663300
+		}
+TT	 {
+			Font-Family : Courier New, Courier
+		}
+

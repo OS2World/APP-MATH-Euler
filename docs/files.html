@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Files and Directories</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">File Input and Output</H1>
+<P>Shows</P>
+
+<UL>
+	<LI><A HREF="#Numerical Data from Files">how to store and retrieve data from a file</A>,
+	<LI><A HREF="#Primitive Input and Output">how to do primitive file input and output</A>
+	<LI><A HREF="#Directories">how to find files in the EULER command line</A>.
+</UL>
+
+<P>
+<PRE></PRE>
+<H2 ALIGN="CENTER"><A NAME="Numerical Data from Files"></A>Numerical Data from Files</H2>
+<P>Often, you have numbers stored in files in a unpredictable format. You need 
+to open the file for reading using</P>
+<PRE>    &gt;open(&quot;test.dat&quot;,&quot;r&quot;)
+</PRE>
+<p>Then you can use</p>
+<PRE>    &gt;getvector(N)
+</PRE>
+<P>to get a vector of these numbers. The function will read over any non-numeric data and will stop after reading
+N numbers. You can use</P>
+<PRE>    &gt;{v,M}=getvector(N)
+</PRE>
+<P>to get the vector v and the actually read number of data M. If the vector is a matrix, you will have to resize
+it with</P>
+<PRE>    &gt;A=redim(v,[n,m])</PRE>
+<P>There is also the utility function</P>
+<PRE>    &gt;A=getmatrix(n,m,filename)
+</PRE>
+<P>which will do all work for you. If the filename is empty, the function will assume that you already opened a
+file for reading. Otherwise, it will open and close the file for you. This way, you can read several matrices in
+a single file. The converse is</P>
+<PRE>    &gt;writematrix(A,filename)
+</PRE>
+<P>If the filename is not empty, the file will be created (<STRONG>beware!</STRONG>) and closed. Otherwise, you
+need to open and close the file yourself.</P>
+<H2 ALIGN="CENTER"><A NAME="Primitive Input and Output"></A>Primitive Input and Output</H2>
+<P>There are some primitive file input and output routines. </P>
+<PRE>    &gt;open(&quot;test.dat&quot;,&quot;w&quot;)
+</PRE>
+<P>will open the file test.dat for writing, erasing it if it exists. The two parameters of open must be strings
+and work just like fopen. So</P>
+<PRE>    &gt;open(&quot;test.dat&quot;,&quot;r&quot;)
+</PRE>
+<P>opens the file for reading. Opening in binary mode can be achieved with &quot;wb&quot; or &quot;rb&quot;. &quot;a&quot;
+stand for append and will write to the end of the file. You can only open a single file at any time. Opening a
+second one will close the first one.</P>
+<PRE>    &gt;close()
+</PRE>
+<P>will close the file again.</P>
+<PRE>    &gt;putchar(c)
+</PRE>
+<P>puts a character with code c to a binary file. If c is a 1xn real vector, it will put n characters to the file.</P>
+<PRE>    &gt;putword(x)
+    &gt;putlongword(x)</PRE>
+<P>Puts a word or a vector of words (long words) to the file in binary format.</P>
+<PRE>    &gt;c=getchar()
+</PRE>
+<P>reads a character.</P>
+<PRE>    &gt;v=getchar(n)
+</PRE>
+<P>reads a vector of n characters.</P>
+<PRE>    &gt;x=getword()
+    &gt;x=getlongword()
+</PRE>
+<P>reads a word or long word.</P>
+<PRE>    &gt;x=getword(n)
+    &gt;x=getlongword(n)
+</PRE>
+<P>reads n words (long words) from a binary file.</P>
+<PRE>    &gt;s=getstring(n)
+</PRE>
+<P>reads a string of length n from a binary file.</P>
+<P>You can check for the end of the file with</P>
+<PRE>    &gt;eof()
+</PRE>
+<P>It will return 1, if the file is completely read.</P>
+<PRE>    &gt;write(&quot;string&quot;)
+</PRE>
+<P>is a function, which writes a string to a text file. You can add a newline with</P>
+<PRE>    &gt;write(&quot;string&quot;|asc(10))</PRE>
+<P>
+<H2 ALIGN="CENTER"><A NAME="Directories"></A>Directories</H2>
+<P>The active directory can be changed with</P>
+<PRE>    &gt;cd &quot;path&quot;
+</PRE>
+<P>where path is the new directory and may include a drive letter, like</P>
+<PRE>    &gt;cd &quot;a:\progs&quot;
+</PRE>
+<P>The changedir function does the same. It will return the active directory when it is called with &quot;&quot;.</P>
+<P>The command</P>
+<PRE>    &gt;dir &quot;*.e&quot;
+</PRE>
+<P>displays all files in the active directory, which fit with the pattern. An empty string fits all files.</P>
+<P>The function</P>
+<PRE>    &gt;searchfile(&quot;*.e&quot;);
+</PRE>
+<P>returns the first file that fits to the pattern. Further calls of searchfile without any parameters return further
+files until &quot;&quot; indicates that there are no more fits.
+
+</BODY>
+
+</HTML>

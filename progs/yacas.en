@@ -1,0 +1,83 @@
+% This is a showcase for the Yacas interface in Euler. For more
+% information about Yacas look at the HTML documentation of Euler.
+% 
+% At first, Yacas provides infinite integer computation.
+% 
+% Note that the yacas function takes and returns a string.
+>yacas("30!")
+% Factor it.
+>yacas("Factor(30!)")
+% The next thing takes a while. On my Notebook it takes 10 seconds.
+>yacas("NextPrime(30!)")
+% To evaluate a result you can use evaluate(string), or the function
+% yeval.
+>longestformat; yeval("30!")
+% Since Euler can use expression with variable x in many places,
+% you can directly use the output of yacas, if Euler knows how
+% to interpret it.
+>e=yacas("Expand((1+x)^5)"), fplot(e,-2,0);
+% If you want to reuse the string in Yacas expression, you can
+% use string concetanation.
+>"D(x) "|e, yacas("D(x) "|e),
+% You can also evaluate an expression after it went through yacas,
+% and have some variables set to certain values. This is done
+% with named parameters.
+% 
+% In this example, we integrate from 0 to a and evaluate at a=1.
+>yeval("Integrate(x,0,a) "|e,a=1)
+% Compare to the result of the Romberg method.
+>romberg(e,0,1)
+% Here is method you can use.
+% 
+% The string % uses the most recent result from Yacas.
+>yacas("Expand((1+x)^3)"), yacas("Factor(%)")
+% Here is a first example on how to use Yacas for something useful.
+% 
+% We plot the sin functions and its taylor series.
+>setplot(0,2*pi,-2,2); fplot("sin(x)",0,2*pi);
+>hold; fplot(yacas("Taylor(x,0,9) Sin(x)"),0,2*pi); hold;
+% Let's determine the sum of n^2, n=1 to a. There is a simple
+% formula for this.
+>yacas("Sum(n,1,a,n^2)"), yacas("Factor(%)"),
+% To evalute in a=100, you can use the substitution machanism
+% of Yacas.
+>yacas("Eliminate(a,100,%)"),
+% Yacas does also know about complex numbers.
+>yacas("Exp(Complex(1,1))"), yeval("%"), exp(1+1i)
+% Here are some variations of the factorial.
+>yacas("(44 *** 49) / 6!"), yacas("Bin(49,6)"), bin(49,6),
+>e=yacas("x - (x^x-a) / (D(x) x^x)")
+>a=2; xs=iterate(e,1,10),
+% The newton() and inewton() functions of Euler must get a derivative.
+% So we use Yacas to compute it.
+>inewton("x^x-a",yacas("D(x) x^x"),1)
+% Here is a continued fraction.
+>yacas("ContFrac(N(Sqrt(2)),10)")
+% We evaluate with rest=0.
+>yacas("Simplify(% /: {rest <- 0})"), yeval("%")-sqrt(2)
+% Yacas has a (yet) not perfect solver. It may return a list of
+% solutions. You get the first solution by indexing. The right
+% hand side of the equation is also obtained by indexing.
+>yacas("Solve(x^2+a*x==2,x)"), yacas("%[1][2]")
+% To create an Euler vector from a Yacas list, you can use the
+% y2vector() function.
+% 
+% The following example creates a list of 100 random numbers in
+% Yacas, turns that into an Euler vector then plots the cumulative
+% sum.
+>xplot(cumsum(y2vector("Table(Random(),n,1,100,1)")));
+% To demonstrate the inverse transformation, we interpolate with
+% Yacas.
+>x=1:5; y=sin(x); setplot(0,6,-2,2); xmark(x,y);
+% The transformation is done by vector2y(). Yacas uses the LagrangeInterpolant
+% to compute the interpolation. We expand it into normal form.
+>pol=yacas("Expand(LagrangeInterpolant("|vector2y(x)|","|vector2y(y)|",x))"),
+>hold; fplot(pol,0,6); hold;
+% With Yacas, it is possible to write advanced functions like
+% the Newton method without computing the derivative function.
+% This is done in the function itself.
+>ynewton("x^x-2",1)
+>A=[1,1;1,2]; yacas("EigenValues("|matrix2y(A)|")"), yeval("%[1]")
+% This ends our introduction into Yacas. For more information,
+% read the manuals.
+>

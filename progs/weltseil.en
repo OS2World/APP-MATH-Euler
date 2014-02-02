@@ -1,0 +1,103 @@
+% Dieses Notebook beschäftigt sich mit verschiedenen geometrischen
+% Aufgaben im Zusammenhang mit der Erdkugel. Zunächst wird also
+% eine Näherung für den Erdumfang und den Erdradius angegeben.
+>u=40008000; r=u/(2*pi);
+% Die erste Aufgabe besteht einfach darin, den ERdumfang um 1m
+% zu verlängern. Um wieviel würde sich dann der Erdradius verlängern
+% müssen?
+% 
+% Die Antwort ist unabhängig vom Radius, weil der Umfang linear
+% vom Radius abhängt. Es sind ca 16 cm.
+>1/(2*pi)
+        0.1591549430919 
+% Als nächstes Fagen wir, um wieviel der Radius zunehmen müsste,
+% damit die Oberfläche um 1 Quadratmeter zunimmt.
+% 
+% Aus der Formel für die Oberfläche (4*pi*r^2) ergibt sich durch
+% Ableiten die Änderung recht genau. Es sind 9 Nanometer!
+>1/(8*pi*r)
+      6.24875024995e-09 
+% Versuchen wir das Ergebnis ohne Ableitung exakt aus der Differenz
+% der Oberflächen herzuleiten, so ergibt sich die Lösunge einer
+% quadratischen Gleichung. Leider berechnet der Computer die Lösung
+% falsch, weil sich zwei Größen gegenseitig aufheben (Auslöschung).
+>r-sqrt(r^2+1/(4*pi))
+    -5.587935447693e-09 
+% Man kann dieses falsche Ergebnis korrigieren, indem man die
+% andere Lösung berechnet und sich erinnert, dass das Produkt
+% der Nullstellen mal dem höchsten Koeffizienten gleich dem konstanten
+% Glied ist.
+% 
+% Man erhält dieselbe Lösung wie mit der Näherung.
+>h=r+sqrt(r^2+1/(4*pi)); 1/(4*pi*h)
+      6.24875024995e-09 
+% Mit Hilfe des Intervall-Newton-Verfahrens erhält man eine sehr
+% gute Einschließung der Nullstelle.
+>inewton("2*r*x+x^2-1/(4*pi)","2*(r+x)",~0,1~)
+~6.2487502499500036e-09,6.2487502499500102e-09~ 
+% Im nächsten Problem ziehen wir ein Seil, das um die Erde liegt
+% und einen Meter länger als der Erdumfang ist, an einer Stelle
+% hoch. Wie hoch kann man das Seil ziehen?
+% 
+% Mit ein wenig Geometrie erhält man eine Formel, die allerdings
+% numerisch instabil ist.
+>f="sqrt(2*x*r+x^2)-acos(r/(r+x))*r-0.5";
+% Das Bisektionsverfahren liefert aber dennoch eine Lösung.
+>longformat; bisect(f,100,200)
+         121.4382871772 
+% Ebenso das Sekantenverfahren.
+>longformat; secant(f,100,200)
+         121.4382874699 
+% Plottet man die Funktion in der Nähe der Nullstelle, so sieht
+% man, dass etwas faul ist. Es entstehen durch numerische Zufälligkeiten
+% Artefakte.
+>fplot(f,121.4382,121.4383);
+% Man kann das Problem auch über den Winkel lösen, den das Sel
+% vom höchsten Punkt bis zu dem Punkt, an dem es aufliegt, bildet.
+>a=bisect("tan(x)-x-0.5/r",0,1)
+      0.006175980080382 
+% Die zum Winkel gehörende Höhe berechnet sich ebenfalls nach
+% einer einfachen Formel.
+>(1/cos(a)-1)*r
+         121.4382927119 
+% Das Seil befindet sich ungefähr püber eine Strecke von 79 km
+% in der Luft.
+>2*a*r
+         78650.74766252 
+% Wieder kann man mit dem Intervall-Newton-Verfahren eine gute
+% Einschließung erhaten.
+>a=inewton("tan(x)-x-0.5/r","tan(x)^2",~0,1~)
+    ~0.006175980080344,0.006175980080417~ 
+% Man kann damit die Höhe bis auf 7 Stellen hinter dem Komma einschließen.
+>(1/cos(a)-1)*r
+            ~121.438292709,121.438292715~ 
+% Als nächstes Versuchen wir die Oberfläche der Erde um 1 Quadratmeter
+% zu erhöhen, indem wir einen Punkt nach außen ziehen.
+% 
+% Mit ein wenig Geometrie erhält man für den halben Winkel, der
+% dabei nach außen gezogen wird die Gleichung cos(a)+1/cos(a)=2+1/(pi*r^2).
+% Allerdings wird die rechte Seite schlecht berechnet.
+>2+1/(pi*r^2)
+                      2 
+% Man kann aber einfach cos(a)=1-a^2/2 setzen und erhält näherungsweise
+>a=(4/(pi*r^2))^(1/4)
+      0.000420963113707 
+% Die zugehörige Höhe, um die die Oberfläche nach außen gezogen
+% wird, ist ungefähr 56 cm.
+>(1/cos(a)-1)*r
+        0.5641896247476 
+% Alternativ kann man eine quadartische Gleichung für x=1-cos(a)
+% lösen. Dies gelingt ebenfalls, weil die Auslöschung hier keine
+% große Rolle spielt.
+>d=1/(pi*r^2); x=(d-sqrt(d^2+4*d))/2; acos(1+x)
+     0.0004209631073947 
+% Das Gleichungssystem kann man auch mit dem Intervall-Newton-Verfahren
+% lösen.
+>cx=inewton("x^2+d*x-d","2*x+d",~-0.0001,-0.000000001~)
+~-8.8604975476386212e-08,-8.860497547638616e-08~ 
+% Da der acos nicht Intervallmäßig implementiert ist, muss man
+% ihn mit dem Intervall-Newton-Verfahren berechnen. Man erhält
+% eine Einschließung der Lösung.
+>a=inewton("cos(x)-(1+cx)","-sin(x)",~0.0001,0.0005~); (1/cos(a)-1)*r
+              ~0.5641896559,0.5641896615~ 
+>

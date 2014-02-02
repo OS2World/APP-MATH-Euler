@@ -1,0 +1,29 @@
+This is EULER, Version 1.42.
+
+Type help(Return) for help.
+Enter command: (8388608 Bytes free.)
+
+Utilities
+framed views
+Exact solver
+Remez algorithm
+Steffenson iteration
+Gauss integration
+Histogram plots
+Interval Solvers
+Broyden algorithm
+Minimization
+Nicer 3D plots
+Single Value Decomposition Tools
+>clg;load bode
+>bode(1,[1,0.6,1],what=2);
+>bode(1,[1,1]);
+>
+>load logplot
+>n=1;d=[1,0.6,1];w=10^linspace(-2,4,100);gdb=20*logbase(abs(fbode(n,d,w)),10);
+>shrinkwindow();ylogplot(gdb,w);
+>
+>load logplot
+>v=10^linspace(-2,1,100);r=0.5*v^2;
+>shrinkwindow();xylogplot(v,r);
+>

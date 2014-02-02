@@ -1,0 +1,36 @@
+% This notebook demonstrate some of the linear algebra
+% features of EULER.
+% 
+% Let us first show some easy things. We solve a linear
+% system Ax=b.
+>A=[0,1;1,2]
+>b=[1;1]
+>x=A\b
+% The test.
+>A.x-b
+% Let us try a huge problem. We generate a 100x100 matrix
+% A with normally distributed entries. Then we set b equal
+% to the sum of all rows of A. The solution of Ax=b is
+% the vector 1. We only check the first three coefficients
+% of the computes solution x.
+>A=normal(100,100); b=sum(A); x=A\b; x[1:3]
+% We can check, how good this solution is.
+>max(abs(x-1)')
+% The ill-conditioned Hilbert matrix yields bad results
+% even for small sizes.
+>H=hilbert(12); b=sum(H); x=H\b; max(abs(x-1)')
+% However, we can compute the residuum r=A.x-b with maximal
+% accuracy and solve the problem A.x=r. This yields an
+% improved solution x-r.
+>r=residuum(H,x,b); x=x-H\r; max(abs(x-1)')
+% Another iteration makes the result even better.
+>r=residuum(H,x,b); x=x-H\r; max(abs(x-1)')
+% The function xlgs does exactly this until a good solution
+% is derived.
+>x=xlgs(H,b); max(abs(x-1)')
+% The INTERVAL.E file contains an optimal interval solver,
+% using the Krawzyk method.
+>load "interval"
+% Now we get good inclusions.
+>ilgs(H,b)
+>

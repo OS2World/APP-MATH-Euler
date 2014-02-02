@@ -1,0 +1,111 @@
+% This notebook introduces you into the fast fourier
+% transform. We will use it to analyze a WAV file.
+% 
+% Mathematically, the FFT evaluates a polynomial in all
+% n-th roots of unity simultanuously. If n is a power of
+% 2 the algorithm is rather quick. To demonstrate this,
+% we set xi equal to all 8-th roots of unity.
+>reset; xi=exp(1i*2*Pi/8); z=xi^(0:7); xmark(re(z),im(z)); wait(20);
+% Now we generate a complex polynomial of degree 7. We
+% take a random polynomial.
+>p=random(1,8)+1i*random(1,8);
+% We evaluate this polynomial at all points of z. Note
+% that a polynomial is represented in EULER in a vector
+% starting with the lowest coefficient.
+>polyval(p,z)
+Column 1 to 2:
+           3.61514+4.02725i        -0.0606771+0.879766i 
+Column 3 to 4:
+         0.132548-0.145173i      -0.000568016-0.934639i 
+Column 5 to 6:
+           1.42217-1.86785i           0.396519+0.14824i 
+Column 7 to 8:
+       -0.448191-0.0126947i           0.18639+0.166618i 
+% This is exactly the same as FFT of p.
+>fft(p)
+Column 1 to 2:
+           3.61514+4.02725i        -0.0606771+0.879766i 
+Column 3 to 4:
+         0.132548-0.145173i      -0.000568016-0.934639i 
+Column 5 to 6:
+           1.42217-1.86785i           0.396519+0.14824i 
+Column 7 to 8:
+       -0.448191-0.0126947i           0.18639+0.166618i 
+% The inverse oparation interpolates values with a polynomial
+% in the roots of unity. We can go back and forth.
+>fft(ifft(fft(p)))
+Column 1 to 2:
+           3.61514+4.02725i        -0.0606771+0.879766i 
+Column 3 to 4:
+         0.132548-0.145173i      -0.000568016-0.934639i 
+Column 5 to 6:
+           1.42217-1.86785i           0.396519+0.14824i 
+Column 7 to 8:
+       -0.448191-0.0126947i           0.18639+0.166618i 
+% The inverse FFT is almost the same as the original FFT.
+>8*conj(ifft(conj(p)))
+Column 1 to 2:
+           3.61514+4.02725i        -0.0606771+0.879766i 
+Column 3 to 4:
+         0.132548-0.145173i      -0.000568016-0.934639i 
+Column 5 to 6:
+           1.42217-1.86785i           0.396519+0.14824i 
+Column 7 to 8:
+       -0.448191-0.0126947i           0.18639+0.166618i 
+% The FFt can be used to evaluate a trigonometric series
+% at equidistant points. Let us take a cos series and evaluate
+% it directly.
+>t=0:Pi/128:2*Pi-Pi/128; s=1+2*cos(t)+cos(2*t); xplot(t,s); wait(20);
+% Then we evaluate it with FFT. This is very much faster.
+>a=[1,2,1]|zeros(1,253); xplot(t,re(fft(a))); wait(20);
+% IFFT (and FFT) can thus be used to determine frequencies
+% in a signal. The following signal consists of frequencies
+% 20 and 55.
+>t=0:Pi/128:2*Pi-Pi/128; s=2*cos(20*t)+cos(55*t); xplot(t,s); wait(20);
+% We can see the frequencies with IFFT.
+>f=abs(ifft(s)); xplot(0:127,f[1:128]); wait(20);
+% Adding randomly distributed noise does still show the
+% frequencies.
+>s=s+normal(size(s)); f=abs(ifft(s)); xplot(0:127,f[1:128]); wait(20);
+% The file SOUND.E contains some functions to load and
+% save WAV files. Other functions in this file analyze
+% sound.
+>load "sound"
+Save and load WAV sound files. Analyze frequencies.
+
+{w,rate}=loadwave(filename); loads a WAV file.
+w=loadwave(filename); loads a WAV file. r is saved to defaultrate.
+savewave(filename,v[,rate,bits]); saves a WAV file.
+analyze(v[,fmin,fmax,rate,points]); plots the frequencies of v
+mapsound(w,[,dt,fmin,fmax,simpl,rate]); show the sound history
+soundsec(n[,rate]); generates t values for n seconds.
+
+Default sample rate is 22050 or the sample rate of the last read WAV file.
+% At first we create 2 seconds of sound parameters.
+>t=soundsec(1);
+% Then we generate the sound.
+>s=sin(440*t)+sin(220*t)/2+sin(880*t)/2;
+% We can easily make a Fourier analysis of it.
+>analyze(s); wait(20);
+% Save the file in WAV format.
+>savewave("test.wav",s);
+% If your version supports playwav (Windows 95) and you have a
+% soundcard and speakers installed, you may play the sound file.
+% Else you will get an error in the following command.
+>playwave("test.wav");
+% Now we add a lot of noise and listen to it.
+>s=s+normal(size(s)); savewave("test.wav",s); playwave("test.wav");
+% Load it back.
+>sa=loadwave("test.wav");
+% Now we can make a complete picture of the sound.
+>mapsound(sa); wait(20);
+% Finally we demonstrate Gibb's effect a bit. Summing up sin(nt)/n
+% for odd n appraoches the rectangle wave but with an error at
+% 0 and pi.
+>t=linspace(0,pi,100)';
+>n=1:2:41;
+>S=cumsum(sin(t*n)/n);
+% We plot the cumulative sum with growing n.
+>twosides(0); view(3,2,1,0.5); framedsolid(n/10,t,S*2,1);
+>
+>

@@ -1,0 +1,106 @@
+% This file demonstrates rounding errors. Every computer
+% with a floating point arithmetic makes errors due to
+% rounding. EULER can get rid of some of these errors with
+% the exact scalar product and the interval arithmetic.
+% 
+% First of all, we investigate the basic rounding error.
+>a=1/3-0.33333333333333
+% 1/3 is not exactly representable in the computer. However,
+% if we multiply it by 3, we get 1 exactly. This is due
+% to the rounding.
+>(1/3)*3-1
+% This does no longer work for 1/49.
+>1/49*49-1
+% By the way, there are not many numbers between 1 and
+% 100 such that 1/n*n does not round to 1.
+>n=1:100; nonzeros(1/n*n-1<>0)
+% As you can see belowe, the sqrt function is a good function.
+% The input error is divided by 2 in each iterations. Thus
+% all values are correct.
+>longestformat; p=niterate("sqrt(x)",2,20); p|2^(2^-(1:20))'
+% However, going back with x^2 to 2 is not a good function.
+% The error is multiplied by 2 this time. This accumulates
+% to a surprising error.
+>niterate("x^2",p[20],20)|2^(2^-(19:-1:0))'
+% Another example is the subtraction of two large numbers.
+>x=10864; y=18817; 9*x^4-y^4+2*y^2,
+% The correct result is 1. We can obtain it in the following
+% way.
+>x=10864; y=18817; (3*x^2-y^2)*(3*x^2+y^2)+2*y^2,
+% By transforming the problem into a linear system, we
+% can get very good results and even inclusions.
+% 
+% The linear system is v[1]=x, v[2]=x*v[1], ..., v[5]=y,
+% v[6]=y*v[5], ..., v[9]=9*v[4]-v[8]+2*v[2]
+>x=10864; y=18817;
+>A=id(9);
+>A[2,1]=-x; A[3,2]=-x; A[4,3]=-x;
+>A[6,5]=-y; A[7,6]=-y; A[8,7]=-y;
+>A[9,4]=-9; A[9,8]=1; A[9,6]=-2;
+>b=[x 0 0 0 y 0 0 0 0]';
+>v=A\b; v[9],
+% The first solution is wrong.
+% 
+% However, we can improve it with a residual iteration.
+>w=v-A\residuum(A,v,b); w[9],
+% This is correct.
+% 
+% The function xlusolve does the same.
+>v=xlusolve(A,b); v[9]
+>load "interval"
+% Using ilgs, we get a bound for the solution.
+>v=ilgs(A,b); v[9]
+% We now try the following recursion: I[n+1]=1/(n+1)-5*I[n].
+% It is true that I[n]=intergral(x^n/(x+5),x=0..1).
+% 
+% We compute the recursion with the following function.
+>function I(n)
+$a=log(1.2); x=[];
+$loop 1 to n;
+$a=(1/#-5*a); x=x|a;
+$end;
+$return x;
+$endfunction
+>I(20)
+% The last number is completely wrong.
+>romberg("x^20/(x+5)",0,1)
+% However, if we compute the recursion backwards, we get
+% I[0] exactely. We get even a proved inclusion for log(1.2).
+>function J(n)
+$a=~0,1~;
+$loop 1 to n
+$a=0.2*(1/(n-#+1)-a);
+$end
+$return a
+$endfunction
+>J(20)
+>log(1.2)
+% The file CHEBYSH.E contains functions for the Chebyshev
+% polynomials.
+>load "chebysh";
+% We test is for degree 60 at 0.9.
+>T(60,0.9)
+% Surprisingly, the recursive version is also exact. This
+% is surprising in view of the example above.
+>Trek(60,0.9)
+% However, if we compute the polynomial and evaluate it
+% at 0.9 with polyval, the result is completely wrong.
+>p=Tpoly(60);
+>polyval(p,0.9)
+% This is not due to the coefficients, as we see with interval
+% aritmetic. This is slow because of the 60x60 matrix involved.
+>ipolyval(p,0.9)
+% xpolyval is fast, but less reliable.
+>xpolyval(p,0.9)
+% The difference to the correct value is due to the coefficients.
+>cos(60*acos(0.9))
+% Another example is the following polynomial.
+>p=[-945804881,1753426039,-1083557822,223200658];
+% We evaluate it in the following interval.
+>t=linspace(1.61801916,1.61801917,100);
+% The values are clearly wrong.
+>xplot(t-1.61801916,polyval(p,t)); wait(20);
+% The correct values are easily obtained with a little
+% residual iteration.
+>xplot(t-1.61801916,xpolyval(p,t)); wait(20);
+>

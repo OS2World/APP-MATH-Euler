@@ -1,0 +1,31 @@
+% Demonstrate the function root.
+% 
+% We first take a simple example.
+>longformat; a=2; x=1; root("x^2-a",x)
+% The solution for x is assigned to the global variable
+% x.
+>x
+>sqrt(2)
+% We could also solve for a starting with a different a.
+>a=3; root("x^2-a",a)
+% A bit more complex is the computation of interest rates
+% for a loan (or a savings account). Assume you get K (K>0)
+% at time 0 and pay P (P<0) at each period, starting from
+% period 1 to period n-1. You then have a final depth F
+% (F<0). What is the interest rate?
+>ex="K*f^n+(f^(n-i0+1)-1)/(f-1)*f^i1*P+F";
+% After we set up the expression, we initialize the variables
+% with values. We take an approximation for f (8 %). This
+% time we have to pay 1000 each month. We are done (F=0)
+% after 120 month.
+>K=100000; n=120; f=1.08^(1/12); P=-1000; i0=1; i1=0; F=0;
+>root(ex,f)
+% To compute the effective interest rate per year, we must
+% take f^12 and compute the interest rate in %.
+>(f^12-1)*100
+% Assume we stop paying after 119 month and the interest
+% rate is 8%. How much would be left after 120 month?
+>f=1.08^(1/12); i1=1; printf("Dept left: %0.2f",-root(ex,F))
+% How long would it take to pay the loan at 8%?
+>F=0; i1=0; printf("Payed after %0.1f years",root(ex,n)/12)
+>

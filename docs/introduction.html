@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Introduction</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Introduction</H1>
+<P>Shows</P>
+
+<UL>
+	<LI><A HREF="#Overview">an overview of what Euler is</A>,
+	<LI><A HREF="#Installation">what files Euler consists of and how it is installed</A>,
+	<LI><A HREF="#Demo">how to run the demo</A>,
+	<LI><A HREF="#Help">how to get on-line help</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Overview"></A>Overview</H2>
+<P>The idea of EULER is a system with the following features
+
+<UL>
+	<LI>Interactive evaluation of numerical expressions with real or complex values, vectors and matrices, including
+	use of variables.
+	<LI>Built-in functions that can take vectors as input and are then evaluated for each element of the vector or
+	matrix.
+	<LI>Matrix functions.
+	<LI>Interval arithmetic for result verification.
+	<LI>Exact scalar product.
+	<LI>Statistical functions and random numbers.
+	<LI>Optimization.
+	<LI>2D- and 3D-plots.
+	<LI>A built-in programming language with parameters and local variables.
+	<LI>An online help.
+	<LI>A tracing feature for the programming language.
+	<LI>Possibility to read and write raw numerical data or even binary data from and to files.
+</UL>
+
+<P>The Euler interface is in a notebook style. You can edit old commands and 
+execute them again. Moreover, you can add <span lang="de">comments</span> to every command. The notebook 
+uses a color scheme to distinguish between commands, comments and output.</P>
+<P>EULER is an ideal tool for tasks such as
+
+<UL>
+	<LI>Inspecting and discussing functions of one real or complex variable.
+	<LI>Viewing surfaces in parameter representation.
+	<LI>Linear algebra and eigenvalue computation.
+	<LI>Testing numerical algorithms.
+	<LI>Statistical evaluations and Monte Carlo simulations.
+	<LI>Solving differential equations numerically.
+	<LI>Computing polynomials.
+	<LI>Studying interval arithmetic.
+	<LI>Examining and generating sound files.
+</UL>
+
+<P>
+<H2 ALIGN="CENTER">Files and <A NAME="Installation"></A>Installation</H2>
+<P>EULER consists of the following files at least
+
+<UL>
+	<LI>The program code and the on-line help.
+	<LI>euler.cfg (is loaded after the start of the program)
+	<LI>utility files ion Euler *.e format (loaded from euler.cfg)
+	<LI>Several other *.e files, which are loaded from euler.cfg.
+	<LI>The HTML documentation.</UL>
+
+<P>Note that there might be a command in euler.cfg to switch directory, so the program files need not be in the
+same directory. There are some additional files, which help using the program
+
+<UL>
+	<LI>demo.e (a demo file, see the demo section)
+	<LI>Other *.e files, which contain sample applications.
+	<LI>The Notebook files *.en, which contain sample notebooks.
+</UL>
+
+<P>You should name your EULER program files *.e.</P>
+<P>To exit EULER issue the command</P>
+<PRE>    &gt; quit</PRE>
+<P>or close the EULER window.
+<H2 ALIGN="CENTER">The <A NAME="Demo"></A>Demo</H2>
+<P>The best way to get a good introduction into EULER is to run the demo. To do that issue the command</P>
+<PRE>    &gt;load demo
+</PRE>
+<P>Do not enter the prompt &quot;&gt;&quot; and press the Return key. Of course, the file DEMO must be in the active
+directory. This is usually the progs directory and should be set up automatically. There is also an automatic,
+non-interactive demo, which you might load with</P>
+<PRE>&nbsp; &nbsp; &gt;load autodemo
+</PRE>
+<P>You can learn to program EULER by studying the demo file, of course.</P>
+<P>If you are using a notebook version, you should start by loading the welcome.en notebook.
+<H2 ALIGN="CENTER">Online EULER <A NAME="Help"></A>Help</H2>
+<P>You can select Help from the menu bar or press the F1 key to see some help. 
+The main documentation is in HTML (and your are reading it currently). Also</P>
+<PRE>    &gt;help function
+</PRE>
+<P>will show the help text of a function (see &quot;programming EULER&quot;). For user defined functions, this
+is a very good way to remember their purpose and give some documentation to the user.</P>
+<P>For built-in functions and commands, the help command will display the help text from help.txt. This file is
+loaded at the start of EULER and is ASCII readable. The format is simple and you are welcome to extend this file
+with your own comments. It does also contain help for brackets, as in</P>
+<PRE>    &gt;help (</PRE>
+<P>There is also this documentation, which explains how all these commands are supposed to work together.
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,26 @@
+% We demonstrate minimization of a function in two variables.
+% 
+% First we define a rather complicate function.
+>A=[1,2;3.1];
+>function f(x)
+$global A;
+$return sin(x).A.(x-1)'
+$endfunction
+% Let us try a minimization.
+>mi=neldermin("f",[1,2])
+     -5.48095       1.49917 
+% Since the function is not a function of two variables, we must
+% define an intermediate function to plot.
+>function g(x,y)
+$return f([x,y])
+$endfunction
+>fcd(''map("g",x,y)'',50,-10,10,-10,10); xplot(); wait(20);
+% We mark the found minimum and another local minimum around -5,-5.
+>hold; color(0); mark(mi[1],mi[2]); hold; wait(20);
+>mi=nelder("f",[-5,-5],1,epsilon)
+     -4.94517      -4.81818 
+>hold; mark(mi[1],mi[2]); hold; wait(20);
+>mi=nelder("f",[8,-8],1,epsilon)
+      8.04959      -7.94387 
+>hold; mark(mi[1],mi[2]); hold; wait(20);
+>

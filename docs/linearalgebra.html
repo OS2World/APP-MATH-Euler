@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Linear Algebra</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Linear Algebra</H1>
+<P>This covers</P>
+
+<UL>
+	<LI><A HREF="#Solving linear Systems">how to solve linear systems</A>,
+	<LI><A HREF="#Eigenvalues">and compute eigenvalues</A>,
+	<LI><A HREF="#Epsilon">and how to control the internal epsilon</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Solving linear Systems"></A>Solving linear Systems</H2>
+<P>There are lots of built-in functions to perform linear algebra. The matrix product has already been discussed.
+The operation</P>
+<PRE>    &gt;A\b
+</PRE>
+<P>takes a NxN matrix A and a Nx1 vector b and returns the vector x such that Ax=b. If in</P>
+<PRE>    &gt;A\B
+</PRE>
+<P>B is a NxM matrix, then the systems A\B[,i] are solved simultaneously. An error is issued if the determinant
+of A turns out to be too small relative to the internal epsilon.</P>
+
+<P>There is also a more precise version, which uses a residual iteration. This usually yields very good results.
+It is of course slower</P>
+<PRE>    &gt;xlgs(A,b)
+</PRE>
+<P>You may add an additional maximal number of iterations.</P>
+<PRE>    &gt;inv(A)
+</PRE>
+<P>computes the invers matrix of A. This is a utility function defined as</P>
+<PRE>    &gt;A\id(cols(A))
+</PRE>
+<P>There are also more primitive functions, like</P>
+<PRE>    &gt;lu(A)
+</PRE>
+<P>for NxM matrices A. Probably, this function is only useful for mathematic insiders. However, we need to explain
+it here in detail. The function returns multiple values (see <A HREF="#324">Multiple Assignments</A>) You can assign
+its return values to variables with</P>
+<PRE>    &gt;{Res,ri,ci,det}=lu(A)
+</PRE>
+<P>If you use only</P>
+<PRE>    &gt;Res=lu(A)
+</PRE>
+<P>all other output is lost. To explain the output of lu, lets start with Res. Res is a NxM matrix containing the
+LU-decomposition of A; i.e., L.U=A with a lower triangle matrix L and an upper triangle matrix U. L has ones in
+the diagonal, which are omitted so that L and U can be stored in Res. det is of course the determinant of A. ri
+contains the indices of the rows of Res, since during the algorithm the rows may have been swept. ci is not important,
+if A is nonsingular. If A is singular, however, Res contains the result of the Gauss algorithm, and ci contains
+1 and 0 such that the columns with 1 form a basis for the columns of A.</P>
+
+<P>To make an example</P>
+<PRE>    &gt;A=random(3,3);
+    &gt;{LU,r,c,d}=lu(A);
+    &gt;LU1=LU[r];
+    &gt;L=band(LU1,-2,-1)+id(3); R=band(LU1,0,2);
+    &gt;B=L.R,
+</PRE>
+<P>will yield the matrix A[r]. To get A, one must compute the inverse permutation r1</P>
+<PRE>    &gt;{rs,r1}=sort(r); B[r1]
+</PRE>
+<P>will be A.</P>
+
+<P>Once we have an LU-decomposition of A, we can use it to quickly solve linear systems A.x=b. This is equivalent
+to A[r].x=b[r], and LU[r] is a decomposition of A[r], thus x can be computed with</P>
+<PRE>    &gt;{LU,r}=lu(A);
+    &gt;lusolve(LU[r],b[r])</PRE>
+<P>There is also a more exact version</P>
+<PRE>    &gt;xlusolve(A,b)
+</PRE>
+<P>wich can be used if A is in LU form. E.g., it works for upper triangular matrices A. E.g.,</P>
+<PRE>    &gt;A=random(10,10); A=band(A,0,10);
+    &gt;xlusolve(A,b)</PRE>
+<P>This function may be used for exact evaluation of arithmetic expressions.</P>
+
+<P>lu is used by several functions in UTIL. E.g.,</P>
+<PRE>    &gt;kernel(A)
+</PRE>
+<P>is a basis of the kernel of A; i.e., the vectors x with Ax=0.</P>
+<PRE>    &gt;image(A)
+</PRE>
+<P>is a basis of the vectors Ax. You may add an additional value parameter eps=... to kernel and image, which replaces
+the internal epsilon in these functions. These function normalize the matrix with</P>
+<PRE>    &gt;norm(A)
+</PRE>
+<P>which returns the maximal row sum of abs(A).</P>
+<P>There is an implementation of the singular value decomposition. The basic function is</P>
+<PRE>    &gt;{U,w,V}=svd(A)
+</PRE>
+<P>As you see, it returns three values. A must be an mxn real matrix, and U will be an mxn matrix, w a 1xn vector
+and V an nxn matrix. The columns of U and V are orthogonal. We have A=U.W.V', where W the a nxn diagonal matrix,
+having w in its diagonal, i.e.</P>
+<PRE>    &gt;A=U.diag(size(V),0,w).V'
+</PRE>
+<P>This decomposition can be used in many circumstances. The file SVD.E (loaded at system start) contains the applications
+svdkernel and svdimage, which compute orthogonal basis of the kernel and image of A. Moreover, svddet computes
+the determinant of A, and svdcondition a condition number.</P>
+<PRE>    &gt;fit(A,b)
+    &gt;svdsolve(A,b)
+</PRE>
+<P>finds a solution of A.x=b for singular matrices A (even non-rectangular) by minimizing the norm of A.x-b. The
+function svdsolve is more stable and should be preferred. By the way, U, w and V can be used to compute solutions
+of A.x=b with</P>
+<PRE>    &gt;x=V.diag(size(V),0,1/w).U'
+</PRE>
+<P>if w contains no zeros. This is a similar procedure as with the lu function above. By the way,</P>
+
+<BLOCKQUOTE>
+	<PRE>&gt;svdsolve(A,id(cols(A));</PRE>
+</BLOCKQUOTE>
+
+<P>will compute the so called pseudo-inverse of A. There is also svddet, which might be more stable than det.</P>
+<H2 ALIGN="CENTER"><A NAME="Eigenvalues"></A>Eigenvalues</H2>
+<P>The primitive function for computing eigenvalues is</P>
+<PRE>    &gt;charpoly(A)
+</PRE>
+<P>which computes the characteristic polynomial of A. It is used by</P>
+<PRE>    &gt;eigenvalues(A)
+</PRE>
+<P>to compute the eigenvalues of A. Then</P>
+<PRE>    &gt;eigenspace(A,l)
+</PRE>
+<P>computes a basis of the eigenspace of l. This function uses kernel, and will fail, when the eigenvalue are not
+exact enough.</P>
+<PRE>    &gt;{l,x}=xeigenvalue(A,l)
+</PRE>
+<P>will improve the eigenvalue l, which must be a simple eigenvalue. It returns the improved value l and an eigenvector.
+You can provide an extra parameter, which must be an approximation of the eigenvector.</P>
+<PRE>    &gt;{l,X}=eigen(A)
+</PRE>
+<P>returns the eigenvalues of A in l and the eigenvectors in X. There is an improved but slower version eigen1,
+which will succeed more often then eigen. There is also the svdeigen routine, which uses singular value decomposition
+to determine the kernel.</P>
+<PRE>    &gt;jacobi(a)
+</PRE>
+<P>will use Jacobi's method to compute the eigenvalues of a symmetric real nxn matrix a. </P>
+
+<P>A special feature is the generation of Toeplitz matrices with toeplitz. The parameter of this function is a
+1x2n-1 vector r and the output a matrix R with R(i,j)=r(n-i+j), i.e. the last row of R agrees with the first n
+elements of r, and all columns above are shifted one to the left from bottom up. You can solve a linear system
+with a toeplitz matrix, using</P>
+<PRE>    &gt;toeplitzsolve(r,b)
+</PRE>
+<P>where b is a nxq vector. The result satisfies toeplitz(r).x=b.
+<H2 ALIGN="CENTER">The Internal <A NAME="Epsilon"></A>Epsilon</H2>
+<PRE>    &gt;epsilon()
+</PRE>
+<P>is an internal epsilon, used by many functions and the operator ~= which compares two values and returns 1 if
+the absolute difference is smaller than epsilon. This epsilon can be changed with the statement</P>
+<PRE>    &gt;setepsilon(value)</PRE>
+
+</BODY>
+
+</HTML>

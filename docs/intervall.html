@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Inervall Arithmetic</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Interval Arithmetic and Exact Computation</H1>
+<P>You learn how to do</P>
+
+<UL>
+	<LI><A HREF="#Interval Arithmetic">interval arithmetic</A>,
+	<LI><A HREF="#Exact Scalar Product">use the exact scalar product in basic form</A>,
+	<LI><A HREF="#Exact Solutions">how to obtain exact</A>,
+	<LI><A HREF="#Guaranteed Inclusions">and verified results</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Interval Arithmetic"></A>Interval Arithmetic</H2>
+<P>EULER can do interval arithmetic. Intervals are number ranges instead of single numbers. Intervals are entered
+in the form</P>
+<PRE>    &gt;~a,b~
+</PRE>
+<P>or</P>
+<PRE>    &gt;interval(a,b)
+</PRE>
+<P>which generates the closed interval [a,b], whenever a and b are two reals or real vectors. If a matrix contains
+an interval, the matrix will become an interval matrix. Complex intervals are not implemented.</P>
+
+<P>You may also use the notation</P>
+<PRE>    &gt;~x~
+</PRE>
+<P>if x is a real or a real matrix. In this case, EULER computes a small interval with non-empty interior, which
+contains x. Thus ~x,x~ is different from ~x~!</P>
+
+<P>If x is already of interval type, ~x~ will be identical to x.</P>
+<P>You can do all basic and most other operations on intervals. E.g.,</P>
+<PRE>   &gt;~1,2~ * ~2,3~
+</PRE>
+<P>is the interval of all s*t, where s in [1,2] and t in [2,3]. Thus [2,6]. An operation on one or several intervals
+results in an interval, which is guaranteed to contain all the possible results, if the operations is performed
+on all possible members of the intervals.</P>
+
+<P>Some operations do not give the smallest possible interval. I traded speed for accuracy (e.g. sin and cos).
+However, they will give reasonable intervals for <EM>small input intervals</EM>. Some other functions do not work
+for interval input.</P>
+
+<P>Special functions are</P>
+<PRE>   &gt;left(x)
+</PRE>
+<P>and</P>
+<PRE>   &gt;right(x)
+</PRE>
+<P>which give the right and left end of an interval.</P>
+<PRE>   &gt;middle(x)
+</PRE>
+<P>is its middle point and</P>
+<PRE>   &gt;diameter(x)
+</PRE>
+<P>its diameter. To compute the diameter of an interval vector, use</P>
+<PRE>   &gt;sqrt(sum(diameter(x)^2))
+</PRE>
+<P>The function</P>
+<PRE>   &gt;expand(x,f)
+</PRE>
+<P>will expand an interval x, such that the diameter becomes f times bigger. If x is not an interval and real,
+it will produce an interval with midpoint x and diameter 2*f.</P>
+
+<P>You can, check if an interval is contained in another interval, using</P>
+<PRE>   &gt;x &lt;&lt; y
+</PRE>
+<P>This will return true (1), if the interval x is properly contained in the interval y.</P>
+<PRE>   &gt;x &lt;&lt;= y
+</PRE>
+<P>tests for proper containment or equality.</P>
+<P>You can intersect two intervals with</P>
+<PRE>   &gt;x &amp;&amp; y
+</PRE>
+<P>unless the intersection is empty. This would yield an error. The function</P>
+<PRE>   &gt;intersects(x,y)
+</PRE>
+<P>tests for empty intersection. An interval containing the union of x and y is constructed with</P>
+<PRE>   &gt;x || y
+</PRE>
+<H2 ALIGN="CENTER"><A NAME="Exact Scalar Product"></A>Exact Scalar Product</H2>
+<P>Sometimes it is necessary to compute with higher accuracy. E.g., the solution of a linear system A.x=b can be
+improved by computing the residuum r=A.x-b and iterating with x=x-A\r. However, this will work only if the residuum
+is computed with higher accuracy. You can do this in Euler with</P>
+<PRE>    &gt;r=residuum(A,x,b)
+</PRE>
+<P>The result is exact up to the last digit. Just enter 0 for b, if you just want A.x.</P>
+
+<P>The computation is done using a long accumulator. This is about 10 times slower than A.x-b. You can access the
+accumulator (two of them for complex values and intervals) directly with</P>
+<PRE>    &gt;accuload(v)
+</PRE>
+<P>for any vector v. This will compute the exact value of sum(v). The accumulator is not cleared afterwards. You
+can add another vector with</P>
+<PRE>    &gt;accuadd(v)
+</PRE>
+<P>Likewise,</P>
+<PRE>    &gt;accuload(v,w); accuadd(v1,w1),
+</PRE>
+<P>will compute the scalar product of v and w and the scalar product of v1 and w1. These functions return the last
+value of the accumulator. You can transfer the complete accumulator into a vector with</P>
+<PRE>    &gt;h=accu();
+</PRE>
+<P>(or accure, accuim, accua, accub for complex values and intervals). Then sum(h) is the value of the accumulator.</P>
+<H2 ALIGN="CENTER"><A NAME="Exact Solutions"></A>Exact Solutions</H2>
+<P>There are several functions, which use the exact scalar product. Most are parallel to the less exact but faster
+counterparts. These functions are explained in the corresponding sections.</P>
+
+<P>E.g., the function</P>
+<PRE>    &gt;xlgs(A,b)
+</PRE>
+<P>produces an exact solution of the system Ax=b. You may add an additional maximal number of iterations.</P>
+<H2 ALIGN="CENTER"><A NAME="Guaranteed Inclusions"></A>Guaranteed Inclusions</H2>
+<P>Euler provides some interval procedures, which produce guaranteed inclusions. The underlying algorithms may
+be found in the work of Rump, Alefeld, Herzberger and Moore. Please refer to the mathematical literature for more
+information.</P>
+<PRE>    &gt;y=idgl(&quot;f&quot;,x,y0);
+</PRE>
+<P>y is then an inclusion of the solution of the differential equation y'=f(x,y). f must be an EULER function with
+two arguments like</P>
+<PRE>    function f (x,y)
+        return x*y;
+    endfunction
+</PRE>
+<P>The parameter x of idgl is a vector of grid points, where the solution is to be computed. The accuracy will
+depend on the step sizes in x. y0 is a start value at x[1]. The result y is a vector of interval values containing
+the solution. The function will work in several dimensions.</P>
+<PRE>    &gt;x=ilgs(A,b);
+    &gt;x=ilgs(A,b,R);
+</PRE>
+<P>This is a linear system solver, producing an inclusion of the solution of Ax=b. You may provide a matrix R,
+which is close to the inverse of A. The procedure may fail.</P>
+<P>
+<PRE>    &gt;iinv(A);
+</PRE>
+<P>This produces an inclusion of the inverse of A.</P>
+<P>
+<PRE>    &gt;ipolyval(p,t)
+</PRE>
+<P>This computes an inclusion of the value of the polynomial p at t. t may be a vector as usual.</P>
+
+<P></P>
+<PRE>    &gt;inewton(&quot;f&quot;,&quot;f1&quot;,~a,b~)
+</PRE>
+<P>This is the interval Newton method. f must be a function and f1 its derivative. ~a,b~ is a starting interval,
+which must contain a zero. If it does not contain a zero, there will most probably occur an empty intersection.
+If the starting interval is replaced by a non-interval real number, the function calls the Newton method and expands
+the result to an interval, which is taken as a start interval. Of course, f1 must not be zero in ~a,b~. The function
+returns the inclusion interval and a flag, which is nonzero if the interval is a verified solution.</P>
+
+<P>This function accepts expressions instead of functions. E.g.</P>
+<PRE>    &gt;inewton(&quot;x^2-2&quot;,&quot;2*x&quot;,~1,2~);
+</PRE>
+<P>will compute an inclusion of sqrt(2).</P>
+
+<P></P>
+<PRE>    &gt;newton2(&quot;f&quot;,&quot;f1&quot;,x);
+    &gt;inewton2(&quot;f&quot;,&quot;f1&quot;,x);
+</PRE>
+<P>newton2 is the Newton method for several dimensions. f must be a function, which computes a 1xn vector f(x)
+from a 1xn vector x. f1(x) must produce the Jacobian matrix at x. inewton does the same, but produces an interval
+inclusion. The start interval vector x must contain a solution.
+
+</BODY>
+
+</HTML>

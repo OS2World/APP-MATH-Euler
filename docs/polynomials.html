@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Polynomials</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Polynomials</H1>
+<P>Shows you
+
+<UL>
+	<LI><A HREF="#Basics">how Euler stores polynomials and how you can evaluate them</A>,
+	<LI><A HREF="#Interpolation">how to interpolate</A>,
+	<LI><A HREF="#FFT">how to use the Fast Fourier Transform (FFT)</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Basics"></A>Basics</H2>
+<P>EULER stores a polynomial a+bx+...+cx^n in the form [a,b,...,c]. Note, that this is different from MatLab. It
+can evaluate a polynomial with Horner's scheme</P>
+<PRE>    &gt;polyval(p,x)
+</PRE>
+<P>where x can be a matrix, of course. If you want a more exact answer in case of a badly conditioned polynomial,
+you may use</P>
+<PRE>    &gt;xpolyval(p,x)
+</PRE>
+<P>You may add an additional maximal number of iterations. This function uses the exact scalar product for a residual
+iteration. Of course, it is slower that Horner's scheme.</P>
+
+<P>One can multiply polynomials with</P>
+<PRE>    &gt;polymult(p,q)
+</PRE>
+<P>or add them with</P>
+<PRE>    &gt;polyadd(p,q)
+</PRE>
+<P>The polynomials need not have the same degree.</P>
+<PRE>    &gt;polydiv(p,q)
+</PRE>
+<P>divides p by q and returns the multiple values {result,remainder}.</P>
+<PRE>    &gt;polytrunc(p)
+</PRE>
+<P>truncates a polynomial to its true degree (using <A HREF="#345">epsilon</A>). In UTIL</P>
+<PRE>    &gt;polydif(p)
+</PRE>
+<P>is defined. It differentiates the polynomial once. To construct a polynomial with prescribed zeros z=[z1,...,zn]</P>
+<PRE>    &gt;polycons(z)
+</PRE>
+<P>is used. The reverse is obtained with</P>
+<PRE>    &gt;polysolve(p)
+</PRE>
+<P>This function uses the Bauhuber method, which converges very stably to the zeros. However, there is always the
+problem with multiple zeros destroying the accuracy (but not the speed of convergence).
+<H2 ALIGN="CENTER"><A NAME="Interpolation"></A>Interpolation</H2>
+<P>Polynomial interpolation can be done with</P>
+<PRE>    &gt;d=interp(t,s)
+</PRE>
+<P>where t and s are vectors. The result is a polynomial in divided differences (Newton) form, and can be evaluated
+by</P>
+<PRE>    &gt;interpval(t,d,x)
+</PRE>
+<P>at x. To transform the Newton form to the usual polynomial form</P>
+<PRE>    &gt;polytrans(t,d)
+</PRE>
+<P>may be used.
+<H2 ALIGN="CENTER"><A NAME="FFT"></A>Fast Fourier Transform (FFT)</H2>
+<P><IMG SRC="images/fft3.gif" WIDTH="298" HEIGHT="252" ALIGN="RIGHT" BORDER="0"></P>
+<P>Interpolation in the roots of unity can be done with the fast Fourier transform</P>
+<PRE>    &gt;p=ifft(s)
+</PRE>
+<P>Then p(exp(2*pi*i*k/n))=s[k+1], 0&lt;=k&lt;n-1. For maximal speed, n should be a power of 2, or at least have
+many low order factors. The reverse function evaluates a polynomial at the roots of unity 
+simultaneously</P>
+<PRE>    &gt;s=fft(p)
+</PRE>
+<P>Note, that polynomials have the lowest coefficient first. Both functions are most often used in computations
+of trigonometric sums. The example file contains a demonstration.</P>
+
+<P>If A is a matrix</P>
+<PRE>&nbsp; &nbsp; &gt;fft(A)
+</PRE>
+<P>will compute the two dimensional Fast Fourier Transform of A. This time, the number of columns and rows of A
+must be power of 2. ifft(A) returns the inverse.
+
+</BODY>
+
+</HTML>

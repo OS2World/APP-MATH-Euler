@@ -1,0 +1,36 @@
+This is EULER, Version 1.42.
+
+Type help(Return) for help.
+Enter command: (8388608 Bytes free.)
+
+Utilities
+framed views
+Exact solver
+Remez algorithm
+Steffenson iteration
+Gauss integration
+Histogram plots
+Interval Solvers
+Broyden algorithm
+Minimization
+Nicer 3D plots
+Single Value Decomposition Tools
+>T=10e-3;f=1/T;t=0:T/50:T;
+>v1=3.5*sin(2*pi*f*t);v2=1.2*sin(2*pi*f*t-pi/3);
+>reset;clg;load scope;fullwindow();
+>lw=linewidth(2);c=color(10);scope(t,v1,v2);color(c);linewidth(lw);
+>help scope
+function scope (x=...,y1=...,y2=...)
+## Default for x :
+            0 
+## Default for y1 :
+            0 
+## Default for y2 :
+            0 
+## o scope(x,y1,), scope(x,,y2) and scope(x,y1,y2) shows a scope grid and
+##   the curves y1(x) or y2(x) or both.
+## o scope(,y1,y2) shows the curve y2(y1) in XY mode.
+## o scope() shows only the grid.
+>scope()
+            0          0.01            -4             4 
+>

@@ -1,0 +1,89 @@
+% Let us introduce you into the programming language of
+% EULER.
+% 
+% The programming style is rather straightforward and classical.
+% We first make a simple example.
+>function f(x)
+$return x^3+x^2-x
+$endfunction
+% The function may be used in any expression, just like
+% the built-in functions.
+>f(5)+f(f(3))
+% This function will work for vectors x.
+>f(1:10)
+% A function can call itself.
+>function fakult (n)
+$if n<=0; return 1; endif;
+$return n*fakult(n-1)
+$endfunction
+% This defines the faculty function.
+>fakult(5)
+% We can achieve the same result with a loop.
+>function fakult1 (n)
+$x=1; loop 2 to n; x=x*#; end;
+$return x;
+$endfunction
+% This should be a bit faster.
+>fakult1(5)
+% To get the result for a vector input, you must use the map function.
+>map("fakult1",5:10)
+% You may provide default values for parameters.
+>function pnorm (v,p=0)
+$if p>=1; return sum(abs(v)^p)^(1/p);
+$else return max(abs(v))
+$endif;
+$endfunction
+% If p=0 (the default), norm computes the maximum norm.
+>v=[2,3,-2]; pnorm(v)
+% Or the L_2 norm for p=2.
+>pnorm(v,2)
+% We try to evaluate the Chebyshev polynomial of degree
+% n at x, using the recursive formula T(n,x)=2*x*T(n-1,x)-T(n-2,x).
+% 
+% We could use a recursive definition, but is far more
+% effective to make it in a loop.
+>function t(n,x)
+$if n==0; return ones(size(x)); endif;
+$if n==1; return x; endif;
+$a=1; b=x;
+$loop 2 to n;
+$c=2*x*b-a;
+$a=b; b=c;
+$end;
+$return b
+$endfunction
+% You will wonder, why we return ones(size(x)) instead
+% of simply 1. This is a principle: All functions in EULER
+% should work for vector input. So the function must return
+% a vector. However, our function does only work for non-vector
+% n. This is for simplicity and effectiveness.
+>x=-1:0.01:1; xplot(x,t(6,x)); title("t(6,x)"); wait(20);
+% By the way, it is surprising how accurate the formula
+% is. This is due to an error cancellation.
+>longformat; t(60,0.9), cos(60*acos(0.9)),
+% Let us try to get the Chebyshev polynomial itself.
+>function T(n)
+$if n==0; return [1]; endif;
+$if n==1; return [0,1]; endif;
+$a=[1]; b=[0,1];
+$loop 2 to n;
+$c=[0,2*b]-[a,0,0];
+$a=b; b=c;
+$end;
+$return b
+$endfunction
+% T(n) returns now the coefficients of the n-th Chebyshev
+% polynomial.
+>T(4)
+% We can evaluate it with polyval.
+>xplot(x,polyval(T(10),x)); title("T(10)");
+% However, this is not an accurate procedure for large
+% n. (Compare with the result above).
+>p=T(60); polyval(p,0.9)
+% Though it is not efficient either, we can use an accurate
+% solver for the evaluation of this polynomial. We see
+% that the reason of the inaccuracy is due to the Horner
+% scheme.
+>xpolyval(p,0.9)
+>
+>

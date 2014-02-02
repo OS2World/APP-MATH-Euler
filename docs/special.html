@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Special Problem Solvers</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Problem Solvers</H1>
+<P>This section describes some problem solvers. These functions are either built in or read from a file at program
+start. We explain</P>
+
+<UL>
+	<LI><A HREF="#Solving Equations">how to solve equations numerically</A>,
+	<LI><A HREF="#Optimization">how to find minima and maxima of a function in one or several variables</A>,
+	<LI><A HREF="#Linear Optimization">linear optimization with the Simplex method</A>,
+	<LI><A HREF="#Integration">numerical integration</A>,
+	<LI><A HREF="#Differentiation">numerical differentiation</A>,
+	<LI><A HREF="#Splines">splines</A>,
+	<LI><A HREF="#Regression Analysis">regression analysis and best fit</A>,
+	<LI><A HREF="#Iteration and Fixed Points">how to do iteration and find fixed points</A>,
+	<LI><A HREF="#Differential Equations">numerical solution of differential equations</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Solving Equations"></A>Solving Equations</H2>
+<P>In UTIL some functions are defined, which will to be of general interest. First there are some functions for solving
+equations.</P>
+<PRE>    &gt;bisect(&quot;f&quot;,a,b,...)
+</PRE>
+<P>uses the bisection method to solve f(x,...)=0. f must be a function of the real variable x which may have additional
+parameters &quot;...&quot;. These parameters can be passed to bisect and are in turn passed to f. You can use the
+syntax</P>
+<PRE>    &gt;bisect(&quot;f&quot;,a,b;v)
+</PRE>
+<P>to pass the additional parameter v to f(x,v). This syntax applies to all functions below, which accept additional
+parameters to be passed to a function.</P>
+<P>The method uses the internal epsilon to stop the iteration. You can specify an own epsilon with</P>
+<PRE>    &gt;bisect(&quot;f&quot;,a,b,eps=0.1)
+</PRE>
+<P>Note, that parameters with values must be the last parameters of all. The eps parameter can be applied to many
+functions in this section.</P>
+<P>It is possible to pass an expression to bisect. This expression must be a string containing a valid EULER expression
+for f(x). The name of the unknown variable must be x.</P>
+<PRE>    &gt;bisect(&quot;x^2-2&quot;,1,2);
+</PRE>
+<P>All functions in this section will work with expressions in x.</P>
+<PRE>    &gt;secant(&quot;f&quot;,a,b,...)
+</PRE>
+<P>uses the secant method for the same purpose. &quot;f&quot; may again be an expression containing the variable
+x.</P>
+<P>If you want to find the root of an expression, which contains one variable or many variables, you can use</P>
+<PRE>    &gt;root(&quot;expr&quot;,x)
+</PRE>
+<P>expr must be any valid EULER expression. All variables in this expression must be global variables of type real.
+This function is not to be used in other functions, unless this functions sets the global variables first! x must
+be the name of the variable, which you want to solve expr==0 for. The new value of x solves the expression. E.g.,</P>
+<PRE>    &gt;a=2; x=1; root(&quot;x^2-a&quot;,x)
+</PRE>
+<P>will set x equal to sqrt(2).</P>
+<P>If you need to find roots of a function with several parameters, you can use Newton's method or the method of
+Broyden.</P>
+<PRE>    &gt;broyden(&quot;f&quot;,x)
+</PRE>
+<P>or</P>
+<PRE>    &gt;broyden(&quot;f&quot;,x,J,...)
+</PRE>
+<P>uses the Broyden method to find the roots of f(x,...)=0. This time, f may be a function f. Then x is a vector.
+J is an approximation of the Jacobian at x, the starting point. If J==0 or J is missing, then the function computes
+J. Again, additional parameters are passed to f.</P>
+<PRE>    &gt;newton(&quot;f&quot;,&quot;f1&quot;,x,...)
+</PRE>
+<P>finds a zero of f using the Newton method for a function with one parameter. You must provide the derivative
+of f in f1. Similarly,</P>
+<PRE>    &gt;newton2(&quot;f&quot;,&quot;Df&quot;,x,...)
+</PRE>
+<P>is used for several parameters. f(x) must compute an 1xn vector y from the 1xn vector x. Df(x) must compute
+the nxn derivative matrix at x.</P>
+<H2 ALIGN="CENTER"><A NAME="Optimization"></A>Optimization</H2>
+<P>The minimum of a convex function (maximum of a concave function) can be computed with fmin (fmax). E.g.</P>
+<PRE>    &gt;fmin(&quot;x^3-x&quot;,0,1)
+</PRE>
+<P>If f is a function, you may also use fmin(&quot;f&quot;,0,1). As always, additional parameters are passed to
+f.</P>
+<P>The function fmin uses the Golden Ratio method. However, Brent's method may be faster and is available with</P>
+<PRE>    &gt;brentmin(&quot;x^3-x&quot;,0.5)
+</PRE>
+<P>where the parameters are an initial try, and optionally a step size for the search and an stopping criterion
+epsilon. The basic built-in function is brent. All minima and maxima of a function or expression (in x) are computed
+with</P>
+<PRE>    &gt;fextrema(&quot;x^3-x&quot;,a,b)
+</PRE>
+<P>where a and b are the interval ends. There may be an optional n parameter to determine the number of subintervals
+to be investigated. The minimum of a function in several variables can be found with the Nelder-Mean simplex algorithm.</P>
+<PRE>    &gt;neldermin(&quot;f&quot;,v)
+</PRE>
+<P>This time, f must take a 1xn vector as an argument and return a real number. Or you may pass an expression in
+x, which evaluates for a 1xn vector x to a real. V is a starting point for the search. The basic built-in function
+is nelder. Optionally, you may pass a delta as size of the first simplex and a stopping epsilon.</P>
+<H2 ALIGN="CENTER"><A NAME="Linear Optimization"></A>Linear Optimization</H2>
+<P>EULER has a built in Simplex algorithm, which minimizes c'*x among all x, satisfying x&gt;=0 and A*x&lt;=b.</P>
+<PRE>    &gt;simplex(A,b,c)
+</PRE>
+<P>will compute the solution x. To check for feasibility and boundedness, use</P>
+<PRE>    &gt;{x,r}=simplex(A,b,c)
+</PRE>
+<P>r will be 0, if x is a correct minimum. If r is -1, the problem is not feasible. If r is 1, the problem is unbounded.
+In this case, x contains a feasible point. In any case A must be a real mxn matrix, b an mx1 matrix (a column vector),
+and c a 1xn matrix (a row vector). x will be a nx1 column vector.</P>
+<P>Note, that the internal epsilon is used for numerical computations.</P>
+<H2 ALIGN="CENTER"><A NAME="Integration"></A>Integration</H2>
+<PRE>    &gt;simpson(&quot;f&quot;,a,b)
+</PRE>
+<P>or</P>
+<PRE>    &gt;simpson(&quot;f&quot;,a,b,n,...)
+</PRE>
+<P>computes the Simpson integral with of f in [a,b]. n is the discretization and additional parameters are passed
+to f(x,...). f must be able to handle vector input for x. Again, &quot;f&quot; may be an expression in x.</P>
+<P>
+<PRE>    &gt;gauss(&quot;f&quot;,a,b)
+</PRE>
+<P>or</P>
+<PRE>    &gt;gauss(&quot;f&quot;,a,b,n,...)
+</PRE>
+<P>performs gauss integration with 10 knots. If n is specified, then the interval is subdivided into n subintervals.
+f(x,...) must be able to handle vector intput for x. &quot;f&quot; may be an expression in x.</P>
+<PRE>    &gt;romberg(&quot;f&quot;,a,b)
+</PRE>
+<P>or</P>
+<PRE>    &gt;romberg(&quot;f&quot;,a,b,n,...)
+</PRE>
+<P>uses the Romberg method for integration. n is the starting discretization. All other parameters are as in &quot;simpson&quot;.
+Again, &quot;f&quot; may be an expression containing the variable x.</P>
+<P>There is also an adaptive integrator</P>
+<PRE>&nbsp; &nbsp; &gt;adaptiveint(&quot;f&quot;,a,b,eps)
+</PRE>
+<P>where eps is the desired accuracy. Optionally, you may pass the number of initial subdivisions. Further parameters
+are passed to f.</P>
+<H2 ALIGN="CENTER"><A NAME="Differentiation"></A>Differentiation</H2>
+<P>To take the derivative, one may use the dif function, as in</P>
+<PRE>    &gt;dif(&quot;f&quot;,x)
+    &gt;dif(&quot;f&quot;,x,n)
+</PRE>
+<P>(the latter for the n-th derivative). Again, &quot;f&quot; may be an expression in &quot;x&quot;. There are
+some approximation tools. Polynomial interpolation has been discussed above.</P>
+<H2 ALIGN="CENTER"><A NAME="Splines"></A>Splines</H2>
+<P>There is also spline interpolation</P>
+<PRE>    &gt;sp=spline(t,s)
+</PRE>
+<P>which returns the second derivatives of the natural cubic spline through (t[i],s[i]). To evaluate this spline
+at x,</P>
+<PRE>    &gt;splineval(t,s,sp,x)
+</PRE>
+<P>is available.</P>
+<H2 ALIGN="CENTER"><A NAME="Regression Analysis"></A>Regression Analysis</H2>
+<PRE>    &gt;polyfit(t,s,n)
+</PRE>
+<P>fits a polynomial of n-th degree to (t[i],s[i]) in least square mode. This is an application of</P>
+<PRE>    &gt;fit(A,b)
+</PRE>
+<P>which computes x such that the L_2-norm of Ax-b is minimal.</P>
+<H2 ALIGN="CENTER"><A NAME="Iteration and Fixed Points"></A>Iteration and Fixed Points</H2>
+<PRE>    &gt;iterate(&quot;f&quot;,x,...)
+</PRE>
+<P>seeks a fixed point of f by iterating the function from x. If you provide additional arguments ..., these are
+passed to f. Of course, f must be a function of type</P>
+<PRE>    &gt;function f(x)
+    $...
+    $endfunction
+</PRE>
+<P>If you want see the iterations, use the following variant.</P>
+<PRE>    &gt;niterate(&quot;f&quot;,x,n,...)
+</PRE>
+<P>iterates f starting at x n times and returns the vector of iterated values.</P>
+<PRE>    &gt;steffenson(&quot;f&quot;,x);
+</PRE>
+<P>Seeks a fixed point starting from f using the Steffenson operator. nsteffenson is similar to niterate.</P>
+<PRE>    &gt;map(&quot;f&quot;,x,...)
+</PRE>
+<P>evaluates the function f(x,...) at all elements of x, if f(x,...) does not work because the function f does
+not accept vectors x.</P>
+<H2 ALIGN="CENTER"><A NAME="Differential Equations"></A>Differential Equations</H2>
+<P>One of the differential equation solvers is the Heun method. To use it, write the function f, which defines
+the differential equation y=f(t,y). y can be a 1xN vector. Then call</P>
+<PRE>    &gt;heun(&quot;f&quot;,t,y0,...)
+</PRE>
+<P>The extra parameters ... are passed to f. y0 is the starting value y(t[1]) and t must be a vector of points
+t. The function returns the values of the solution at t. The accuracy depends of the distances from t[i] to t[i+1].
+Heun is implemented via a UTIL function. A faster solver, implemented as a built-in function, is the Runge-Kutta
+method and its adaptive variant.</P>
+<PRE>    &gt;runge(&quot;f&quot;,t,y0)
+</PRE>
+<P>does the same as heun. Optionally, a number of steps to take between the points of t can be passed. Thus you
+have to pass additional arguments for f as</P>
+<PRE>    &gt;runge(&quot;f&quot;,t,y0;...)
+</PRE>
+<P>The adaptive Runge-Kutta method is called adaptiverunge, and takes an epsilon and an initial step size as optional
+arguments. Internally, these functions use the built-in runge1 and runge2 respectively.
+
+<P>To solve a boundary value problem is not so easy and requires the combination 
+of a numerical solver for differential equations and a zero finder. Please study 
+the notebook boundaryvalue to see how to do that.</BODY></HTML>

@@ -1,0 +1,67 @@
+This is EULER, Version 2.0.
+
+Type help(Return) for help.
+Enter command: (8388608 Bytes free.)
+
+Processing configuration file.
+
+Done.
+>load astro
+
+-----------------------------------------------------
+   Astronomical functions 1999-08-19
+   Type 'help astro(RETURN)' for list of functions
+-----------------------------------------------------
+
+>help astro
+function astro ()
+## Astronomical functions taken from 
+## Jean Meeus - 'Astronomical Algorithms'
+## Montenbruck and Pfleger - 'Astronomy on the Personal Computer'
+## Duffett-Smith - 'Practical astronomy with your calculator'
+## other sources.
+## For information on a function named fred, type 'help fred'.
+##
+## Report any problems or errors in these functions to
+## Keith Burnett (keith@xylem.demon.co.uk)
+## Latest version of this package is available from
+## http://www.xylem.demon.co.uk/kepler/euler.html
+##
+## day        jday     gst      nutation 
+## hmercury   hvenus   hearth   hmars     hjupiter    hsaturn    
+## mercury    venus    sun      mars      jupiter     saturn     
+## gmer       gven              gmar      gjup
+## gmoon      amoon    moon     tmoon     librate
+## equatorial apparent mean     altaz     raltaz
+## cart       sph
+## table
+## ddegrees   dsin     dcos     dtan      dasin     dacos    datan    datan2
+## brum       reekie   settle
+##
+>help tmoon
+function tmoon (day,station)
+## returns: topcentric equatorial coordinates of Moon
+##   given: TD instant in 'day'
+##          'station' - vector lat, long, height (m), temp (C), 
+##          and pressure (mB) of observing location
+>now = day(1999, 8, 11, 10, 17)
+     -143.072 
+>psun = sun(now)
+      140.754       15.3374       1.01358 
+>gmoon = moon(now)
+      140.429       15.9114        373195 
+>here = [-1.9167, 52.5, 120, 17, 1011 ]
+      -1.9167          52.5           120            17          1011 
+>pmoon = tmoon(now, here)
+      140.729       15.3036        368556 
+>pmoon - gmoon
+     0.300715      -0.60774      -4639.18 
+>psun - pmoon
+    0.0243673     0.0337465       -368555 
+>sunbrum = altaz(now, here, psun)
+      137.411       46.3381       1.01358 
+>moonbrum = altaz(now, here, pmoon)
+      137.463       46.3176        368556 
+>sunbrum-moonbrum
+   -0.0516406     0.0204827       -368555 
+>

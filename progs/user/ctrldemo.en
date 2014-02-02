@@ -1,0 +1,112 @@
+% Now loading library
+>load "user\control.e"
+% Draw the tribute of (s+2)
+>pbode([2,1],1);
+% And inv(s+2)
+>pbode(1,[5,1]);
+% if we want to draw W(s)=(s+2)/(s+5) we simply must add
+% the two tribute
+>pbode([2,1],[5,1]);
+% Into a term of the type (s+a) we can find the break
+% point:
+% 
+% a(s/a+1) 1/a is called break point 
+>pbode([1,1],1];
+% in (s+1) break point is 1, we can see that a decade before
+% and after bode's diagrams of the magnitude is linear.
+% On a log-log paper of course.
+>pbode([1,1],1,expi=-4,expf=4);
+% In the diagrams we can look this better. For the phase
+% diagram we can to notice that a decade before phase
+% = 0 and after=90
+>n=polycons([1,1]);
+>pbode(n,1,expi=-4,expf=4);
+% This is basically the method for plot asintotic Bode's
+% diagrams. We simply add the slope of the single tribute
+% for the magnitude and the tribute to the phase of each
+% terms.
+>n2=polymult(n,polycons([1000,1000,1000,1000]));
+>pbode(n2,1,expi=-3,expf=6);
+% There are 4 different tribute:
+% 
+% (s+a) we have alredy noticed it
+% 
+% (s-a) is like s+a in magnitude but not in phase
+>pbode([-1,1],1);
+>pbode([1,1],1);
+% and they reciprocal
+>pbode(1,[1,1]);
+>pbode(1,[-1,1]);
+% Now we can to examine the root's place. From a given
+% W(s)=N(s)/D(s) we can exctract the poly:
+% 
+% P(s,k)=N(s)+kD(s)
+% 
+% And when the k change its value the roots change places.
+% The root's place is the plot of the roots.
+% 
+% For EXIT click out of the graph. If you click ON the
+% graph you can get information about the value of k that
+% permits the configuration.
+>place(polycons([1,2,8]),polycons([6,3,7]));
+% 
+% 
+% Some examples from: Esercizi di controlli automatici,
+% ed sidera.
+% 
+% 
+% 
+% III.4
+>pbode(1,polycons([0,-2,-4]),-1,2);
+>place(1,polycons([0,-2,-4]));
+% 
+% 
+% III.5
+>pbode([-0.5, 1],polycons([0,-1,-5]));
+>place([-0.5, 1],polycons([0,-1,-5]));
+% 
+% 
+% III.7
+>pbode([2,1],polycons([-1,1,pbode([2,1],polycons([-1,1,1]));
+>place([2,1],polycons([-1,1,pbode([2,1],polycons([-1,1,1]));
+% 
+% 
+% III.8
+>pbode([1, 0, 1],polycons([2,-2,4]),pt=300); .. 300 campioni!—
+>place([1, 0, 1],polycons([2,-2,4])); 
+% 
+% 
+% III.9
+>pbode([1,0,1],polycons([0,-2,-4]),pt=600); .. 600 campioni!
+>place([1,0,1],polycons([0,-2,-4]));
+% 
+% 
+% III.10
+>pbode([-2,1],polymult([2,1],[1,0,1]));
+>place([-2,1],polymult([2,1],[1,0,1]));
+% 
+% 
+% III.11
+>pbode(1,polycons([0,2,2]));
+>place(1,polycons([0,2,2]));
+% 
+% 
+% III.12
+>pbode(1,polymult([1,0,1],[2,1]));
+>place(1,polymult([1,0,1],[2,1]));
+% 
+% 
+% III.13
+>pbode([-1,1],polymult(polycons(0),[1,0,1]));
+>place([-1,1],polymult(polycons(0),[1,0,1]));
+% 
+% 
+% III.14
+>pbode([1,1],polymult([2,1],[5,4,1]));
+>place([1,1],polymult([2,1],[5,4,1]));
+% 
+% 
+% III.15
+>pbode(polymult([3,1],[2,2,1]),polycons([0,1,-2,-4]));
+>place(polymult([3,1],[2,2,1]),polycons([0,1,-2,-4]));
+% 

@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="VPSiteProject" CONTENT="file:///E|/euler/docs/Euler.vpp">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Basics</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER"><span lang="en-us">Basics</span></H1>
+<P><span lang="en-us">This file explains</span></P>
+
+<UL>
+	<LI><span lang="en-us"><A HREF="#windows">the windows Euler uses</A>, </span>
+	<LI><span lang="en-us"><A HREF="#Notebooks">the notebooks</A>, </span>
+	<LI><span lang="en-us"><A HREF="#Command">the command line</A>, </span>
+	<LI><span lang="en-us"><A HREF="#Loading">how to save commands and functions on files</A>,
+    </span>
+	<LI><span lang="en-us"><A HREF="#Errors">how to deal with errors</A>. </span>
+</UL>
+
+<H2 ALIGN="CENTER"><span lang="en-us">Using the EULER <A NAME="windows"></A>windows</span></H2>
+<P><span lang="en-us">EULER uses two windows. The <EM>text window</EM> and the <EM>graphics window</EM>. 
+You
+can switch between these windows with the TAB key. You can alternatively use the 
+mouse to click into one of the windows, of course.</span></P>
+<P><span lang="en-us">The text window contains the menu and is used for user input and output of EULER. 
+The input and output is organized in &quot;notebooks&quot; (see below).</span><P>
+<span lang="en-us">The graphics window is displayed,
+whenever EULER draws to it. It remains visible as long as there is no text output. EULER
+pops the text screen to the foreground as soon as some procedure prints text.
+</span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Notebooks"></A>Notebooks</span></H2>
+<P><span lang="en-us">Notebooks contain the commands, comments and EULER output. Old commands can 
+be edited and changed. A comment may be added to each command using a built-in 
+editor. </span> </P>
+<P><span lang="en-us">Notebook files are useful for communication of Euler computations
+to other people, or to archive documented computations. Collections of functions 
+should still be kept in program files (see below), which, however, may be loaded 
+in the first commands of a notebook. A notebook could accompany program files,
+and explain the use of the functions with examples. Another idea is to use notebooks for teaching mathematics.</span></P>
+<P><span lang="en-us">The most important fact about notebooks is that EULER still uses the sequence of commands as they are executed.
+So if you change the value of a variable later and then go to previous command, the changed value is used.</span></P>
+<P><span lang="en-us">You may not only change previous commands, but also delete them or insert new commands. Use the notebook menu
+to do this, or the keyboard shortcuts. If you change a command and execute it, its output is removed and EULER
+proceeds to the next command, unless you toggle a switch to insert  new commands. In this case, a new command is inserted
+after the one you just executed.</span></P>
+<P><span lang="en-us">You can delete the output of commands. To do this, select a text area and use the command in the notebook menu.
+All output of the selected commands will be deleted.</span></P>
+<H2 ALIGN="CENTER"><span lang="en-us">The <A NAME="Command"></A>Command Line</span></H2>
+<P><span lang="en-us">Text can be entered behind the prompt (&gt;) using the keyboard. Letters can be cancelled with
+the Backspace key. The cursor keys position the cursor back and forth in the line. The line editor is always in
+insert mode, so any character is inserted at the current cursor position. The 
+Home and End keys work as usual. Escape clears all input. Shift plus -&gt; or&lt; - 
+position the cursor one word to the right or left. Finally, the input is 
+executed
+by pressing Return.&nbsp; EULER will then start to interpret the command. The cursor can be at any position of the input
+line, when Return is pressed.</span></P>
+<P><span lang="en-us">Previous input can be re-called with Shift and the Cursor-Up and Cursor-Down keys. 
+If a command is recalled this way and executed with Return, Cursor-Down recalls the next command;
+i.e., Cursor-Up and Cursor-Down are always based on the last recalled command. Clearing the input line also makes
+the last command the base for recalling (use Escape or Control-Cursor-Up). Thus Escape plus 
+Cursor-Up recalls the
+previous command.</span></P>
+<P><span lang="en-us">Pressing the Insert key extends incomplete commands. Pressing this key again gives another extension, if there
+is one. The search goes through the command history, the implemented functions, the user defined functions and
+the built-in commands in that order.</span></P>
+<P><span lang="en-us">The End key will insert the text &quot;endfunction&quot;, but only on empty lines in programming mode (see below).
+Otherwise, it works as usual.</span></P>
+<P><span lang="en-us">There are some other special keys. The Tabulator key switches to the Graphics screen and from there any key
+switches back. The Escape key stops any running EULER program and some internal functions, like the 3-dimensional
+plots, the linear equation solver and the polynomial root finder.</span></P>
+<P><span lang="en-us">The Page-Up and Page-Down keys works as usual.</span></P>
+<P><span lang="en-us">Input can spread over several lines using &quot;..&quot;. The two dots are allowed at any place, where
+a space is acceptable. E.g.</span></P>
+<PRE><span lang="en-us">    &gt;3+ .. some comment
+    &gt;4</span></PRE>
+<P><span lang="en-us">is equivalent to</span></P>
+<PRE><span lang="en-us">    &gt;3+4</span></PRE>
+<P><span lang="en-us">Comments can follow the &quot;..&quot; and are skipped.</span></P>
+<H3><span lang="en-us">Function Keys</span></H3>
+<P><span lang="en-us">The function keys may be programmed by</span></P>
+<PRE><span lang="en-us">    &gt;setkey(number,&quot;text&quot;);</span></PRE>
+<P><span lang="en-us">The number must be between 1 and 10 and the &quot;text&quot; may be any EULER string. Then the corresponding
+function key will produce the text, when it is pressed together with the ALT key . If the function key text is
+to contain the &quot; character, one can use double quotes as string delimiters as in</span></P>
+<PRE><span lang="en-us">    &gt;setkey(1,''load &quot;test&quot;;'');</span></PRE>
+<P><span lang="en-us">which puts</span></P>
+<PRE><span lang="en-us">    &gt;load &quot;test&quot;;</span></PRE>
+<P><span lang="en-us">on the function key Shift-F1. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Loading"></A>Euler Files</span></H2>
+<P><span lang="en-us">To abbreviate tedious input one may generate a file containing EULER input. 
+Such files can be generated with
+any editor. To load that file enter</span></P>
+<PRE><span lang="en-us">    &gt;load filename
+</span></PRE>
+<P><span lang="en-us">All lines of that file are interpreted just as any other input from the keyboard. Also a loaded file may itself
+contain a load command. If an error occurs, the loading is stopped and an error message is displayed. There is
+a default extension &quot;.e&quot;, which you should use for these files. You need not specify this extension in
+the load command. The filename may be included in double quotes. If you are using a string expression, include
+it in round brackets.</span></P>
+<P><span lang="en-us">The best use of an Euler program file is to define functions in those files. 
+Many predefined functions are loaded at each program start. EULER will load the file euler.cfg everytime the program
+starts. This file does again contain load commands, which load the necessary utility files.</span></P>
+<P><span lang="en-us">EULER looks for the specified file in the active directory by default. You may specify a path with the path
+statement</span></P>
+<PRE><span lang="en-us">    &gt;path &quot;...&quot;</span></PRE>
+<P><span lang="en-us">where the string  contains a path like &quot;.;myspecial&quot;. This would put the active directory into
+the path and a subdirectory named myspecial. The path command is useful for network setups.</span></P>
+<P><span lang="en-us">A file may contain comments. Comments look like this</span></P>
+<PRE><span lang="en-us">comment
+This is a comment.
+Comments can spread several lines.
+
+Also empty lines are allowed.
+endcomment</span></PRE>
+<P><span lang="en-us">endcomment must be the first string of a line.</span></P>
+<P><span lang="en-us">You can turn comment printing off with</span></P>
+<PRE><span lang="en-us">comment off</span></PRE>
+<P><span lang="en-us">Otherwise all comments in a file are displayed, when the file is loaded.</span></P>
+<PRE><span lang="en-us">comment on
+</span></PRE>
+<P><span lang="en-us">turns this feature on.</span></P>
+<H2 ALIGN="CENTER"><span lang="en-us">Euler <A NAME="Errors"></A>Errors</span></H2>
+<P><span lang="en-us">If a computation error occurs, Euler will issue an error message and try to print the offending input. This
+may either be a place in your input from the command line, a command line in a loaded file, or a line in an EULER
+function. In the latter case, Euler will print a stack dump of function calls.</span></P>
+<P><span lang="en-us">You can generate an error yourself and print an error message with</span></P>
+<PRE><span lang="en-us">error(&quot;An error occured&quot;);</span></PRE>
+<P><span lang="en-us">If this line is in an Euler function, execution will be stopped, and the normal error routine is called, generating
+a stack dump.</span></P>
+<P><span lang="en-us">It is also possible to test an expression for errors. This will not generate error messages (indeed it will
+suppress all output), and return an error code and, if available, a result. An example is</span></P>
+<PRE><span lang="en-us">{n,B}=errorlevel(&quot;inv(A)&quot;);</span></PRE>
+<P><span lang="en-us">The matrix A will be inverted to B, if possible, and n will contain 0. If the inversion fails, n will contain
+an error number different from 0. The variable B may not be used in this case. Use</span></P>
+<PRE><span lang="en-us">if n&lt;&gt;0; error(&quot;Inversion failed&quot;); endif;</span></PRE>
+<P><span lang="en-us">to pass an error to the user.</span></BODY></HTML>

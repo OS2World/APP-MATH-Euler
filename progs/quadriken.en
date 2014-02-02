@@ -1,0 +1,26 @@
+>fcontour("x^2+y^2",50); xplot();
+>fcontour("x^2-y^2",50); xplot();
+>fcd("x^2-y^2",50);
+>fniveau("x^2+y^2",1,50,-2,2,-2,2); xplot();
+>fniveau("x^2+y^2-x-y",1,50,-2,2,-2,2); xplot();
+>fniveau("x^2+y^2+x*y",1,50,-2,2,-2,2); xplot();
+>fniveau("x^2+y^2+x*y-x-2*y",1,50,-2,2,-2,2); xplot();
+>fniveau("x^2-4*y^2+x*y",[0,1],50,-2,2,-2,2); xplot();
+>fniveau("y^2-x",1,50,-2,2,-2,2); xplot();
+>t=linspace(0,2*pi,100); x=cos(t); y=sin(t); xplot(x,y);
+>keepsquare(1); xplot(x,y/2);
+>xplot(x+y,x); keepsquare(0);
+>reset(); f3d("x^2-y^2",20);
+>rotate("f3d";"x^2-y^2",20);
+>rotate("f3dpolar";"x^2-y^2",20);
+>rotate("f3d";"x^2+y^2-1",20); reset();
+>f3daxispolar("x^2+y^2",20); reset();
+>z=-1:0.1:1; r=sqrt(1+z^2); t=linspace(0,2*pi,60)'; x=cos(t)*r; y=-sin(t)*r;
+>framedsolid(x,y,z,1.2);
+>view(7,4,0,0.7); framedsolid(x,y,z,1.2); reset();
+>view(7,4,0,0.7); stereo("wire";x,y,z); reset();
+>z=1:0.1:3; r=sqrt(z^2-1); t=linspace(0,2*pi,60)'; x=cos(t)*r; y=-sin(t)*r;
+>z=z|(-z); x=x|x; y=y|y;
+>view(7,2,0,0.7); solid(x',y',dup(z,rows(x))',length(r)); reset();
+>view(7,2,0,0); solid(x',y',dup(z,rows(x))',length(r)); reset();
+>

@@ -1,0 +1,817 @@
+!abs,sin,cos,tan,asin,acos,atan,exp,log,sign,sqrt
+abs,sin,cos,tan,asin,acos,atan,exp,log,sign,sqrt
+Mathematical functions.
+Work for real, complex and interval scalars and
+matrices.
+#
+!for
+Starts a for loop. Example syntax :
+for i=1 to n; ...; end;
+for i=1 to n step h; ....; end;
+
+See: loop,if,break,repeat
+#
+!accu,accure,accuim,accua,accub
+The accu... functions get the long accumulator (or
+its real, imaginary (for complex accus), upper or lower
+(for interval accus) part from the accu.
+
+See: accuload, accuadd, residuum
+#
+!accuload,accuadd
+accuload(v) loads the sum of the vector v to the accumlutor.
+accuload(v,w) loads the scalar product of v and w.
+accuadd(v) adds the sum of the vector v to the accumulator.
+accuadd(v,w) adds the scalar product of v and w.
+Both must be 1xn vectors.
+
+See: accu, accure, accim, accua, accub, residuum
+#
+!residuum
+residuum(A,x,b) computes A.x-b exactly to the last digit.
+A, x and b must be compatible matrices.
+
+See: xlgs
+#
+!addpage,deletepages,showpage,pages
+The animation uses the following functions:
+
+addpage() : copies your graphics to a new page
+addpage(w,h) : uses a smaller buffer to preserve
+memory, where w and h are the dimensions in pixels.
+deletepages() : deletes all pages.
+showpage(n) : shows the page number n (1 to number
+of pages). If n is 0, it shows the normal graphics.
+pages() : returns the number of pages.
+#
+!any
+any(A) returns 1, if any entry in A is different from 0.
+
+See: nonzeros
+#
+!argn,args,arg1,arg2,arg3
+The arg... group of functions gives you access to
+unnamed arguments of functions. First of all unnamed
+arguments get the default names arg1, arg2, arg3, ...
+argn() : returns the number of arguments, given to the function.
+args(n) : returns all arguments from the n-th argument on,
+which may be past to another function as arguments.
+args() : returns all parameter from the first unnamed
+or the first argument from the semicolon ; on.
+
+See: function
+#
+!arg
+Returns the argument/arguments of a complex value/matrix.
+#
+!ascii,char
+ascii(string) : returns the ascii code of the first letter
+in the string
+char(n) : forms a string containing only the character with
+ascii code n.
+
+See: key
+#
+!key
+key() : waits for a key and returns the ascii key code, or
+the internal key code, mapped to codes from 0 to 15.
+
+See: ascii
+#
+!band
+band(A,n1,n2) returns A, with a(i,j) set to 0, if i+j<n1 or
+i+j>n2.
+#
+!bandmult
+bandmult(A,B) computes A.B and is a bit faster for sparse 
+matrices A and B.
+
+See: .
+#
+!.
+A.B: Matrix multiplcation.
+
+See: bandmult
+#
+!bar,barcolor,barstyle
+bar([xl,yu,w,h]) : draws a rectangle with upper left
+coordinates (xl,yu), and lower right coordinates (xl+w,yu+h)
+in screen coordinates.
+barcolor(n) : sets the color index (See: color) for the bar.
+barstyle(string) : sets the style for the bar. Available
+are "#" for solid bars, "#O" for solid filled bars, "O"
+for rectangles, "\", "/" "\/" for hatched bars.
+
+See: plotbar
+#
+!bin,fak,logbin,logfak
+bin(n,m) : computes the binomial coeeficient "m chosen from n".
+logbin(n,m) : computes the logarithm of the above (for large n,m)
+fak(n) : computes the faculty n! of n.
+logfak(n) : computes the logarithm of the above (for large n)
+#
+!ceil,floor,round,mod
+ceil(x) : returns the interger above x.
+floor(x) : returns the integer below x.
+round(x,n) : returns x rounded to n digits.
+mod(x,y) : returns x modulo y.
+#
+!changedir,cd,path,load
+changedir(string) : is a function changing the direcory and
+returning the new directory. If the string is empty, it
+returns the active directory.
+cd string : is a command doing the same.
+path(string) : contains a path to look for EULER files. The
+load command will look through this path and choose the
+first available file. The path items must be separated by
+a semicolon. An example is ".;myspecial".
+load filename : loads the file. The name may be included in
+double quotes, or in round brackets (if it is a string
+expression.
+#
+!charpoly
+charpoly(A) : returns the characteristic polynomial of A.
+#
+!normaldis,chidis,fdis,tdis,invnormaldis,invtdis
+normaldis(x) : returns the probability that a normally
+distributed (mean 0, st.dev. 1) is less than x.
+invnormaldis(p) : is the inverse.
+chidis(x,n) : chi-distribution with n degrees of freedom.
+tdis(x,n) : Student's t-distribution with n degrees of
+freedom.
+invtdis(p,n) : the inverse.
+fdis(x,n,m) : f-distribution with n and m degrees of freedom.
+#
+!open,close,eof
+open(filename,type) : opens a file with the specified name
+for reading (type is "r") or writing (type is "w"). Binary
+mode can be achieved with "rb" or "wb".
+close() : closes the opened file.
+eof() : returns 1, if the file is read completely.
+
+See: putchar, putword, putlongword, getchar, getword, getlongword
+getstring, write, getvector
+#
+!putchar,putword,putlongword,getchar,getword,getlongword,getuchar,getuword,getulongword,putuchar,putuword,putulong
+putchar(c) : puts a character to a previous opened file, c
+is the ascii code of the character.
+putuchar(c) put c as unsigned charactar.
+putword(x) : puts x a s two bytes to the file.
+putuword(x) : put x as unsigned word.
+putlongword(x) : puts x as four bytes to the file. The format
+is the internal format.
+putulongword(x) : the unsigned thing.
+getchar() : reads one character from the file.
+getuchar() : for unsigned characters.
+getchar(n) : reads n characters, and returns in a 1xn vector.
+getword() : reads a word.
+getuword() : reads an unsigned word.
+getword(n) : reads n words.
+getlongword() : reads a long word.
+getulongword() : reads an unsigned long word.
+getlongword(n) : reads n long words.
+
+See: write, getstring, open, close
+#
+!getstring,write
+getstring(n) : reads a string of length from an opened file.
+write(string) : writes a string to the file.
+
+See: open, close
+#
+!getvector
+getvector(n) : reads n numbers in redable form from an opened
+file. The function returns a vector and the actual number
+of read numbers. The numbers may be separated by any non-digit
+characters.
+
+See: open, close
+#
+!cols,rows,size
+cols(A) : returns the number of columns of a matrix A.
+rows(A) : returns the number of rows of A.
+size(A,B,C,...) : returns the maximal size of A,B,C,...
+This is used to get a matrix, which can hold the result
+of any operation between A,B,C,...
+#
+!complex,re,im
+re(x) : returns the real part of x.
+im(x) : returns the imaginary part of x.
+complex(x) : makes the real argument x complex.
+
+See: conj, arg
+#
+!conj,arg
+Function of a complex variable. Works for a real argument.
+#
+!I,E,Pi,pi
+I : is the imaginary unit.
+E : is exp(1).
+Pi : is pi().
+#
+!contour
+contour(A,v) : draws contour lines of a(i,j) at heights v(k).
+a(i,j) is interpreted as the values of a function f at (i,j).
+Note, that i and j are always scaled to a square grid, unless
+you specify a non-square plot window. The function does not
+set the plot coordinates, so they must be set manually to
+overlay the contours with xplot coordinates.
+
+See: density
+#
+!count
+count(v,n) : counts the numbers of v(i) in the intervals (0,1)
+to (n-1,n). Returns a 1xn vector.
+#
+!ctext,rtext,text,textheight,textwidth,textcolor
+text(string,[n,m]) : draws the string to screen coordinates n,m
+aligned at the upper left edge. The plot is not erased.
+ctext(string,[n,m]) : draws the string horizontally centered.
+rtext(string,[n,m]) : draws it right aligned.
+textheight() : returns the maximal text height.
+textwidth() : returns the average text character width.
+textcolor(n) : sets the color index for text (0..15).
+
+See: label
+#
+!prod,sum,cumprod,cumsum
+prod(A) : returns a matrix with one column containing the 
+products of rows of A.
+sum(A) : returns a matrix containing the sums of rows of A.
+cumprod(A) : a matrix with the same size as A and the cumulative
+products of the rows of A.
+cumsum(A) : the same for the cumulative sum.
+#
+!density
+density(A) : represents the elements a(i,j) by darker and lighter
+values in a square grid seen from above. You should scale the matrix
+to [0,1) since only the fractional part is used.
+
+See: contour
+#
+!diag,setdiag
+diag(A,k) : returns the k-th diagonal of A.
+diag([n,m],k,v) : returns a nxm matrix with the vector (or scalar)
+v on its k-th diagonal.
+setdiag(A,k,x) : returns A, but sets the k-th diagonal of A to x.
+#
+!diameter,middle,left,right
+diameter,middle,left,right
+Functions for intervals. Works for real numbers too.
+#
+!interp,interpval,polytrans,interpolation
+Interpolation with polynomials.
+interp(x,y) : returns the divided differences of the polynomial
+interpolating y(i) in x(i).
+interpval(x,d,t) : evaluates the interpolation in x(i) (with
+divided differences d) in the points t.
+polytrans(x,d) : transfer the divided differences into a polynomial.
+
+See: polycons
+#
+!dll
+dll(name,function,n) : loads the function f (a string)
+from the dll with the name, assuming it has n arguments.
+
+Read DLL.DOC for more information.
+#
+!dup,_,|
+dup(v,n) : duplicates the vector v n times vertically or horizontally
+depending, if it is a 1xn or an nx1 vector.
+v_w : sets v atop of w.
+v|w : sets v aside of w.
+#
+!epsilon,setepsilon,localepsilon
+epsilon() : returns the internal epsilon used for various purposes,
+like solving equations and the ~= operator.
+setepsilon(x) : sets the internal epsilon.
+localepsilon() : sets the epsilon locally for a function.
+#
+!eval
+eval("f",v,...) : calls the function f with parameters v,...
+This is obsolete, because f(v,...) will work for strings f.
+
+See: evaluate
+#
+!evaluate,interpret,error,errorlevel
+evaluate(expression) : evaluates the expression string.
+interpret(expression) : does the same, but will return the string
+"error", if the expression contains an error.
+error(string) : issues an error and prints the message string.
+errorlevel(string) : evaluate the string and return 0 and the result,
+if no error, else the error number.
+
+See: eval
+#
+!expand
+expand(x,d) : returns the interval [x-d,x+d], if x is real,
+and an interval of d times the diameter of x, if x is an
+interval.
+#
+!format,goodformat,expformat,fixedformat,iformat,fracformat
+format([n,m]) : sets the format for printing numbers to
+width m and fixed decimal places m.
+fixedformat([n,m]) : the same.
+expformat([n,m]) : uses the exponential format.
+goodformat([n,m]) : uses format or expformat, whatever look nicer.
+fracformat([n,eps]) : sets output as fractions with width n and
+an accuracy of eps. The above formats deactivate this.
+iformat(n) : sets the total length for interval output.
+
+Used by: longformat, shortformat
+#
+!extrema,max,min
+extrema(A) : returns a matrix with four columns containing the
+miminal value, its position, the maximal value and its position
+of each row of A.
+max(A) : returns the maxima of the columns of A.
+min(A) : returns the minima of the columns of A.
+max(x,y) : returns the bigger of x and y.
+min(x,y) : returns the lesser of x and y.
+#
+!fft,ifft
+fft(v) : returns the Fast Fourier Transform of v. v must have one
+row and should have a number of columns with many low prime
+factors, like 2^n. This is the same as evaluating a polynomial
+with coeffcients v in the 2^n-the roots of unity.
+ifft(v) : is the inverse operation.
+fft(V) : if V is a matrix, this will return the two dimentional FFT
+of V. In this case, the number columns and rows must be a power of 2.
+ifft(V) : is the inverse operation.
+#
+!find
+find(v,x) : finds x in the sorted vector v. Returns the index
+i such that v(i) <= x < v(i+1). x may be a vector as usual.
+#
+!flipx,flipy,shiftleft,shiftright,rotleft,rotright
+flipx(A) : mirrors the matrix A vertically.
+flipy(A) : mirrors the matrix A horizontally.
+rotleft(A) : rotates the rows of A to the left (last column copied to 
+first column).
+rotright(A) : The same to the right.
+shiftleft(A),shiftright(A) : Similar to rot, but sets the right (left)
+element to 0.
+#
+!frame
+frame() : Draws the frame around the plot.
+See: framecolor
+#
+!free,hexdump,memorydump,list,listvar,forget
+free() : returns the free space on the stack.
+list : lists all built-in functions, commands and all functions.
+listvar : lists all variables, their types and sizes.
+clear var,... : removes the variables.
+forget function,... : removes the functions.
+memorydump : shows all elements on the stack.
+hexdump var : dumps the variable or uder defined function var 
+in hexadecimal form.
+#
+!hold,holding,clg
+hold : toggles holding of the graphics on or off. This applies
+to the fact that plot clears the graphics normally.
+hold on : toggles holding on.
+hold off : toggles holding off.
+holding() : returns the holding state.
+holding(f) : sets the holding state. f should be 1 or 0. Returns
+the old state
+clg : clears the graphics screen.
+
+See: plot, cls
+#
+!huecolor,huegrid,solidhue
+solidhue(x,y,z,h) : works like solid basically, but colors the plot
+with a shading 0<=h<1.
+huegrid(f) : turns the grid on or off. It returns the previous state.
+huecolor(n) : sets the color index (See: color) for the shading.
+
+See: solid
+#
+!input,lineinput
+input(prompt) : prompts the user for an expression. Returns the value
+of this expression. In case of an error, the prompt will be repeated.
+lineinput(prompt) : prompts for a string, which is not interpreted.
+
+See: interpret
+#
+!intersects
+intersects(a,b) : tests two intervals on non-empty intersection
+
+See: interval,&&,||
+#
+!help
+help topic : Displays help for a user function, a builtin function and
+other Euler commands, programming keywords and brackets.
+
+More help is in the documentation, which comes in HTML format.
+Moreover, the demos and the included Euler files provide useful
+information and examples. You can also use the list command to get a
+list of user functions. Finally, you can press insert for command
+completion in the input line.
+
+If you need very specific help, please visit my homepage at
+http://www.rene-grothmann.de/
+or the Unix homepage at
+http://euler.sourceforge.net
+#
+!interval,~
+interval(a,b) : returns the interval [a,b].
+~a,b~ : does the same.
+~a~ : returns an interval [a-eps,a+eps].
+
+See: middle,left,right,expand,intersects,&&,||
+#
+!&&,||
+a&&b : returns a and-connected with b in case of reals. I.e., the
+result will be 1, if both a and b are non-zeros.
+I&&J : returns the interval intersection of I and J.
+a||b : returns a or-connected with b in case of reals. I.e., the
+result will be 1, if both a and b are non-zeros.
+I||J : returns the interval union of I and J.
+#
+!iscomplex,isfunction,isinterval,isreal,typeof
+isreal(x) : tests, if x is real.
+iscomplex(x) : tests, if x is complex.
+isinterval(x) : tests, if x is an interval scalar or matrix.
+isfunction(x) : tests, if x is a function.
+typeof(var) : returns the type of the variable (internal enum).
+#
+!jacobi
+jacobi(A) : computes the eigenvalues of a symmetric real matrix A,
+using the Jacobi procedure.
+
+See: charpoly, eigenvalues
+#
+!keepsquare
+keepsquare(f) : sets a flag to determine the autoscaling. If the
+flag is on, autoscaling will keep the y coordinates the same range
+as the x coordinates.
+
+See: plot
+#
+!plot,linestyle,setplot,linewidth,color
+plot(x,y) : connects the points x(i),y(i) with lines. The coordinates
+are plot coordinates, which are set before the plot from the range of
+x and y, unless setplot has not been called before, or scaling is
+turned off. y can contain more rows as x. This will plot x,y[r]
+for all rows of y simultanuously.
+plot() : returns the x and y plot range (1x4 vector [x1,x2,y1,y2]).
+setplot([x1,x2,y1,y2]) : sets the plot coordinates.
+scaling(f) : sets the scaling flag. Returns the previous value. 
+linestyle(string) : sets the linestyle to "-" solid, "--" dashed,
+"." dotted, "i" white, or "->" arrowed. Returns the previous value.
+linewidth(n) : Sets the width of the line.
+color(n) : Sets the color index for the plot (0..15). Returns
+the old value.
+
+See: xplot, xgrid, ygrid, fplot, cplot, pixel, plotarea, clg, setcolor
+#
+!\,lu,lusolve
+\ : A\b solves the linear system A.x=b.
+lu(A) : returns an LU-decomposition of A. In fact, it returns
+{B,r,c,det}. B is the result of the Gauss algorithm with the
+factors written below the diagonal, r is the index re-arrangement
+of the rows of A, that was necessary, c is 1 for each linear
+independet column and det is the determinant of A. To get
+a real LU-decomposition for a non-singular square A, take the
+lower part of B (plus the identity-matrix) as L and the upper
+part as U. Then A[r] is L.U, i.e.
+A[r] is (band(B,-n,-1)+id(n)).band(B,0,n)
+To solve A.x=b for an x quickly, use lusolve(A[r],b[r]).
+#
+!mark,markersize,markerstyle
+mark(x,y) : works like plot, but does not connect the points.
+markerstyle(string) : sets the style for the markers. Style
+is "<>", "[]", ".", "+" or "*".
+markersize(n) : sets the markersize in screen coordinates
+(0..1024).
+
+See: plot
+#
+!zeros,ones,matrix
+matrix([n,m],x) : returns an nxm matrix set to x.
+zeros([n,m]) : with x=0.
+ones([n,m]) : with x=1.
+[n,m] can be taken from the size of another matrix, as in
+B=zeros(size(A)).
+
+See: size
+#
+!mesh,meshbar,meshfactor
+mesh(A) : plots a simple 3D plot of a(i,j) over a grid of points
+(i,j).
+meshbar(A) : does something similar. However, the plot consists
+of columns of height a(i,j). Works for 1xn vectors too.
+meshfactor(f) : dumps the mesh with the factor (0 to 1) in height.
+
+See: solid, wired
+#
+!solid,wire,fillcolor,project,view,twosides
+solid(x,y,z) : plots a solid 3D plots of points x(i,j), y(i,j),
+z(i,j). I.e., a retangular grid (x,y) is mapped to these points.
+The two sided may have different colors, unless the twosides
+flag is off. Take care that the mapping is one-to-one and the
+plot does not self-intersect.
+wire(x,y,z) : works like solid, but does not fill the plot.
+fillcolor([n,m]) : sets the fill colors for both sides. n,m
+are color indices (0..15).
+wirecolor(n) : sets the color of the wires.
+project(x,y,z) : projects the coordinates to the screen, just
+in a solid or wired plot. Returns {vx,vy}.
+solid(x,y,z,i) : Works like solid(x,y,z), but does not connect
+the i-th row to the i+1-th row. This produces disconnected
+solid plots.
+view([f,d,a,b]) : sets the viewpoint of the camera. f is the
+zooom factor, d the camera distance to 0, a the angle from the
+negative x axis and b the angle in height (measured in radial
+coordinates).
+twosides(f) : Turns the different colors for solid plots on or
+off.
+
+See: solidhue
+#
+!setcolor,resetcolors
+setcolor(i,red,green,blue) : sets the color number i to this
+red, green, blue values
+resetcolors() : resets all colors to the user defined values
+#
+!searchfile,dir,cd,remove
+dir pattern : Lists a directory of the files matching the
+pattern.
+searchfile(pattern) : Searches for the file pattern.
+searchfile() : Searches the next file with this pattern.
+remove(file) : Removes a file
+
+See: cd
+#
+!mouse
+mouse() : Waits until the user has clicked into the plot window.
+Returns the x,y-coordinates in plot coordinates. If the user
+pressed escape, the function will return 0, not an 1x2 vector.
+
+See: setplotm
+#
+!name
+name(var) : returns the name of the variable var.
+
+See: varwrite
+#
+!pixel
+pixel() : returns the width and height of a screen pixel in plot
+coordinates. This helps avoiding unnecessary computations.
+#
+!playwave
+playwave(string) : On some systems, it is possible to play a wave
+file with this function.
+#
+!plotarea
+plotarea(x,y) : works like plot, but is only used to determine and
+set the plot coordinates.
+#
+!polyadd,polycons,polydiv,polymult,polytrunc,polyval
+polynomials are stored in vectors with the constant coefficient
+first.
+polyval(p,x) : evaluates p at x.
+polycons(v) : returns a polynomial with zeros v(i).
+polydiv(p,q) : returns {h,r}, where h is the result of a polynomial
+p/q and r the remainder.
+polymult(p,q) : returns p*q.
+polyadd(p,q) : return p+q.
+polytrunc(p) : truncates zero coefficients.
+
+See: polysolve, polyroot
+#
+!polysolve,polyroot
+polysolve(p) : computes all roots of p.
+polyroot(p,x) : computes the root near x.
+
+See: polyval, polycons
+#
+!printf
+printf(format,x) : prints x in the format, where the format string
+is a C type format, as in printf("x=%15.10f",x).
+#
+!setkey
+setkey(n,text) : sets the function key n to the text.
+#
+!simplex
+This is a simplex algorithm. It takes three parameters:
+simplex(A,b,c). The return value is {x,r}, where x minimizes
+c'.x under all x>=0 with A.x<=b. If r is 0, the minimum is found.
+If r is 1 the problem is unbounded, and if r is -1 it is
+infeasable.
+#
+!resize
+resize(A,[n,m]) : resizes A to an nxm matrix.
+#
+!time,wait
+time() : returns the time in seconds.
+wait(n) : waits for n seconds.
+#
+!repeat,break,end,for,loop,#,index
+repeat; ...; end;
+This is an eternal loop. It may be ended with return or break
+(usually in an if statement).
+for i=n to m; ...; end;
+for i=n to m step i; ...; end;
+This is the for loop.
+loop 1 to n; ...; end;
+A faster loop. The loop index may be called with index() or #.
+#
+!if,elseif,endif,else
+if condition; ...; endif;
+if condition; ...; else; ...; endif;
+if condition; ...; elseif condition; ...; endif;
+if condition; ...; elseif condition; ...; else; ...; endif;
+These are the three forms of the if statement.
+#
+!function,endfunction,return
+function name (parameter names)
+...
+return ...
+...
+endfunction
+This is the general form of a function definition. There may be more
+than one return statement.
+See: {, }, parameter
+#
+!comment,endcomment
+comment
+....
+endcomment
+Brackets for a comment in a file. The load command will show the
+comment, unless this is turned off.
+comments on : turns comments on.
+connents off : turns comments off.
+#
+!dump
+dump "filename" : Turns dumping to the file on. All output will
+appear in the file.
+dump : turns it off.
+#
+!exec
+exec "command" : executes an external system command. The command
+may also have parameters, like exec "explorer c:\"
+#
+!notebook,prompt
+notebook "filename" : allows to load notebooks on non-notebook 
+interfaces. The user has to press return before any command,
+unless this is turned off.
+prompt on : turns the prompting on.
+prompt off : turns the prompting off.
+#
+!{,},multiple
+return {a,b,c} : returns multiple values from a function.
+{a,b,c}=f(...) : assigns these values to variables.
+See: =
+#
+!=,assignment
+variable=value : Is the general assignment statement. The variable may
+be a variable name or a submatrix of a matrix.
+
+See: submatrix
+#
+!submatrix,[,]
+A[i,j] : defines a single element of a matrix or a submatrix (if i or
+j are vectors of integers). If an index in i or j is out of range,
+it is neglected. Thus A[i,j] may be an empty matrix (0x0 size).
+A[i] : defines the i-th element of a 1xn vector or the i-th row of a
+matrix with more than one row.
+A[:,j] : The : denotes all rows here. This is the j-th column of A.
+A[i,:] : The i-th row of A.
+
+See: =
+#
+!parameter
+Parameters of functions are passed by reference, unless they are
+submatrices. Be careful not to change the value of a parameter!
+If more parameters are passed than in the definition of the
+function, the function name these parameters argX, where X is
+the position number of the parameter.
+If the parameter has a default value in the function definition as in
+f(x,n=3), this value is used, unless two arguments are passed to f.
+If a paramter is missing as in h(x,,4), the default value for the
+second parameter is taken.
+If the call contains a ; instead of the , to separate parameters
+as in f(x,y;4,5), parameters 4,5 are extra parameters, which may
+be passed from f to other functions using the args() function.
+
+See: args, argn
+#
+!(,)
+Round brackets are used to group operations as in (3+4)*5, to
+call functions as in sin(pi), or may be used instead of v[5],
+if there is no function with the name v (else v(5) is a function
+call with parameter 5).
+#
+!:
+i:n : returns the vector [i,(i+1),...,n] for integers i,n.
+x1:d:x2 : returns the vector [x1,x1+d,...,x1+kd], if d is positive,
+where kn is maximal such that x1+kn<=x2. If d is negative, we get
+the vector [x1,x1+d,...,x1+kd], where k is maximal such that
+x1+kd>=x1. For the comparison with the bound, the internal
+epsilon is used.
+See: epsilon
+#
+!gamma,gammaln,betai
+gammaln(x) : return the logarithm of the gamma function at x.
+gamma(x) : return the gamma function at x.
+gamma(x,a) : returns the incomplete gamma function. This function
+is not scaled between 0 and 1 (divide by gamma(a) to do scale it).
+betai1(x,a,b) : returns the incomplete beta function for non-matrix
+arguments.
+Used by: beta,betai
+
+See: fak
+#
+!map
+map("f",X,Y,...) maps the function f to the elements of X,Y.
+If X,Y,... need not have the same sizes. But there may be
+only a single column number different from 1, which will be
+the column number of the results (same with rows).
+#
+!nelder,brent
+brent("f",a,d,eps) returns a minimum close to a. The function
+goes away from a with step size d until it finds a good interval
+to start a fast iteration. Additional parameters are passed to f.
+nelder("f",v,d,eps) for multidimenional functions f(v), accepting
+1xn vectors. d is the initial simplex size.
+eps is the final accuracy.
+
+Used by: neldermin, brentmin
+#
+!runge1,runge2
+runge1("f",a,b,n,y) does n steps of the Runge-Kutta method to
+solve y'=f(x,y). y may be a 1xn vector or a real (the initial
+value), (a,b) is the x-interval.
+runge2("f",a,b,y,eps,step) does the same with adaptive step sizes.
+The initial size is step, and the accuracy is eps.
+
+Used by; runge,adaptiverunge
+#
+!besselj,bessely,besseli,besselk,besselallr,besselmodallr
+besselj(x,a) the BesselJ function of the first kind at x
+with order a.
+bessely(x,a) the Bessel function of the second kind.
+besseli(x,a) the modified Bessel function of the first kind.
+besselk(x,a) the modified Bessel function of the second kind.
+besselallr(x,a) returns besselj(x,a), bessely(x,a) and
+their derivatives simultanously (works only for real arguments).
+besselmodallr(x,a) the same for the modified Bessel functions.
+#
+!toeplitz,toeplitzsolve
+toeplitz(v) returns the Toeplitz matrix T to v. v must be a 1xn
+vector with odd n=2m+1, i.e. T(i,j)=v(m+i-1-j)
+toeplitzsolve(v,b) solves T\b fast, where T is the Toeplitz
+matrix to v.
+#
+!shuffle
+shuffle(v) shuffles the 1xn vector v randomly.
+#
+!<,>,<=,>=,<>,~=
+a<b etc. are the usual comparison operators. They return a real 
+matrix of the same size as a,b with 0,1 entries.
+a~=b compares for equality taking into account the internal
+epsilon.
+#
+!postscript,pswindow
+postscript "file.ps" dumps the graphics to the file in postscript
+format. To set the size of the output in cm, use pswindow([w,h]).
+w=h=15 is the default.
+#
+!output
+output on,off sets the command output.
+#
+!svd
+{U,v,W}=svd(A) : computes the singular value decomposition of a
+real matrix A. U,V are orthogonal and
+A=U.diag(size(V),0,v).W'
+
+See: svdsolve,fit
+#
+!yacas,yacasclear
+yacas(expr) : lets Yacas evaluate the expression. It returns the
+result string or the Yacas error message.
+yacasclear() : starts a new Yacas session.
+
+See: converty,y2matrix,y2vector,ynewton
+#
+!useglobal
+useglobal : Allows reference to global variables in functions.
+#
+!random,normal,fastrandom,fastnormal,seed
+random([n,m]),random(n,m) : Create a matrix of equally
+distributed random numbers in [0,1].
+random([n,m]),random(n,m) : Create a matrix of 0,1-normal
+distributed random numbers.
+fastrandom,fastnormal : faster, but less reliable random numbers.
+seed : set the starting random number
+#
+!sort
+sort(v) : Sorts a vector. Returns the sorted vector and the new
+indices of the elements {w,i} = sort(v). If v is a matrix, it
+sorts all rows and returns two matrices of results.
+#
+!@
+@"D(x) x^x" : Evaluates "D(x) x^x" with Yacas and returns the 
+evaluated string. This is done at compile time in functions. It
+cannot be used in normal execution.

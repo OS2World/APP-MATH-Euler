@@ -1,0 +1,43 @@
+% Let us solve a boundary value problem. The differential equation
+% is y''=x*y. We rewrite that in two dimensions and get y1'=y2,
+% y2'=x*y1 (y1=y). We want the boundary values y(0)=1, y(1)=1.
+% 
+% We plug this into a function.
+>function f(x,y)
+$return [y[2],x*y[1]];
+$endfunction
+% We then use the Heun method to solve this equation.
+>help heun
+function heun (ffunction,t,y0)
+## y=heun("f",x,y0;...) solves the differential equation y'=f(x,y).
+## f(x,y;...) must be a function.
+## y0 is the starting value.
+## ffunction may be an expression in x and y.
+% So the method accepts the function f(x,y), the step values x=0..1
+% and the intial condition. We choose y(0)=1, y'(0)=1.
+% 
+% Press escape to see the solution.
+>t=0:0.05:1; y=heun("f",t,[1,0]); xplot(y[1]); y[1,cols(y)]
+       1.1723 
+% An alternative method is the adaptive Runge method. Is is far
+% more accurate. We do not need intermediate steps here.
+>y=adaptiverunge("f",[0,1],[1,0]); y[1,2]
+       1.1723 
+% The next step is to set up a function, which has a zero in the
+% solution. We do that by taking y'(0) as a parameter and y(1)-1
+% as the function value.
+>function g(a)
+$t=0:0.001:1;
+$y=adaptiverunge("f",[0,1],[1,a]);
+$return y[1,2]-1;
+$endfunction
+% We know already g(0)>0, and we see g(-2)<0.
+>g(0), g(-2),
+       0.1723 
+     -1.99838 
+% Thus the secant method yields the desired value for y'(0).
+>a=secant("g",-2,2)
+    -0.158752 
+% A final plot of the answer.
+>t=0:0.05:1; y=adaptiverunge("f",t,[1,a]); xplot(t,y[1]);
+>

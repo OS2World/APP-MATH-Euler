@@ -1,0 +1,41 @@
+.TH Euler 1 "" ""
+.SH NAME
+xeuler - math program for XWindows
+.SH SYNTAX
+xeuler
+[-f Fontname] [-g Fontname] [-s KB] [-geom Geometry] [-d Display]
+ [-0..15 Colorname] [-b] filename ...
+.SH DESCRIPTION
+Euler is a numerical math program. it can handle real and complex
+numbers, vectors and matrices, can produce 2D/3D graphics and has a
+built in programming language.
+.SH OPTIONS
+xeuler accepts the following command line options
+.TP 8
+-f Font|-g Font
+Sets the font for the text window and the text font for the graphics
+window.
+.TP 8
+-s Number
+Sets the maximal size of the Euler stack in KB.
+.TP 8
+-geom Geometry
+The window geometry in standard form (e.g. 600x600+0+0)
+.TP 8
+-disp Display
+Chooses the XWindow display.
+.TP 8
+-0 Color|-1 Colorname ...
+Sets color number 0,1,...
+.TP 8
+-b
+Chooses black and white output.
+.SH EXAMPLE
+e -geom 500x500+0+0 -disp unix:0 -f 8x13 -2 green test.e
+.SH OPERATION
+.PP
+.SH Documentation
+Read the manual euler.doc for more documentation about the Euler
+language, the text window and the keyboard shortcuts.
+.PP
+You may also wish to run the demo. Type >load "demo" to do this.

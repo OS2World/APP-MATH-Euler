@@ -1,0 +1,22 @@
+This is EULER, Version 1.42.
+
+Type help(Return) for help.
+Enter command: (8388608 Bytes free.)
+
+Utilities
+framed views
+Exact solver
+Remez algorithm
+Steffenson iteration
+Gauss integration
+Histogram plots
+Interval Solvers
+Broyden algorithm
+Minimization
+Nicer 3D plots
+Single Value Decomposition Tools
+>load fresnel;clg;
+>animatefresnel;
+>drawfresnel;
+>
+>

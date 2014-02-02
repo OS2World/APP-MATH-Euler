@@ -1,0 +1,11 @@
+% This plots some Anaglyphs.
+% 
+% You need a red-green glass to view these 3D pictures.
+>x=-1:0.1:1; y=x';
+>view(4,2.5,0.3,0.3);
+>anaglyphwire(x,y,x^2*y);
+>view(5,2.5,0.3,0.3);
+>anaglyphwire(x,y,x^2+y^3);
+>view(4,2.5,0.3,0.3);
+>anaglyphwire(x,y,2*exp(-x^2-y^2)-1);
+>

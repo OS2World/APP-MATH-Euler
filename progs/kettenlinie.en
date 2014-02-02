@@ -1,0 +1,58 @@
+% Wir wollen die Kettenlinie bestimmen, und zwar durch eine Messung
+% und durch die Lösung einer Differentialgleichung. Außerdem soll
+% die Messung mit dem theoretisch erwarteten Ergebnis verglichen
+% werden.
+% 
+% Zuerst lesen wir die Daten einer gemessene Kette ein. Die Kette
+% wurde vor den Bildschirm geklebt und mit der Funktion mouse()
+% wurden die Bildpunkte abgenommen.
+>P=getmatrix(24,2,"kette.dat")';
+% Wir geben die Messpunkte und die verbundene Kurve aus.
+>xplot(P[1],P[2]);
+>style("m[]"); hold on; mark(P[1],P[2]); hold off; wait();
+% Versuchen wir zunächst, eine Parabel mit diesen Punkten in Übereinstimmung
+% zu bringen.
+>p=polyfit(P[1],P[2],2);
+>y=polyval(p,P[1]);
+>hold on; color(3); plot(P[1],y); color(1); hold off; wait();
+% Die Zeichnung zeigt, daß die Übereinstimmung nicht groß ist.
+% 
+% Versuchen wir es mit einer physikalischen Überlegung und einer
+% aus kleinen Teilen zusammengesetzten Kette. Dazu dient die Überlegung,
+% daß die y-Kompente der Zugkraft in der Kette im gleichen Verhältnis
+% mit der Kettenlänge zunimmt.
+>ky=-1:0.01:1; kx=ones(size(ky));
+% Die Kette geht in Richtung der Kraft und setzt sich aus lauter
+% kleinen gleich langen Teilstücken zusammen. Sie hat die Gesamtlänge
+% 1.
+>ds=sqrt(kx*kx+ky*ky)*100;
+>X=0|cumsum(kx/ds); Y=0|cumsum(ky/ds);
+% Wir normieren noch so, daß die Kette im Ursprung am tiefsten
+% hängt.
+>X=X-(X[1]+X[cols(X)])/2; Y=Y-min(Y);
+>xplot(X,Y); wait();
+% Nun bestimmen wir eine cosh-Kurve, die die obige Kurve interpoliert,
+% und zeichnen den Fehler.
+>a=bisect("x*cosh(X[1]/x)-x-Y[1]",1,1000)
+>y1=a*cosh(X/a)-a;
+>max(abs(Y-y1))
+% Wie man sieht, ist der Fehler verschwindend gering.
+% 
+% Versuchen wir nun, eine Funktion vom Typ a*cosh((x-b)/c)-d an
+% die gemessene Funktion anzupassen. Der Faktor a/c ist der Verzerrungsfaktor
+% des Bildschirms bei der Messung.
+% 
+% Zunächst wird die Funktion jedoch neu gezeichnet.
+>xplot(P[1],P[2]);
+>style("m[]"); hold on; mark(P[1],P[2]); hold off; wait();
+% Anschließend programmiert man die zu minimierende Funktion.
+>function f(x)
+$global P;
+$y=x[1]*cosh((P[1]-x[2])/x[3])-x[4];
+$return sum((y-P[2])^2);
+$endfunction
+% Das Minimum wird mit der Methode von Nelder berechnet.
+>x=neldermin("f",[1,0,1,1],eps=0.0001);
+% Dies ergibt eine zufriedenstellende Übereinstimmung.
+>hold on; color(3); plot(P[1],x[1]*cosh((P[1]-x[2])/x[3])-x[4]); color(1); hold off; wait();
+>

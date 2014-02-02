@@ -1,0 +1,171 @@
+
+DLL.DOC
+
+
+How to extend EULER with own functions?
+
+This document describes how you are able to write built-in functions,
+which reside in a DLL (dynamic linkage library). Such an extension my be
+necessary, if the function cannot be written in the EULER programming
+language or would be too inefficient.
+
+You need a C++ compiler that can produce Windows 95 GUI DLLs. The
+following description applies to Borland C++ Version 4.52. It should not
+be difficult to use any other compiler for Windows 95.
+
+You DLL must export one function or several functions. You can use this
+function in EULER with its exported name. To load the DLL, write e.g.
+    >dll("test.dll","f",2)
+This will load the DLL test.dll, and get the address of a function f,
+which takes two parameters. You may then call this function with e.g.
+    >z=f(x,y)
+just like any other EULER function. DLL function may take between 0 and
+15 parameters. They always have a fixed parameter number, unlike user
+defined EULER functionsand some built-in functions, which may take a
+veriable number of parameters. You may define more than one function
+"f", it their parameter number is different. DLL functions may issue an
+error.
+
+To write the DLL, generate a DLL project, which makes a Windows 95 GUI
+DLL (maybe any other Windows 32 model is sufficient, but it must be a 32
+bit application). Link DLLDEF.CPP to your program and your own file,
+e.g. MINE.CPP. An example of this file is the following, which I
+commented for you
+
+#include "dlldef.h"
+#include <string.h> // We need strcpy for the error message
+
+extern "C" char * _export fold (header * p[], int np,
+	char *newram, char *ramend)
+// Your function must be of this type !!!
+{   if (np!=2) // Check number of parameters
+	{	strcpy(newram,"Need 2 Parameters");
+		return newram; // Return ERROR
+	}
+	if (p[0]->type!=s_matrix || p[1]->type!=s_matrix)
+		// Check the type of parameters
+	{	strcpy(newram,"Need 2 vectors");
+		return newram;
+	}
+	int n=dimsof(p[0])->c;
+		// dimsof is a macro which lets you access the
+		// dimension structure of a matrix
+	if (dimsof(p[0])->r!=1 || dimsof(p[1])->r!=1 ||
+		dimsof(p[1])->c!=n)
+		// We want two 1xn vectors !
+	{	strcpy(newram,"Need to vectors of same size");
+		return newram;
+	}
+	header *hd=new_matrix(1,n,newram,ramend);
+		// get place for the result
+	if (!hd) // Better to check for overflow !!!
+	{	strcpy(newram,"Out of memory");
+		return newram;
+	}
+	// Do the computation :
+	int i,j,k;
+	double x;
+	for (i=0; i<n; i++)
+	{   x=0; k=i;
+		for (j=0; j<n; j++)
+		{	x+=matrixof(p[0])[k]*matrixof(p[1])[j];
+				// matrixof is another macro to access the double
+				// numbers of a matrix
+			k++; if (k>=n) k=0;
+		}
+		matrixof(hd)[i]=x;
+	}
+	new_real(2.3,newram,ramend);
+		// For practice, we return two values, a matrix and a real
+	return newram;
+		// new_... increases newram !
+}
+
+As you see, there is a lot of error checking to be done. This is typical
+for an interpreted language. By the way, the example produces the cyclic
+folding of two vectors defined as
+   r[i]=sum_j v[i]*w[i+j modulo n]
+
+The parameters of your functions are an array of pointers to headers,
+the size of this array and the bounds for the place, where you can return
+your result. The return value of your function marks the end of your
+result, unless it is equal to the original newram value. In this case,
+you must copy an error string to newram, which will be shown to the user
+of your function.
+
+What is a header? Each EULER variable has a header, which defines its
+size, its name and its type. After the header, there may be a dimension
+information and after that you will see an array of double numbers,
+which contain the data. The types of interest are s_real, s_complex,
+s_interval, s_matrix, s_cmatrix, s_imatrix and s_string. Only s_matrix,
+s_cmatrix and s_imatrix have a dimension information, wich is a
+structure with tow integers r and c (rows and columns). The s_string
+type has the string after the header. You do not have to know about the
+type constants, for you may use the new_... functions defined in
+DLLDEF.H:
+
+header *make_header (int type, int size, char * &newram,
+	char *ramend);
+
+header *new_string (char *s,
+	char * &newram, char *ramend);
+
+header *new_real (double x,
+	char * &newram, char *ramend);
+
+header *new_complex (double x, double y,
+	char * &newram, char *ramend);
+
+header *new_interval (double a, double b,
+	char * &newram, char *ramend);
+
+header *new_matrix (int rows, int columns,
+	char * &newram, char *ramend);
+
+header *new_cmatrix (int rows, int columns,
+	char * &newram, char *ramend);
+
+header *new_imatrix (int rows, int columns,
+	char * &newram, char *ramend);
+
+These function allow you to build place for your results at newram. They
+do increase newram automatically. Furthermore, you do not have to enter
+anything after you called new_... with the exception of the matrix data.
+
+To access the dimensions of a matrix, a string or the data of a matrix,
+use the following macros, which all accept headers as parameters:
+
+#define stringof(hd) ((char *)((hd)+1))
+// returns the address of the string (char *)
+#define realof(hd) ((double *)((hd)+1))
+// returns the address of the double number, the real part of a complex
+// number or the lower bound of an interval.
+#define matrixof(hd) ((double *)((char *)((hd)+1)+sizeof(dims)))
+// return the address of the first double number in a matrix
+// resp. its real part or lower bound
+#define dimsof(hd) ((dims *)((hd)+1))
+// returns the address of a dims structure (with members r and c)
+// valid for matrices
+
+Note that complex numbers are stored as two double numbers, as well as
+intervals.
+
+After you have filled your results (or results) with values, return the
+new value of newram.
+
+In Borland C++, you must use the following DEF file (e.g. test.def):
+
+LIBRARY TEST
+EXETYPE WINDOWS
+CODE PRELOAD MOVEABLE DISCARDABLE
+EXPORTS
+fold=_fold @1
+
+This will export the internal _fold name as fold. Load this example into
+EULER with dll("test.dll","fold",2). You may use the function as in
+fold(x,y), where x and y are two 1xn vectors.
+
+That is all! In case of troubles, send me an EMail:
+
+Rene Grothmann <grothm@ku-eichstaett.de>
+

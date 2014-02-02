@@ -1,0 +1,40 @@
+% This notebook tests pure versus equal tempered harmonics. Of
+% course, creating a sine wave is not real life.
+>load sound
+% Create the time values for 4 seconds of sound.
+>t=soundsec(4);
+% Let 440 Hz be our basic frequency.
+>f=440;
+% New listen to a 220 Hz sound.
+>s=sin(f*t/2);
+>savewave("test.wav",s); playwave("test.wav");
+% This is a pure quint.
+>s=sin(f*t)+sin(f*3/2*t);
+>savewave("test.wav",s); playwave("test.wav");
+% Now we add the lower octave and vary the quint in pitch. First
+% the pure quint.
+>s=sin(f*t)+sin(f*3/2*t)+sin(f*t/2);
+>savewave("test.wav",s); playwave("test.wav");
+% Now the equal tempered quint. The difference is small.
+>s=sin(f*t)+sin(f*2^(7/12)*t)+sin(f*t/2);
+>savewave("test.wav",s); playwave("test.wav");
+% Now a quint wich is too much off.
+>s=sin(f*t)+sin(f*1.49*t)+sin(f*t/2);
+>savewave("test.wav",s); playwave("test.wav");
+% Here are the corresponing numbers
+>3/2, 2^(7/12), 1.49
+          1.5 
+      1.49831 
+         1.49 
+% Repeat the same with the major terz.
+>s=sin(f*t)+sin(f*5/4*t)+sin(f*t/4);
+>savewave("test.wav",s); playwave("test.wav");
+>s=sin(f*t)+sin(f*2^(4/12)*t)+sin(f*t/4);
+>savewave("test.wav",s); playwave("test.wav");
+>s=sin(f*t)+sin(f*1.27*t)+sin(f*t/4);
+>savewave("test.wav",s); playwave("test.wav");
+>5/4, 2^(4/12), 1.24
+         1.25 
+      1.25992 
+         1.24 
+>

@@ -1,0 +1,373 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="VPSiteProject" CONTENT="file:///E|/euler/docs/Euler.vpp">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Expressions</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Expressions</H1>
+<P>This sections explains
+
+<UL>
+	<LI><A HREF="#Data Types">the data types Euler uses</A>,
+	<LI><A HREF="#Commands">the difference between a command</A>, <A HREF="#Expressions">an expression</A>, <A HREF="#Assignments">and
+	an assignment</A>,
+	<LI><A HREF="#Variables">how to store values into variables</A>,
+	<LI><A HREF="#Strings">what strings are</A>,
+	<LI><A HREF="#Submatrices">how to access sub-matrices</A>,
+	<LI><A HREF="#Operator">how to generate matrices with :</A>,
+	<LI><A HREF="#Matrix Expressions">how expressions deal with matrices</A>,
+	<LI><A HREF="#Generating">how to generate matrices with functions</A>,
+	<LI><A HREF="#Matrix Functions">how to modify matrices.</A>
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Data Types"></A>Data Types</H2>
+<P>EULER uses the following data types
+
+<UL>
+	<LI>real numbers
+	<LI>complex numbers
+	<LI>real matrices
+	<LI>complex matrices
+	<LI>strings
+	<LI>real intervals
+	<LI>real interval matrices
+	<LI>references
+	<LI>functions
+</UL>
+
+<P>The meaning of the first five data types should be clear. EULER tries to keep an evaluation real. But as soon,
+as complex data is involved the computation gets complex. That is why</P>
+<PRE>    &gt;sqrt(-1)
+</PRE>
+<P>results in a wrong answer, but</P>
+<PRE>    &gt;sqrt(complex(-1))
+</PRE>
+<P>is 0+1*i. complex(x) is a way to make a real number complex.</P>
+<P>Strings are used for explaining output, file names, passing functions and expressions to functions, and function
+key texts. There are only two operators, like the concetanation | and the compare operators.</P>
+<P>References are used internally for parameters of functions (see the programming section).</P>
+<P>Functions are the user defined functions including the functions in the utility files.</P>
+<P>All these data are kept on the stack. Usually, the user does not have to worry about the stack, since EULER
+uses normal mathematical notation for expressions. Internally, the evaluation of an expression uses the stack rather
+heavily. Programs are kept in the lower area of the stack. The stack is also used to pass parameters to built-in
+or user defined functions and to keep the local variables of these functions.</P>
+<P>A complete list of built-in functions, commands and user defined functions is printed by</P>
+<PRE>    &gt;list
+</PRE>
+<P>A list of all variables can be obtained with</P>
+<PRE>    &gt;listvar
+</PRE>
+<P>If size information is needed, the command</P>
+<PRE>    &gt;memorydump
+</PRE>
+<P>is available. A hexdump of any data can be obtained with</P>
+<PRE>    &gt;hexdump name
+</PRE>
+<P>but it will only be useful for insiders.</P>
+<PRE>    &gt;store(&quot;filename&quot;)
+</PRE>
+<P>stores the content of the EULER stack into a file.</P>
+<PRE>    &gt;restore(&quot;filename&quot;)
+</PRE>
+<P>loads that file. This is a short way of storing a session including the global variables and functions. Note
+that the file will be system dependent.
+<H2 ALIGN="CENTER"><A NAME="Commands"></A>Commands</H2>
+<P>Normal EULER input is either a &quot;command&quot;, an &quot;expression&quot; or an &quot;assignment&quot;.
+EULER works a bit differently in programming mode, which is indicated by a different prompt.</P>
+<P>An example for a command is</P>
+<PRE>    &gt;quit
+</PRE>
+<P>which quits the EULER system. By and by, we will mention a few others. Another example is &quot;load&quot;,
+which you already used to load the demo.
+<H2 ALIGN="CENTER"><A NAME="Expressions"></A>Expressions</H2>
+<P>An expression is a valid EULER expression, and has a value as a result. If it is entered on its own or followed
+by a comma &quot;,&quot; its value is printed.</P>
+<PRE>    &gt;3+4*5
+</PRE>
+<P>prints the value 23.00000. The print is suppressed, if the expression is followed by a semicolon &quot;;&quot;.
+This makes sense, because some functions have side effects and their result is not needed, or because the user
+does not want to see the long output of an assignment.</P>
+<P>The printing is done in a <A NAME="format"></A>format determined by the function</P>
+<PRE>    &gt;format([n,m])
+</PRE>
+<P>where n is the total width of print and m is the number of digits after the 
+decimal dot. As with many other commands,</P>
+<PRE>    &gt;format(n,m)
+</PRE>
+<P>does the same thing. The output automatically switches
+to exponential format, if there is not enough space to display the number in fixed format. There is also the command</P>
+<PRE>    &gt;goodformat(n,m)
+</PRE>
+<P>which does omit decimal digits, if they are zero.</P>
+<PRE>    &gt;longformat()
+</PRE>
+<P>sets a longer output format, while</P>
+<PRE>    &gt;shortformat()
+</PRE>
+<P>sets a shorter one. Both use goodformat. The longest format is</P>
+<PRE>    &gt;longestformat()</PRE>
+<P>You can explicitly specify to have exponential format or fixed format with</P>
+<PRE>    &gt;expformat(n,m)
+    &gt;fixedformat(n,m)</PRE>
+<P>There is also support for output as a fraction (like 1/3).</P>
+<PRE>    &gt;fracformat(n,eps)
+</PRE>
+<P>will output numbers with n places and an accuracy of eps as fractions. Default for n is 20 and, for eps is the
+internal epsilon. So these parameters can be omitted. The other formats (like shortformat) switch off this type
+format.</P>
+<P>For intervals, you may use</P>
+<PRE>    &gt;iformat(n)
+</PRE>
+<P>This will print as many digits as necessary to show the differences between left and right interval bounds.
+The output width will be at least n.</P>
+<PRE>    &gt;iformat(0)
+</PRE>
+<P>switches back to the usual format.
+<H2 ALIGN="CENTER"><A NAME="Assignments"></A>Assignments</H2>
+<P>An assignment looks like</P>
+<PRE>    &gt;variablename=value
+</PRE>
+<P>The variable name must start with an alphanumeric, and continue with alphanumeric characters or digits. The
+command assigns the value to the variable, which is declared by the assignment, and prints the value. If the assignment
+is followed by a &quot;;&quot;, then the printing is suppressed. An assignment may be followed by &quot;,&quot;,
+which prints the right hand side of the assignment.
+<H3>Multiple Assignments</H3>
+<P>The syntax is of a multiple assignment is</P>
+<PRE>    &gt;{x,y,...}=expression
+</PRE>
+<P>This does make sense only in the cases, when the expression is the result of a function with multiple return
+values. If a multiple expression is assigned to a single variable, only the first value is used.
+<H2 ALIGN="CENTER"><A NAME="Variables"></A>Expression Types</H2>
+<P>The most simple expressions are variables. Their value is the value of the variable, and their type is the type
+of the variable. If the variable is undefined, interpreting the expressions will stop with an error message.</P>
+<P>The basic constant expressions are numbers. Those are entered in the usual form 100, 100.0, 1e2, or 1.0e+2.
+The letter &quot;small e&quot; indicates powers of 10. An appendix &quot;i&quot; indicates multiples of the complex
+unit &quot;i&quot;. &quot;1+1i&quot; is in fact a sum of 1 and 1i, which is the proper way to enter complex numbers.</P>
+<P>A <A NAME="matrix"></A>matrix is entered in the brackets &quot;[&quot; and &quot;]&quot; row by row. The columns
+are separated by &quot;,&quot; and the rows by &quot;;&quot;. Not all rows need to be entered in full length. For
+example</P>
+<PRE>    &gt;A=[1,2,3;4,5;6]
+</PRE>
+<P>is equivalent to</P>
+<PRE>    &gt;A=[1,2,3;4,5,0;6,0,0]
+</PRE>
+<P>The matrix is real, if all entries are real, otherwise it becomes complex. If an entry of a matrix is an interval,
+the matrix becomes an interval matrix.</P>
+<P>A matrix constant can spread over several lines.</P>
+<P>One can also use a 1xn matrix as part of the row in a matrix, like in</P>
+<PRE>    &gt;x=[1,2,3,4]
+    &gt;A=[7,x]
+</PRE>
+<P>A will be [7,1,2,3,4] then.</P>
+<H2 ALIGN="CENTER"><A NAME="Strings"></A>Strings</H2>
+<P>String constants are enclosed in double quotes, like in</P>
+<PRE>    &gt;string=&quot;This is a text&quot;
+</PRE>
+<P>or in two single quotes to make it possible to include quotes in strings</P>
+<PRE>    &gt;string=''This is a &quot;text&quot;''
+</PRE>
+<P>The section on the line editor shows how to insert a double quote into a string. A single character with ASCII
+code n can be produced by</P>
+<PRE>    &gt;char(n)</PRE>
+<H2 ALIGN="CENTER"><A NAME="Submatrices"></A>Sub-Matrices</H2>
+<P>A submatrix is a matrix, which is made up by the entries of another matrix. The simplest example is a matrix
+element</P>
+<PRE>    &gt;A[1,1]
+</PRE>
+<P>which is the element in the first row and column of A.</P>
+<P>Let us assume that A is a matrix and r and c are vectors. Then A[r,c] results in a matrix, which consists
+of the rows r[1],r[2],... of A, and from these rows, only the columns c[1],c[2],... are taken. Example</P>
+<PRE>    &gt;A[[1,2],[1,2]]
+</PRE>
+<P>is the upper left 2x2 submatrix of A. If a row or column does not exist, it is simply neglected. Thus, if A
+is a 4x4 matrix, then A[[4,7],[4,7]] results in the value A[4,4]. A special thing is A[i], which is the either
+the i-th row of A, or if A is a 1xn vector, the i-th element, i.e. A[1,i].</P>
+<P>A &quot;:&quot; indicates all rows or columns; i.e., A[:,1] is the first column of A, and A[:,:] is A itself.
+Another example</P>
+<PRE>    &gt;v=[-1,-2,-3,-4,-5]; v[[5,4,3,2,1,1]]
+</PRE>
+<P>is the vector [-5,-4,-3,-2,-1,-1]. If A is a 4x4 matrix, then A[[2,1]] is a 2x4 matrix, which consists of the
+second row of A on top of the first row. Note, that there may be a 0xN or Nx0 matrix.</P>
+<P>It is possible to assign values to submatrices. Thus</P>
+<PRE>    &gt;A[1,1]=4.5
+</PRE>
+<P>is a legal statement. However, if the submatrix has more than one element, the value must either be a matrix
+of equal size or a scalar. I.e.</P>
+<PRE>&nbsp; &nbsp; &gt;A[1:2,:]=0
+</PRE>
+<P>will set the first two rows of A to 0. If a submatrix gets complex, the matrix gets complex. If v is a 1xN or
+Nx1 matrix (i.e., a vector), then v[1] is the first element of v; i.e.,</P>
+<PRE>    &gt;v=[1.5,-2,0,4.8]; v[3]
+</PRE>
+<P>is 0.</P>
+<P>For compatibility reasons, the square brackets can be replaced by round brackets. Thus, A(1,1) is the same thing
+as A[1,1]. But A[1,1] is faster. Furthermore, if there is a function A, then A(1,1) will result in a function call
+to A.</P>
+<P>A{i} is the i-th element of the matrix A, as if the NxM Matrix A was a vector of length N*M. This is useful
+for making functions work for matrices, and is really the quickest way to access a matrix element. It works also,
+if the matrix A is too small or a real or complex scalar variable. Then the result is the last element of A.</P>
+<H2 ALIGN="CENTER">The : <A NAME="Operator"></A>Operator</H2>
+<P>The &quot;:&quot; generates a vector quickly. Thus</P>
+<PRE>    &gt;1:10
+</PRE>
+<P>generates the vector [1,2,3,4,5,6,7,8,9,10]. A step size may be given as in the example</P>
+<PRE>    &gt;5:-1.5:1
+</PRE>
+<P>which yields [5,3.5,2]. By numerical reasons, one cannot expect to hit 1 exactly with 0:0.1:1. However, the program
+uses the internal epsilon to stop generating the vector, so that 0:0.1:1 yields the desired result. By default, the
+internal epsilon is set so that even</P>
+<PRE>    &gt;0:0.0001:1
+</PRE>
+<P>works correctly.</P>
+<H2 ALIGN="CENTER"><A NAME="Matrix Expressions"></A>Matrix Expressions</H2>
+<P>If A is a matrix expression (an expression of type matrix), then A' is the transposed matrix.</P>
+<P>The binary operator &quot;|&quot; puts a matrix aside another; i.e., if A is a NxM matrix and B is a NxK matrix,
+then A|B is a Nx(M+K) matrix, which consists of A left of B. Analogously, A_B puts A atop of B. These operators
+work also for numbers, which are treated as 1x1 matrices. They do even work, if A is a Nx0 or 0xN matrix.</P>
+<P>The mathematical operators +,-,*,/ work as usual for numbers. For matrices they work element 
+for element. However, the
+matrices need not necessarily have the same size. There are some special rules.</P>
+
+<UL>
+	<LI>If a is a number and B a matrix, then a+B or B+a computes the sum of all elements of B with a.
+	<LI>If v is a 1xN vector and A an MxN matrix, then v+A adds v to each row of A. A+v yields the same result.
+	<LI>If v is an Mx1 vector and A an MxN matrix, then each element of v is added to all elements in the corresponding
+	row of A.
+	<LI>If v is an Mx1 vector, and w is a 1xN vector, then v+w is an MxN matrix, which has the sums of corresponding
+	elements of v and w as entries (The i-j-th elements is v[i]+w[j]). w+v yields the same result.
+</UL>
+
+<P>Of course, the same rules hold for all other operands and functions of two parameters. The reason for these
+rules will become apparent later on. But the guideline is, that one can easily generate tables of functions for
+tables of parameters. Just one examples is the table</P>
+<PRE>    &gt;(1:10)*(1:10)'</PRE>
+<P>which contains all products i*j.</P>
+<P>Of course, -A negates all elements of A. EULER knows the rule, to compute &quot;*&quot; and &quot;/&quot; before
+&quot;+&quot; and &quot;-&quot;. One can also write &quot;.*&quot;,&quot;./&quot; for compatibility reasons. If
+A has a different size as B, and neither A or B is a 1x1 matrix or a number, then A+B results in error.</P>
+<P>Note, that the matrix product is computed with &quot;A.B&quot;.</P>
+<P>Of course, one can use the round brackets ( and ) to group expressions like in</P>
+<PRE>    &gt;(1+5)*(6+7^(1+3))
+</PRE>
+<P>The power operator can be written &quot;^&quot; or &quot;**&quot; (or &quot;.^&quot;). It computes the power
+element for element, like all the other operators. So</P>
+<PRE>    &gt;[1,2,3]^2
+</PRE>
+<P>yields [1,4,9]. The power may also be negative; i.e., the integer powers of all numbers are defined. For a matrix,
+inv(A) computes the inverse of A (not &quot;A^-1&quot;!). Note, that &quot;^&quot; has precedence, so</P>
+<PRE>    &gt;-2^2
+</PRE>
+<P>is -4.</P>
+<P>Comparison of values can be done with &gt; ,&gt; =,&lt; ,&lt; =, != (not equal) or == (equal). They result in
+1 or 0, where 1 is TRUE. Again, these operators work element for element; i.e,</P>
+<PRE>    &gt;[1,2,3,4]&gt;2
+</PRE>
+<P>yields [0,0,1,1].</P>
+<PRE>    &gt;!A
+</PRE>
+<P>(not A) is a matrix, which is 1 on all zero elements of A, and 0 on all nonzero elements of A.</P>
+<PRE>    &gt;A &amp;&amp; B
+</PRE>
+<P>is a matrix, which is 1 whenever the corresponding elements of A and B are nonzero.</P>
+<PRE>    &gt;A || B
+</PRE>
+<P>is 1 whenever the corresponding element of A is nonzero or the corresponding element of B is nonzero.</P>
+<PRE>    &gt;any(A)
+</PRE>
+<P>yields 1 if any element of A is nonzero.</P>
+<P>One can change dimensions of a matrix with</P>
+<PRE>    &gt;B=redim(A,[n,m])
+</PRE>
+<P>or</P>
+<PRE>    &gt;B=redim(A,n,m)
+</PRE>
+<P>This will copy the content of A to B filling with 0 if necessary. A matrix is stored row by row.
+<H2 ALIGN="CENTER"><A NAME="Generating"></A>Generating Matrices</H2>
+<P>There are several built-in functions which generate matrices. The most elementary ones are zeros([N,M]) and
+ones([N,M]), which can also be written zeros(N,M) and ones(N,M), as usual. They produce a NxM matrix, which is filled with
+ones or zeros respectively. Note, that one can also generate 0xN and Nx0 matrices. So</P>
+<PRE>    &gt;zeros[0,5]_v_v
+</PRE>
+<P>is a legal statement, if v is a 1x5 vector.
+<H2 ALIGN="CENTER"><A NAME="Matrix Functions"></A>Matrix Functions</H2>
+<PRE>    &gt;size(A)
+</PRE>
+<P>returns the size of the matrix A as a 1x2 vector [n,m]. It is also possible to give size several arguments.
+Then</P>
+<PRE>    &gt;size(A,B,...)
+</PRE>
+<P>results in the size of the largest matrix of A,B,... However, all matrixes in the list must have the same size,
+unless their size is 1x1. The use of this feature will become apparent later on. Also</P>
+<PRE>    &gt;cols(A)
+    &gt;rows(A)
+</PRE>
+<P>return the number of columns and rows of a matrix A.</P>
+<PRE>    &gt;length(A)
+</PRE>
+<P>it the maximum of the number of columns and rows. More generally,</P>
+<PRE>    &gt;matrix([N,M],x)
+</PRE>
+<P>or matrix(N,M,x) returns a NxM matrix filled with x, which may be real or complex.</P>
+<P>
+<PRE>    &gt;diag([N,M],K,v)
+</PRE>
+<P>produces a NxM matrix, which has the vector v on its K-th diagonal and is 0 everywhere else. If v is not long
+enough, the last element of v is taken for the rest of the diagonal. The 0-th diagonal is the main diagonal, the
+1-st the one above, and the -1-st the one below. So</P>
+<PRE>    &gt;diag([5,5],0,1)
+</PRE>
+<P>produces the 5x5 identity matrix. The same can be achieved with the utility function</P>
+<PRE>    &gt;id(5) 
+</PRE>
+<P>One can also write diag(N,M,K,v).</P>
+<PRE>    &gt;diag(A,K)
+</PRE>
+<P>is a vector, which is the K-th diagonal of A.</P>
+<P>
+<PRE>    &gt;dup(v,N)
+</PRE>
+<P>duplicates the 1xM vector N times, such that a NxM matrix is generated, which has v in each row. If v is an
+Mx1 vector, then v is duplicated into the N columns of a MxN matrix. dup works also, if v is a number. Then it
+generates a column vector.</P>
+<PRE>    &gt;B=band(A,N,M)
+</PRE>
+<P>sets all elements of A[i,j] to 0, unless N&lt; = i-j&lt; = M.</P>
+<PRE>    &gt;B=setdiag(A,N,v)
+</PRE>
+<P>sets the N-th diagonal of A to v. v may be a number or a vector.</P>
+<PRE>    &gt;bandmult(A,B)
+</PRE>
+<P>multiplies to matrices A and B (like A.B), but is considerably faster, if A and B contain lots of zeros.</P>
+<PRE>    &gt;symmult(A,B)
+</PRE>
+<P>multiplies symmetric matrices A and B and saves half of the time.</P>
+
+<P>There are four practical functions shiftleft, shiftright, rotleft, rotright, which shift and rotate the columns
+of a matrix left or right. E.g.,</P>
+<PRE>    &gt;shiftleft(1:4)</PRE>
+<P>will produce the vector (2,3,4,0) and</P>
+<PRE>    &gt;rotleft(1:4)</PRE>
+<P>the vector (2,3,4,1).</P>
+
+<P>Furthermore,</P>
+<PRE>    &gt;flipx(A)
+</PRE>
+<P>flips the matrix, such that the last column becomes the first, the first column the last.</P>
+<PRE>    &gt;flipy(A)
+</PRE>
+<P>does the same to the rows.
+
+</BODY>
+
+</HTML>

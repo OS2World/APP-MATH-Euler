@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--last modified on Wednesday, March 28, 2001 12:18 PM -->
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Graphics</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER"><span lang="en-us">Euler Graphics</span></H1>
+<P><span lang="en-us">This long section explains </span>
+
+<UL>
+	<LI><span lang="en-us"><A HREF="#Basics">the coordinate systems</A>, </span>
+	<LI><span lang="en-us"><A HREF="#Plotting a Function">a simple way to plot functions,</A>
+    </span>
+	<LI><span lang="en-us"><A HREF="#Special 3D-Plots">and functions of two variables,</A>
+    </span>
+	<LI><span lang="en-us"><A HREF="#Titles and Plot Text">how to add titles and text to your plot</A>,
+    </span>
+	<LI><span lang="en-us"><A HREF="#2D Plots">elementary 2D x-y-plots</A>,
+    </span>
+	<LI><span lang="en-us"><A HREF="#Plot Styles and Colors">how to change the line style and color of your plot,</A>
+    </span>
+	<LI><span lang="en-us"><A HREF="#Marker Plots">point plots</A>, </span>
+	<LI><span lang="en-us"><A HREF="#Bar Plots">bar plots</A>, </span>
+	<LI><span lang="en-us"><A HREF="#3D Plots">3D x-y-z-plots,</A> </span>
+	<LI><span lang="en-us"><A HREF="#Contour and Density Plots">contour and density plots,</A>
+    </span>
+	<LI><span lang="en-us"><A HREF="#Contour and Density Plots">colored 3D plots</A>,
+    </span>
+	<LI><span lang="en-us"><A HREF="#Choosing Coordinates with the Mo">how to choose coordinates from the plot with the mouse</A>,</span><LI>
+    <span lang="en-us">
+    <a href="#Animations">how to animate plots</a>,</span><LI>
+    <span lang="en-us"><A HREF="#Exporting">exporting and saving graphics to disk</A>
+    </span>
+</UL>
+
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Basics"></A>Basics</span></H2>
+<P><span lang="en-us">The best part of EULER is its graphics capability. There are two screens, the text screen and the graphic screen.
+Text output automatically displays the text screen, and graphic output displays the graphic screen. One may also
+switch to the graphic screen by pressing TAB on input or with the command</span></P>
+<PRE><span lang="en-us">    &gt;shg;</span></PRE>
+<P><span lang="en-us">There are two coordinate systems. The <EM>screen coordinates</EM> are a 1024x1024 grid with (0,0) in the upper
+left corner. Furthermore, each plot generates <EM>plot coordinates</EM> mapping a rectangle of the plane to the
+screen with the smallest x value left and the smallest y value at the bottom. To be precise, the rectangle is mapped
+to the screen &quot;window&quot;, which may only cover a part of the display area. See below for more information
+on windows. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Plotting a Function"></A>Plotting a Function or Expression</span></H2>
+<P><span lang="en-us">We will start with a few practical functions. These functions are defined in utility files and build on more
+primitive graphic routines, which we explain later. By the way, you can use</span></P>
+<pre><span lang="en-us">    &gt;help function</span></pre>
+<p><span lang="en-us">to get additional help on a function.</span></p>
+<P><span lang="en-us">The plotting of a user defined function f(x,...) can be done with</span></P>
+<PRE><span lang="en-us">    &gt;fplot(&quot;f&quot;,a,b)
+    &gt;fplot(&quot;f&quot;,a,b,c,d)
+    &gt;fplot(&quot;f&quot;,a,b,c,d,n)
+    &gt;fplot(&quot;f&quot;,a,b;...)</span></PRE>
+<P><span lang="en-us">The extra parameters ... are passed to f (in addition to the function value, 
+of course). n is the number of subintervals. c and d are the y-range. If not c&lt;d 
+then the y-range is determined automatically. If a and b are omitted, as in</span></P>
+<PRE><span lang="en-us">    &gt;fplot(&quot;f&quot;;...)</span></PRE>
+<P><span lang="en-us">or</span></P>
+<PRE><span lang="en-us">    &gt;fplot(&quot;f&quot;)</span></PRE>
+<P><span lang="en-us">then the plot coordinates of the last plot are used.</span></P>
+<P><span lang="en-us">You can use an expression instead of a function name.</span></P>
+<PRE><span lang="en-us">    &gt;fplot(&quot;x^2&quot;,-1,1)</span></PRE>
+<P><span lang="en-us">This will plot the function x^2 on the interval [-1,1].</span></P>
+<P><span lang="en-us">After you have plotted a function, you can zoom in with the mouse by</span></P>
+<PRE><span lang="en-us">    &gt;setplotm(); fplot(&quot;f&quot;);</span></PRE>
+<P><span lang="en-us">The function setplotm switches to the graphics screen, and you can select a square region of the screen.</span></P>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Special 3D-Plots"></A>3D-Plots of Functions or Expressions</span></H2>
+<P><span lang="en-us">A 3D-plot of a function can be done with</span></P>
+<PRE><span lang="en-us">    &gt;f3dplot(&quot;f&quot;)
+</span></PRE>
+<P><span lang="en-us">f must be either a function name of a function f(x,y), or an expression in x and y. Additional parameters are
+the x-y-range and the number of grid points in each dimension.</span></P>
+<PRE><span lang="en-us">    &gt;f3dplot(&quot;f&quot;,xmin,xmax,ymin,ymax,nx,my)</span></PRE>
+<P><span lang="en-us">As above, additional parameters of parameters after a semicolon &quot;;&quot; are 
+passed to f (in addition to x and y). You can get other kind of plots with</span></P>
+<PRE><span lang="en-us">    &gt;f3d(&quot;f&quot;);
+    &gt;f3daxis(&quot;f&quot;);
+    &gt;f3dpolar(&quot;f&quot;);
+    &gt;f3daxispolar(&quot;f&quot;);
+    &gt;fcontour(&quot;f&quot;);</span></PRE>
+<P><span lang="en-us">In all cases &quot;f&quot; may be a valid EULER expression using x and y (and other global variables), or a
+function. Especially nice is the function</span></P>
+<PRE><span lang="en-us">    &gt;fcd(&quot;f&quot;)</span></PRE>
+<P><span lang="en-us">which plots contour and density of a function. You may pass the number of grid points, the x-y-ranges and the
+number of level lines as additional parameters, e.g.</span></P>
+<PRE><span lang="en-us">    &gt;fcd(&quot;x*y&quot;,50,-2,2,-2,2,31);</span></PRE>
+<P><span lang="en-us">This will plot the function with 50 grid points and 31 level lines in the specified x-y-range.</span></P>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Titles and Plot Text"></A>Titles and Plot Text</span></H2>
+<PRE><span lang="en-us">    &gt;title(&quot;text&quot;)
+</span></PRE>
+<P><span lang="en-us">draws a title above the plot. To label a specific position in the last plot, use</span></P>
+<PRE><span lang="en-us">    &gt;label(&quot;text&quot;,x,y)</span></PRE>
+<P><span lang="en-us">x and y are plot coordinates.</span></P>
+<P><span lang="en-us">The title function uses the elementary</span></P>
+<PRE><span lang="en-us">    &gt;ctext(&quot;text&quot;,[col,row])</span></PRE>
+<P><span lang="en-us">which plots the text centered at screen coordinates (col,row).</span></P>
+<PRE><span lang="en-us">    &gt;text(&quot;text&quot;,[col,row])</span></PRE>
+<P><span lang="en-us">plots the text left justified. The width and height of the characters can be asked with</span></P>
+<PRE><span lang="en-us">    &gt;textsize()</span></PRE>
+<P><span lang="en-us">returning the vector [width,height] in screen coordinates. There is also</span></P>
+<PRE><span lang="en-us">    &gt;rtext(&quot;text&quot;,[col,row])</span></PRE>
+<P><span lang="en-us">which aligns text to the right. Vertical text can be printed with</span></P>
+<PRE><span lang="en-us">    &gt;vtext(&quot;text&quot;,[col,row]);</span></PRE>
+<P><span lang="en-us">vctext would center the text vertically, and vrtext would align it at text end. The functions vutext, vcutext
+and vrutext work the same way with text going from bottom up.</span></P>
+<P><span lang="en-us">To compute from screen coordinates to plot coordinates, use</span></P>
+<PRE><span lang="en-us">    &gt;{x,y}=fromscreen(c,r)</span></PRE>
+<P><span lang="en-us">and for the other direction, use</span></P>
+<PRE><span lang="en-us">    &gt;{c,r}=toscreen(x,y)</span></PRE>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="2D Plots"></A>2D Plots</span></H2>
+<P><span lang="en-us">We know describe the basic built-in functions. If x and y are 1xN vectors, the function</span></P>
+<PRE><span lang="en-us">    &gt;plot(x,y)</span></PRE>
+<P><span lang="en-us">connects the points (x[i],y[i]) with straight lines and plots these lines. It first clears the screen and draws
+a frame around the screen window. The plot coordinates are chosen such that the plot fits exactly into the screen
+window. This behavior is called auto-scaling. You can set your own plot coordinates with</span></P>
+<PRE><span lang="en-us">    &gt;setplot(xmin,xmax,ymin,ymax)</span></PRE>
+<P><span lang="en-us">(or setplot([...])). The auto-scaling is then turned off. To turn it on again, use</span></P>
+<PRE><span lang="en-us">    &gt;setplot()</span></PRE>
+<P><span lang="en-us">Force EULER to use a square coordinate window with</span></P>
+<PRE><span lang="en-us">    &gt;keepsquare(1)</span></PRE>
+<P><span lang="en-us">Correspondingly keepsquare(0) will turn this off. This does not affect the physical appearance of the plot window.
+But the width in the y-range will be the same as in the x-range.</span></P>
+<PRE><span lang="en-us">    &gt;scaling(flag)</span></PRE>
+<P><span lang="en-us">will stop (flag=0) or resume (flag=1) the autoscaling of the next plot. If scaling is off, then the plot region
+of the last plot (or the one set with setplot) is used.</span></P>
+<P><span lang="en-us">By the way, the plot() command with or without arguments returns the plot coordinates; i.e., a vector [xmin,xmax,ymin,ymax].</span></P>
+<P><span lang="en-us">The screen window is a rectangle on the screen which can be set by</span></P>
+<PRE><span lang="en-us">    &gt;window(cmin,cmax,rmin,rmax)</span></PRE>
+<P><span lang="en-us">(or window([...])) in screen coordinates. The function 
+without arguments returns the current window area. The window area is used to 
+clip the drawing in the plot and mark commands. You can use the clip command 
+with the same arguments to clip to a region. The command unclip will clip to the 
+complete window. It is part of the reset command.</span></P>
+<P><span lang="en-us">If x is a 1xN vector and A MxN matrix,</span></P>
+<PRE><span lang="en-us">    &gt;plot(x,A)</span></PRE>
+<P><span lang="en-us">plots several functions. The same is true with</span></P>
+<PRE><span lang="en-us">    &gt;plot(B,A)</span></PRE>
+<P><span lang="en-us">if B is a MxN matrix. In this case, the plot is done for corresponding rows of A and B.</span></P>
+<P><span lang="en-us">The graphic screen is cleared by the plot command. This can be turned off with</span></P>
+<PRE><span lang="en-us">    &gt;hold on;</span></PRE>
+<P><span lang="en-us">or</span></P>
+<PRE><span lang="en-us">    &gt;holding(1);</span></PRE>
+<P><span lang="en-us">To turn holding off,</span></P>
+<PRE><span lang="en-us">    &gt;hold off;</span></PRE>
+<P><span lang="en-us">or</span></P>
+<PRE><span lang="en-us">    &gt;holding(0);</span></PRE>
+<P><span lang="en-us">is used. The function holding returns the old state of the holding flag. This is a way to draw several plots
+into the same frame. Combining window and holding is a way to draw several plots in several windows on the screen.</span></P>
+<P align="center"><span lang="en-us"><IMG SRC="images/sin1.gif" WIDTH="308" HEIGHT="222" ALIGN="BOTTOM" BORDER="0"></span></P>
+<P>
+<PRE><span lang="en-us">    &gt;xplot(x,y)
+</span></PRE>
+<P><span lang="en-us">works like plot but does also show axis grids. Actually, xplot has default parameters grid=1 and ticks=1, which
+determine, if a grid is plotted and axis labeling is done. Thus</span></P>
+<PRE><span lang="en-us">    &gt;xplot(x,y,1,0)</span></PRE>
+<P><span lang="en-us">does no ticks. Also</span></P>
+<PRE><span lang="en-us">    &gt;xplot(x,y,ticks=0)</span></PRE>
+<P><span lang="en-us">may be used for the same purpose (see in the section about EULER <A HREF="programming.html">programming</A>
+for details on default parameters).</span></P>
+<PRE><span lang="en-us">    &gt;xplot()</span></PRE>
+<P><span lang="en-us">plots the axis and ticks only.</span></P>
+<P><span lang="en-us">You may set vertical to 1, if you wish vertical axis labels for the y-axis. You should call shrinkwindow again
+after doing so, because you will not need so much space to the left of the picture now. Put the command into EULER.CFG
+to make it permanent (after loading UTIL). However, this does make sense only if you have chosen a small outline
+font like (O)Courier at about 40 lines per page.</span></P>
+<PRE><span lang="en-us">    &gt;xplot(z)</span></PRE>
+<P><span lang="en-us">will plot xplot(re(z),im(z)), if z is a complex vector.</span></P>
+<PRE><span lang="en-us">    &gt;cplot(z)</span></PRE>
+<P><span lang="en-us">ca be used to plot a grid pattern, if z is a complex matrix.</span></P>
+<PRE><span lang="en-us">    &gt;histogram(data,n)</span></PRE>
+<P><span lang="en-us">will plot a histogram of the data distribution. It will divide the interval into n equally spaced parts and
+plot the number of d[i] in each subinterval.</span></P>
+<P><span lang="en-us">You should use</span></P>
+<PRE><span lang="en-us">    &gt;shrinkwindow()</span></PRE>
+<P><span lang="en-us">if you intend to use labels (ticks) on the axis. This leaves some space around the plot.</span></P>
+<PRE><span lang="en-us">    &gt;fullwindow()</span></PRE>
+<P><span lang="en-us">resizes the plots to the full size. You may also set the x axis grids on your own with</span></P>
+<PRE><span lang="en-us">    &gt;xgrid([x1,x2,x3,...])</span></PRE>
+<P><span lang="en-us">or</span></P>
+<PRE><span lang="en-us">    &gt;xgrid([x1,x2,x3,...],f)</span></PRE>
+<P><span lang="en-us">the latter producing digits at the edge of the plot (ygrid(...) works respectively). Actually, these functions
+are defined in UTIL.</span></P>
+<P><span lang="en-us">To plot with logarithmic scale is done in the following 
+way. Assume the data is x and y, both 1xn arrays. To get a logarithmic plot of 
+y, use</span></P>
+<PRE><span lang="en-us">    &gt;ylogplot(x,y)
+</span></PRE>
+<p><span lang="en-us">Make sure, y is in the positive range. There is also 
+xlogplot and xylogplot for logarithmic scale in x and in both coordinates. 
+Moreover, there is xlogmark etc.</span></p>
+<P>
+<PRE><span lang="en-us">    &gt;plotarea(x,y)</span></PRE>
+<P><span lang="en-us">sets the plot area for the next plot like plot(x,y), but it does not actually plot.</span></P>
+<PRE><span lang="en-us">    &gt;reset</span></PRE>
+<P><span lang="en-us">is a function in UTIL, which calls shrinkwindow, hold off and some other stuff to reset the plot coordinates
+to default values. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Plot Styles and Colors"></A>Plot Styles and Colors</span></H2>
+<P><span lang="en-us">If a color monitor is used, EULER can produce colored plots. The plot color can be modified with</span></P>
+<PRE><span lang="en-us">    &gt;color(n)</span></PRE>
+<P><span lang="en-us">where n=1 is black, and n=0 is white. Other colors depend on your system settings. 
+Color numbers range from 0 to 15. The textcolor, wirecolor and framecolor
+can be set the same way.</span></P>
+<P><span lang="en-us">You can use your own colors. In Windows, you can do that 
+permanently in a dialog. Colors will be saved for the next session. You can also 
+change a color in a program for one session with</span></P>
+<pre><span lang="en-us">    &gt;setcolor(n,red,green,blue)</span></pre>
+<p><span lang="en-us">where red, green, blue compose the color. To reset all 
+colors to normal, use</span></p>
+<pre><span lang="en-us">    &gt;resetcolors()</span></pre>
+<p>Note that 1 is the normal black color, and 0 is supposed to be white. You 
+should normally not change these two colors. </p>
+<p><span lang="en-us">There is the possibility to use dotted and dashed lines, or even invisible lines erasing the background. This
+is done with one of the commands</span></p>
+<PRE><span lang="en-us">    &gt;style(&quot;.&quot;)
+    &gt;linestyle(&quot;.&quot;)</span></PRE>
+<P><span lang="en-us">(&quot;-&quot; for solid lines, &quot;--&quot; for dashed lines, &quot;-&gt;&quot; for arrowed lines and &quot;i&quot; for white lines). The function linestyle, also</span></P>
+<PRE><span lang="en-us">    &gt;linestyle(&quot;&quot;)
+</span></PRE>
+<P><span lang="en-us">returns the previous line style. The lines can have a width greater than 0. This is set with</span></P>
+<PRE><span lang="en-us">    &gt;linewidth(n)
+</span></PRE>
+<P><span lang="en-us">The function returns the previous setting. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Marker Plots"></A>Marker Plots</span></H2>
+<P><span lang="en-us">The command</span></P>
+<PRE><span lang="en-us">    &gt;mark(x,y)</span></PRE>
+<P><span lang="en-us">works like plot. But it does not connect the points but plots single markers at (x[i],y[i]). The style of the
+marker can be set with one of the commands</span></P>
+<PRE><span lang="en-us">    &gt;style(&quot;mx&quot;)
+    &gt;markerstyle(&quot;mx&quot;)</span></PRE>
+<P><span lang="en-us">for a cross. Other styles are &quot;m&lt;&gt;&quot; for diamonds, &quot;m.&quot; for dots, &quot;m+&quot; for
+plus signs, &quot;m[]&quot; for rectangles and &quot;m*&quot; for stars. The function returns the previous marker
+style. The markersize can be set with</span></P>
+<PRE><span lang="en-us">    &gt;markersize(x)</span></PRE>
+<P><span lang="en-us">in screen coordinates (0..1024). There is also the command</span></P>
+<PRE><span lang="en-us">    &gt;xmark(x,y)</span></PRE>
+<P><span lang="en-us">which works like xplot. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Bar Plots"></A>Bar Plots</span></H2>
+<P><span lang="en-us">A rectangle area of the screen can be filled with</span></P>
+<PRE><span lang="en-us">    &gt;bar([xleft,yup,xright,ydown])</span></PRE>
+<P><span lang="en-us">The coordinates are screen coordinates. But there is the utility function</span></P>
+<PRE><span lang="en-us">    &gt;plotbar(x,y,w,h)</span></PRE>
+<P><span lang="en-us">which plots in plot coordinates. The style of the bar is determined by the barcolor(c) and the barstyle(s) functions.
+The color is an index from 0 to 15 and the style is a string. Available are &quot;#&quot; for solid, &quot;O#&quot;
+for solid framed, &quot;#&quot; for framed, &quot;/&quot;, &quot;\&quot; and &quot;\/&quot; for hatched bars.</span></P>
+<P><span lang="en-us">The usage of this function is a bit critical. You have to set the plot window first, then determine the x and
+y of the lower left corners, finally the heights and widths of the bars. E.g.</span></P>
+<PRE><span lang="en-us">    &gt;setplot(1,30,0,5); x=1:29; y=log(x); plotbar(x,0,1,y);</span></PRE>
+<P><span lang="en-us">There is a function to do histograms.</span></P>
+<PRE><span lang="en-us">    &gt;histogram(data,n)</span></PRE>
+<P><span lang="en-us">which makes a histogram (value distribution) of the given unordered data.
+</span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="3D Plots"></A>3D Plots</span></H2>
+<P><span lang="en-us"><IMG SRC="images/bezier4.gif" WIDTH="292" HEIGHT="223" ALIGN="RIGHT" BORDER="0">The easiest way to produce 3D-plots
+is</span></P>
+<PRE><span lang="en-us">    &gt;mesh(Z)</span></PRE>
+<P><span lang="en-us">If Z is a NxM matrix, its elements are interpreted as z-values of a function defined on a grid of points (i,j).
+The plot is a three dimensional plot with hidden lines of the points (i,j,Z[i,j]). It is auto-scaled to fit onto
+the screen window. The point (1,1,z[1,1]) is the front left point.</span></P>
+<P><span lang="en-us">One can turn off the different fill styles mesh uses for the two sides of the plot with</span></P>
+<PRE><span lang="en-us">    &gt;twosides(0)</span></PRE>
+<P><span lang="en-us">This function works also for solid plots described below. It is a faster way than the use of triangles to avoid
+seeing the errors, that the mesh plot sometimes makes. By the way, both functions return the old values of the
+flags.</span></P>
+<PRE><span lang="en-us">    &gt;meshbar(Z)</span></PRE>
+<P><span lang="en-us">works similar as mesh, but plots the heights of Z as square columns.</span></P>
+<P><span lang="en-us">There is a function which produces matrices X and Y such that X[i,j] and Y[i,j] are the coordinates in the plane
+of a point in a rectangular grid parameterized by (i,j). This function is</span></P>
+<PRE><span lang="en-us">    &gt;{X,Y}=field(x,y)</span></PRE>
+<P><span lang="en-us">where x and y are row vectors. Then X[i,j] is equal to x[i] and Y[i,j] is equal to y[j]. So you can easily generate
+a matrix of function values; e.g.,</span></P>
+<PRE><span lang="en-us">    &gt;Z=X*X+Y*Y
+</span></PRE>
+<P><span lang="en-us">However, you can do this more easily, by defining y as a column vector, x as a row vector. Then</span></P>
+<PRE><span lang="en-us">    &gt;Z=x*x+y*y</span></PRE>
+<P><span lang="en-us">will work just as expected. This is due to the rules for operands, which operate on matrices. Even a more complex
+expression, like x*y+3*x+y^3 would be evaluated correctly.</span></P>
+<P><span lang="en-us">A nicer way to plot a surface is</span></P>
+<PRE><span lang="en-us">    &gt;solid(x,y,z)</span></PRE>
+<P><span lang="en-us">or</span></P>
+<PRE><span lang="en-us">    &gt;framedsolid(x,y,z)</span></PRE>
+<P><span lang="en-us">where x, y and z are NxM matrices. The surface parameters are then (i,j) and (x[i,j],y[i,j],z[i,j]) are points
+on the surface. The function would work, if x is a row vector, y a column vector, just as an operator.</span></P>
+<PRE><span lang="en-us">    &gt;framedsolid(x,y,z,1)</span></PRE>
+<P><span lang="en-us">will scale the plot to fit into a cube of side length 2 (the unit cube).</span></P>
+<P><span lang="en-us">The surface should not self intersect; or  plot errors will occur. The surface is projected onto the screen
+in central projection, with the view centered to (0,0,0). You can set the viewing distance, a zooming parameter,
+the angles of the eye from the negative y- to the positive x-axis, and the height of the eye on the x-y-plane,
+by</span></P>
+<PRE><span lang="en-us">    &gt;view(distance,tele,angle,height)</span></PRE>
+<P><span lang="en-us">(or view([...])). view returns the previous values and view() merely returns the old values. framedsolid has
+a default parameter scale, which scales the image to fit into a cube with side length 2*scale, centered at 0, unless
+scale=0, which is the default value (no scaling). Thus</span></P>
+<PRE><span lang="en-us">    &gt;framedsolid(x,y,z,2)</span></PRE>
+<P><span lang="en-us">will scale the plot so that |x|,|y|,|z|&lt;=2.</span></P>
+<PRE><span lang="en-us">    &gt;wire(x,y,z)</span></PRE>
+<P><span lang="en-us">and</span></P>
+<PRE><span lang="en-us">    &gt;framedwire(x,y,z)</span></PRE>
+<P><span lang="en-us">work the same way, but the plotting is not solid. If x, y and z are vectors, then a path in three dimensions
+is drawn. The color of the wires is set by</span></P>
+<PRE><span lang="en-us">    &gt;wirecolor(c)</span></PRE>
+<P><span lang="en-us">If you add an extra value to framedwire or framedsolid like in</span></P>
+<PRE><span lang="en-us">    &gt;framedwire(x,y,z,scale)
+</span></PRE>
+<P><span lang="en-us">the plot is scaled to fit into a cube of side length 2*scale. The function</span></P>
+<PRE><span lang="en-us">    &gt;{x1,y1}=project(x,y,z)</span></PRE>
+<P><span lang="en-us">projects the coordinates x,y,z to the screen and is useful for labeling 3D plots. There is a function</span></P>
+<PRE><span lang="en-us">    &gt;scalematrix(A)</span></PRE>
+<P><span lang="en-us">which scale the matrix A linearly so that its entries are between 0 and 1.</span></P>
+<PRE><span lang="en-us">    &gt;solid(x,y,z,i)</span></PRE>
+<P><span lang="en-us">is a special form of solid. If i=[i1,...,in], then the ij-th row of (x,y,z) is not connected to the ij+1-st
+row. I.e., the plot consists of n+1 parts.</span></P>
+
+<P><span lang="en-us">To get a plot of a cloud of points, use one of the following</span></P>
+<PRE><span lang="en-us">    &gt;mark3(x,y,z)
+    &gt;framedmark3(x,y,z)
+    &gt;framedmark3(x,y,z,scale)</span></PRE>
+<P><span lang="en-us">x, y and z must be 1xn vectors.</span></P>
+
+<P><span lang="en-us">A special feature are stereo plots. This will generate two pictures and there is a special technique to view
+them as one stereo picture. You look through the image, so that you see three images, and 
+then you focus.
+The middle image will appear to be stereographic. To draw a stereo wire plot, use</span></P>
+<PRE><span lang="en-us">    &gt;stereo(&quot;framedwire&quot;,x,y,z,scale)</span></PRE>
+<P><span lang="en-us">In general, the first parameter is the function, which does the plot, and further parameters are passed to this
+function. </span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Contour and Density Plots"></A>Contour and Density Plots</span></H2>
+<P><span lang="en-us">A contour plot of a matrix is produced with</span></P>
+<PRE><span lang="en-us">    &gt;contour(A,[v1,...,vn])</span></PRE>
+<P><span lang="en-us">The contour lines are then at the heights v1 to vn. The interpretation of A is the same as in mesh(A).</span></P>
+<P><span lang="en-us">A density plot is a plot of a matrix, that uses shades to make the values visible. It can be made with</span></P>
+<PRE><span lang="en-us">    &gt;density(A)</span></PRE>
+<P><span lang="en-us">The integer parts of the values are cut off. So the shades run through the available shades, if A runs from
+0 to 1. A can be scaled to 0 to f with</span></P>
+<PRE><span lang="en-us">    &gt;density(A,f)</span></PRE>
+<P><span lang="en-us">f=1 is the most important value. The shades can be controlled with</span></P>
+<PRE><span lang="en-us">    &gt;huecolor(color)</span></PRE>
+<P><span lang="en-us">Any positive color produces shades in that color with varying intensity.</span></P>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Shaded"></A>Colored plots</span></H2>
+<P><span lang="en-us">The color 0 uses a rainbow color scheme. The color 1 is for gray scale shading.</span></P>
+<PRE><span lang="en-us">    &gt;solidhue(x,y,z,h)</span></PRE>
+<P><span lang="en-us">makes a solid view with shades. h are the shading values with the same interpretation as in density. Thus h
+must be a matrix of the same size as x, y and z. Each point h[i,j] controls the color at the grid point (x[i,j],y[i,j],z[i,j]).</span></P>
+<PRE><span lang="en-us">    &gt;framedsolidhue(x,y,z,h,scale,f)
+</span></PRE>
+<P><span lang="en-us">works like a mixture of framedsolid and solidhue. scale=0 and f=1 are the default values.
+</span>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Choosing Coordinates with the Mo"></A>Choosing Coordinates with the Mouse</span></H2>
+<P><span lang="en-us">It is possible to sample coordinates from the graphics screen with the mouse.</span></P>
+<PRE><span lang="en-us">    &gt;mouse()</span></PRE>
+<P><span lang="en-us">displays the graphics screen and a mouse pointer and waits for a mouse click. It returns a vector [x,y] which
+are the plot coordinates of the clicked spot. Using</span></P>
+<PRE><span lang="en-us">    &gt;{x,y}=select()</span></PRE>
+<P><span lang="en-us">returns several x coordinates and y coordinates at the points, which the user selected by the mouse. The selection
+stops, if the user clicks above the plot window.</span></P>
+<h2><span lang="en-us"><a name="Animations"></a>Animations</span></h2>
+<P><span lang="en-us">You can animate a sequence of plots. These plots are stored in a sequence of 
+pages. To start an animation, you have to clear the pages with</span></P>
+<pre><span lang="en-us">    &gt;deletepages();</span></pre>
+<p><span lang="en-us">Then, you can add the current plot to the sequence with.</span></p>
+<pre><span lang="en-us">    &gt;addpage();</span></pre>
+<p><span lang="en-us">To view a specific page, use</span></p>
+<pre><span lang="en-us">    &gt;showpage(n);</span></pre>
+<p><span lang="en-us">You will then see this page (even if you draw something), until you either 
+delete the sequence of pages, or call</span></p>
+<pre><span lang="en-us">    &gt;showpage(0);</span></pre>
+<p><span lang="en-us">or until the command line editor is invoked. To hold a page on the screen, 
+use</span></p>
+<pre><span lang="en-us">    &gt;showpage(n); wait(180);</span></pre>
+<p><span lang="en-us">This should all be done in a program. An example of such a program is</span></p>
+<pre><span lang="en-us">    &gt;rotate(&quot;function&quot;,d,n;...)</span></pre>
+<p><span lang="en-us">which rotates a 3D-plot around the vertical axis. The plot is generated with 
+any 3D function. d is the time in seconds between two pages and n is the number 
+of frames. An example would be</span></p>
+<pre><span lang="en-us">    &gt;rotate(&quot;f3dplot&quot;;&quot;x*y&quot;);</span></pre>
+<p><span lang="en-us">Note the use of the semicolon. 
+If you want to create your own animation, you can use the function animate() to 
+run it. The page generation can be done with the map function</span></p>
+<pre><span lang="en-us">    &gt;map(&quot;f&quot;,vector);</span></pre>
+<p><span lang="en-us">&quot;f&quot; is a function, which contains all the plots, depending 
+on a parameter, and an addpage(). The map command is called with the vector and 
+will run &quot;f&quot; through all parameters in the vector. Do not forget to call 
+deletepages() before you create an animation.</span></p>
+<H2 ALIGN="CENTER"><span lang="en-us"><A NAME="Exporting"></A>Exporting and Saving Graphics</span></H2>
+<P><span lang="en-us">All Euler version can save graphics in Encapsulated Postscript (EPS) format, a feature, which has been programmed
+by Eric Bouchar&eacute;. The Windows version can export Windows Metafiles to the clipboard, and save Windows bitmaps
+on disk. Moreover, there is a special Euler metafile format, which might be used for external filters. It is documented
+in the source code of Euler.</span></P>
+<P><span lang="en-us">To use the postscript export, there is the command</span></P>
+<PRE><span lang="en-us">    &gt;postscript &quot;filename.ps&quot;</span></PRE>
+<P><span lang="en-us">This command will overwrite any existing file with this name. The size of the Postscript screen can be set with</span></P>
+<PRE><span lang="en-us">    &gt;pswindow([width,height])</span></PRE>
+<P><span lang="en-us">The default is 15x15 cm.</span></P>
+<P><span lang="en-us">You can save the graphics screen in the internal Euler metafile format with the command</span></P>
+<PRE><span lang="en-us">    &gt;meta &quot;filename.met&quot;</span></PRE>
+
+</BODY>
+
+</HTML>

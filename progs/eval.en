@@ -1,0 +1,87 @@
+% In this notebook we will discuss the way EULER evaluates
+% expressions for matrix and vector input.
+% 
+% First of all, each functions spreads over all elements
+% of a vector.
+>shortformat; sqrt(1:4)
+% The same for matrix parameters.
+>sqrt([1,2;3,4])
+% If you program an own function, you will automatically
+% get the same behavior, unless the function contains cases.
+>function f(x)
+$return x^3-x
+$endfunction
+>f([0:0.1:1])
+% By the way 0:0.1:1 does not end exactly at 1 by numerical
+% reasons. We can use "linspace" for better results.
+>f(linspace(0,1,10))
+% If the function contains cases, you run into troubles.
+>function g1(x)
+$if x>0; return x^3; else return -(x^3); endif;
+$endfunction
+% This works for scalar input, of course.
+>g1(-1)
+% But it yields the wrong result for vector input, since
+% the if is evaluated only once for the complete vector.
+>g1(-1:0.5:1)
+% In this case, there is a simple remedy.
+>function g2(x)
+$return sign(x)*x^3;
+$endfunction
+>g2(-1:0.5:1)
+% The following trick works for many functions. It evaluates
+% both branches for all elements however.
+>function g3(x)
+$return (x>0)*x^3+(x<=0)*(-(x^3));
+$endfunction
+>g3(-1:0.5:1)
+% If the function is really complicated, you need the map function.
+% This function maps another function on all elements of the input
+% matrices.
+>function g4(x)
+$return map("g3",x);
+$endfunction
+% Then it will work for vectors.
+>g4(-1:0.5:1)
+% And for matrices.
+>g4([0,1;2,3])
+% For functions of two variables, we generate a grid of
+% values. The basic method is to use a column and a row
+% vector. This produces a matrix a[i,j]=v[i]*w[j].
+>[2;3]*[4,5]
+% Here is another example, using the < operator. This time
+% the first vector is the row vector.
+>i=1:3; i<i'
+% This is most often used in 3D graphics.
+>x=linspace(-1,1,10); y=x'; mesh(x*y^2+y*x^2); wait(20);
+% Note, that even the following examples work. x*y is a
+% matrix and x is a vector. But still everything is evaluated
+% as expected.
+>mesh(x*y+x+y); wait(20);
+% Here is another method, which produces matrices first,
+% and then apllies the operators.
+>{X,Y}=field(x,y'); mesh(X*Y+X+Y); wait(20);
+% The following evaluates the sum of sin(n*x)/n for n=1..20.
+% The sum function operates on the rows of a matrix, so
+% we have to transpose a little bit.
+>x=linspace(-10,10,300); n=(1:20)'; xplot(x,sum((sin(n*x)/n)')'); wait(20);
+% If we write a function of two arguments with cases, we
+% could use the old trick: Multiply the result by the condition.
+>function hat (x,y)
+$r=x^2+y^2; return (r<1)*exp(-1/(1-r^2));
+$endfunction
+% The function will work OK, unless r is accidently 1.
+% This would cause a math error. EULER would catch this
+% on most machines. But with 23 grid points, this will
+% never happen.
+>x=linspace(-2,2,23); y=x'; mesh(hat(x,y)); wait(20);
+% If we want to avoid this, we have to use the map function.
+>function hat1 (x,y)
+$r=x^2+y^2;
+$if r<0.99999; return exp(-1/(1-r^2)); else; return 0; endif;
+$endfunction
+>function hat (x,y)
+$return map("hat1",x,y);
+$endfunction
+>x=linspace(-2,2,20); y=x'; mesh(hat(x,y)); wait(20);
+>

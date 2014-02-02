@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Functions</TITLE>
+	<BASE target="_self">
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Basic Built-in Functions</H1>
+<P>This section introduces you into
+
+<UL>
+	<LI><A HREF="#Basic Functions">the basic mathematical functions in EULER</A>,
+	<LI><A HREF="#Functions and Matrices">how these functions work for matrix input</A>,
+	<LI><A HREF="#Max, Min">how to sort and compare matrices</A>,
+	<LI><A HREF="#Sum, Prod">how to sum up or multiply rows of matrices</A>,
+	<LI><A HREF="#Rounding">rounding</A>,
+	<LI><A HREF="#String Functions">basic string functions</A>.
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="Basic Functions"></A>Basic Functions</H2>
+<P>There are the usual functions</P>
+<PRE>abs, sqrt, exp,
+log, sin, cos,
+tan, asin, acos,
+atan, re, im, conj.
+</PRE>
+<P>They all work for complex values. In this case they yield the principle value. There are some functions which
+make sense only for real values</P>
+<PRE>floor, ceil, sign,
+fak, bin, logfak, logbin.
+</PRE>
+<P>floor and ceil give integer approximations to a real number. &quot;bin(n,m)&quot; computes the binomial coefficient
+of n and m. logbin(n,m) computes the logarithm of that (for large values of n,m)</P>
+<PRE>    &gt;pi()
+</PRE>
+<P>(or simply &quot;&gt;pi&quot;) is a built-in constant.</P>
+<PRE>    &gt;mod(x,y)
+</PRE>
+<P>return x modulus y.</P>
+<H2 ALIGN="CENTER"><A NAME="Functions and Matrices"></A>Functions and Matrices</H2>
+<P>Note, that most of these internal functions work for matrix input. They simply evaluate to any element of the
+matrix. If this is not the case, or if you have written an own function, which does not accept matrix input, you
+can map it to a matrix with</P>
+<PRE>    &gt;map(&quot;function&quot;,...)
+</PRE>
+<P>where the elements of the matrix parameters ... are passed to a the function. This mapping obeys the rules explained
+in the matrix section. That is, if you pass a row v and a column w to it, both are expanded to full matrices with
+as many rows as v and as many columns as w.
+<H2 ALIGN="CENTER"><A NAME="Max, Min"></A>Max, Min etc.</H2>
+<PRE>    &gt;max(x,y)
+</PRE>
+<P>and min(x,y) return the maximum (minimum resp.) of x and y.</P>
+<PRE>    &gt;max(A)
+</PRE>
+<P>and min(A) return a column vector containing the maxima (minima resp.) of the rows of A. The functions totalmax
+and totalmin from UTIL compute the maximum about all elements of a matrix.</P>
+<P>If A is a NxM matrix, then</P>
+<PRE>    &gt;extrema(A)
+</PRE>
+<P>is a Nx4 matrix, which contains in each row a vector of the form [min imin max imax], where min and max are
+the minima and maxima of the corresponding row of A, and imin and imax are the indices, where those are obtained.</P>
+<P>If v is a 1xN vector, then</P>
+<PRE>    &gt;nonzeros(v)
+</PRE>
+<P>returns a vector, containing all indices i, where v[i] is not zero. Furthermore,</P>
+<PRE>    &gt;count(v,M)
+</PRE>
+<P>returns a 1xM vector, the i-th component of which contains the number of v[i] in the interval [i-1,i).</P>
+<PRE>    &gt;find(v,x)
+</PRE>
+<P>assumes that the elements of v are ordered. It returns the index (or indices, if x is a vector) i such that
+v[i]&lt; = x&lt; v[i+1], or 0 if there is no such i.</P>
+<PRE>    &gt;sort(v)
+</PRE>
+<P>sorts the elements of v with the quicksort algorithm. It returns the sorted vector and the rearranged indices.
+If</P>
+<PRE>    &gt;{w,i}=sort(v);
+</PRE>
+<P>then v[i] is equal to w.</P>
+<H2 ALIGN="CENTER"><A NAME="Sum, Prod"></A>Sum, Prod etc.</H2>
+<P>If A is NxM matrix</P>
+<PRE>    &gt;sum(A)
+</PRE>
+<P>returns a column vector containing the sums of the rows of A. Analogously,</P>
+<PRE>    &gt;prod(A)
+</PRE>
+<P>returns the products.</P>
+<PRE>    &gt;cumsum(A)
+</PRE>
+<P>returns a NxM matrix containing the cumulative sums of the columns of A.</P>
+<PRE>    &gt;cumprod(A)
+</PRE>
+<P>works the same way. E.g.,</P>
+<PRE>    &gt;cumprod(1:20)
+</PRE>
+<P>returns a vector with the faculty function at 1 to 20.
+<H2 ALIGN="CENTER"><A NAME="Rounding"></A>Rounding</H2>
+<PRE>    &gt;round(x,n)
+</PRE>
+<P>rounds x to n digits after the decimal dot. It also works for complex numbers. x may be a matrix.
+<H2 ALIGN="CENTER"><A NAME="String Functions"></A>String Functions</H2>
+<P>The only string functions in EULER are</P>
+<PRE>    &gt;stringcompare(&quot;string1&quot;,&quot;string2&quot;)
+</PRE>
+<P>which returns 0, if the strings are equal, -1 if string1 is alphabetically prior to string2, and 1 else, and
+the comparing operators ==,&lt; ,&gt; ,&lt; =,&gt; =.</P>
+<P>Besides this, you can concatenate strings with |.</P>
+<P>Furthermore,</P>
+<PRE>    &gt;interpret(&quot;expression&quot;);
+</PRE>
+<P>will interpret the expression and return the result of the evaluation.
+<H2 ALIGN="CENTER"><A NAME="Timer, Wait"></A>Timer, Wait etc.</H2>
+<PRE>    &gt;time()
+</PRE>
+<P>returns a timer in seconds. It is useful for benchmarks etc.</P>
+<PRE>    &gt;wait(n)
+</PRE>
+<P>waits for n seconds or until a key was pressed. It returns the actual waiting time in seconds.</P>
+<PRE>    &gt;key()
+</PRE>
+<P>waits for a key press and returns the internal scan code, or the ASCII code of the key. You can check this 
+ASCII
+code against a character with key()==ascii(&quot;a&quot;).
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<!-- Created by AOLpress/1.2 -->
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Some Files</TITLE>
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<H1 ALIGN="CENTER">Some included EULER files</H1>
+<P>We explain shortly some of the included EULER files. More help is contained in the help text of the loaded functions.
+You can load these files with the load command, e.g.</P>
+<PRE>    &gt;load demo</PRE>
+<P>and either the files will start a show immediately or will display all defined functions.</P>
+
+<UL>
+	<LI><A HREF="#demo">demo</A>
+	<LI><A HREF="#apple">apple</A>
+	<LI><A HREF="#bezier">bezier</A>
+	<LI><a href="#dea">dea</a><LI><A HREF="#games">games</A>
+	<LI><A HREF="#hondt">hondt</A>
+	<LI><A HREF="#interest">interest</A>
+	<LI><A HREF="#sound">sound</A>
+</UL>
+
+<H2 ALIGN="CENTER"><A NAME="demo"></A>demo</H2>
+<P>You probably know this one. Just load it. There is also an autodemo, which is designed to show the capabilities
+of Euler without any user interaction.
+<H2 ALIGN="CENTER"><A NAME="apple"></A>apple</H2>
+<P>This is a nice plot of the Mandelbrot apple set and its potential. Just load the file.</P>
+<PRE></PRE>
+<H2 ALIGN="CENTER"><A NAME="bezier"></A>bezier</H2>
+<P>This file computes some Bezier curves and surfaces. Some demo functions are available.</P>
+<P>beziertest lets you click at points to define (x,y) values and computes and shows the 
+Bezier curve to these
+points. It is based on the function bezier(p,t), which evaluates the Bezier curve through the columns of the matrix
+p in t. bezier3dtest displays a Bezier curve in 3D-space.</P>
+<P>nurbstest shows some quadratic nurbs with increasing weight in the middle point. It is bases on nurbs(p,b,t),
+which works like bezier(p,t), but needs a weight vector b.</P>
+<P>beziersurftest shows a Bezier surface with its determining grid of points. beziersurf(x,y,z) computes the surface.
+x,y,z are the coordinates of the grid points (kxl-matrices). It returns three values {xb,yb,zb}, which are the
+coordinates of the (n+1)^2 surface points.</P>
+<P>c1test is another demo.
+<h2><a name="dea"></a>dea</h2>
+<P>Routines for the Data Envelopment Approach, using the Simplex algorithm. 
+There is a also notebook.<H2 ALIGN="CENTER"><A NAME="games"></A>games</H2>
+<P>This computes the optimal strategy for some simple games. Read the help for a description of the games (gambling,scissors,poker).</P>
+<P>game(A) computes the optimal strategy for a game with matrix A.
+<H2 ALIGN="CENTER"><A NAME="hondt"></A>hondt</H2>
+<P>Computes seat distributions for votes.</P>
+<P>hondt(v,n) and best(v,n) take the votes for the parties and the number of seats as parameters and compute a vector
+of seats for the parties.
+<H2 ALIGN="CENTER"><A NAME="interest"></A>interest</H2>
+<P>Computes the interest rate of an investment.</P>
+<P>The general purpose functions are rate(x) or rate2(x,n). Both compute the interest rate of a payment vector
+x, with positive or negative entries. The first function assumes times 0,...,n and the latter times n[1],....,n[m].</P>
+<P>investment computes the interest rate of an investment with a start installment, several payments (positive)
+and a final installment. See the help for more information.
+<H2 ALIGN="CENTER"><A NAME="sound"></A>sound</H2>
+<P>With this file, you can load or save mono WAV files in 8 or 16 bit.</P>
+
+<P>v=loadwave(filename) loads a WAV file into a vector v. It does also return the sampling rate r and will save
+this to the global variable defaultrate.</P>
+
+<P>savewave(filename,v) will save the sound with the defaultrate and 8 bits. You may specify the rate and bits
+as extra parameters.</P>
+
+<P>analyze(v) does a spectrum decomposition of the sound. the full parameter list is analyze(v,fmin,fmax,rate,points).
+fmin and fmax are the minimal and maximal frequencies of interest, rate is the sampling rate and points are the
+number of points to be used (should be a power of 2).</P>
+
+<P>mapsound(v) does an analysis for the sound at certain time increments. It will produce a nice density plot of
+the frequencies. the full parameter list is mapsound(v,dt,fmin,fmax,simpl,rate), where dt is the time increment
+in seconds, simp is a simplification factor (take 1), and rate is the sampling rate</P>
+
+<P>playwave(filename) plays the wave in that file on some systems.
+
+</BODY>
+
+</HTML>

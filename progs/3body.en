@@ -1,0 +1,13 @@
+% This is a demonstration for the three body problem. Three bodies
+% of equal weight are moving in space.
+% 
+% The differential equation is solved with an adaptive procedure.
+% But even that is not perfect.
+>load "3body"
+% First a test position.
+>test
+% Now you may set the positions and initial vectors. Click with
+% the mouse to the position of you planet and then to the end
+% of the speed vector. Use vectors of approximate length 1.
+>setplanets
+>

@@ -1,0 +1,37 @@
+% This notebook demonstrates fixpoint iteration.
+>function f(x)
+$return (x+2/x)/2
+$endfunction
+>longformat;
+% The iteration x(n+1)=f(x(n)) converges quickly to
+% sqrt(2).
+>iterate("f",2)
+% It might be easier to use an expression in x instead
+% of a function.
+>iterate("(x+2/x)/2",2)
+% niterate returns the history of 5 iterations.
+>niterate("f",2,5)
+% Starting with an interval does not work.
+>niterate("f",~1,2~,5)
+% We must use the interval Newton operator.
+>function f1(x)
+$m=middle(x);
+$return m-(m^2-2)/(2*x)
+$endfunction
+% This converges quickly to an inclusion iof the zero.
+>iterate("f1",~1,2~)
+% iterate works in several dimensions.
+>function g(x)
+$return [(x[1]+x[2])/2,sqrt(x[1]*x[2])]
+$endfunction
+% The iterations converge to the arithmetic geometric
+% mean of the start values.
+>iterate("g",[1,2])
+% The convergence is rather quick.
+>niterate("g",[1,2],4)
+% We can use an Interval iteration. This shows us that
+% the iteration is stable. The n-th iterate is within
+% the given bounds. It does not prove, that the limit
+% is in these bounds, however.
+>y=niterate("g",[~1~,~2~],4)
+>

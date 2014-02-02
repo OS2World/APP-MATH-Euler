@@ -1,0 +1,683 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	<meta http-equiv="Content-Language" content="en-us">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<!-- Created by AOLpress/1.2 -->
+
+	<META NAME="GENERATOR" Content="Microsoft FrontPage 5.0">
+	<meta name="ProgId" content="FrontPage.Editor.Document">
+	<TITLE>Euler Examples</TITLE>
+	<LINK REL="stylesheet" TYPE="text/css" HREF="euler.css">
+</HEAD>
+
+<BODY>
+
+<P>
+<H1><A NAME="700"></A>Sample Sessions</H1>
+<P>This file contains some explained input and output for some EULER sessions. Each one is dedicated to the solution
+of a specific problem. The following topics are available.
+
+<UL>
+	<LI><A HREF="#710">Evaluating a function</A>
+	<LI><A HREF="#715">Using expression strings</A>
+	<LI><A HREF="#720">Complex Functions</A>
+	<LI><A HREF="#730">A differential equation</A>
+	<LI><A HREF="#740">Bezier curve and surface</A>
+	<LI><A HREF="#750">Fast Fourier transform</A>
+	<LI><A HREF="#760">Solving linear systems</A>
+	<LI><A HREF="#765">Exact evaluation</A>
+	<LI><A HREF="#770">Interval methods</A>
+</UL>
+
+<P>
+<H2><A NAME="710"></A>Evaluating a Function</H2>
+<P>The following session has been left as it was (almost). It contains all the errors and corrections.</P>
+<PRE>This is EULER, Version X.XX.
+
+Type help(Return) for help.
+Enter command)
+
+Loading utilities, Version X.XX.
+</PRE>
+<P>This is the welcome message of EULER.</P>
+<PRE>&gt;sin(2)/2
+      0.4546487
+</PRE>
+<P>We wish to study the function sin(t)/t in the neighborhood of 0. Thus we need some more digits</P>
+<PRE>&gt;longfromat
+Variable longfromat not defined!
+error in:
+longfromat
+          ^
+&gt;longformat
+      10.000000000000       5.000000000000
+</PRE>
+<P>A typical typo. Simply press cursor up and correct it. Format was set to 10 digits width and 5 digits after
+decimal point. The new format gives 12 digits after decimal point. Other options are goodformat and expformat.</P>
+<PRE>&gt;sin(0.0001)/0.0001
+       0.999999998333
+&gt;sin(0.0001)/0.0001-1
+      -0.000000001667
+</PRE>
+<P>We conclude that sin(t)/t converges to 1. Let us see a picture of that function, using a function table.</P>
+<PRE>&gt;t=-10:0.01:10;
+&gt;s=sin(t)/t;
+&gt;xplot(t,s);
+&gt;title(&quot;sin(t)/t&quot;);
+</PRE>
+<P>t is a vector of 1000 values from -10 to 10. s is the function evaluated at these points. Remember that EULER
+evaluates all function on a vector element by element. The result is the following picture</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/sin1.gif" ALIGN="BOTTOM" BORDER="0" width="396" height="331"></P>
+<P>By the way the above plot could have been generated with</P>
+<PRE>&gt;fplot(&quot;sin(x)/x&quot;,-10,10);
+</PRE>
+<P>more easily. There are many functions in EULER allowing an expression or a function name as input.</P>
+<P>Of course, we know that we can expand sin(t)/t to a power series around 0. Let us add a plot of the first 3
+terms of this series. This shows, how a plot can be added to an existing one. It also shows that truncation of
+large values is done automatically, if the plot scale is already set.</P>
+<PRE>&gt;hold on; plot(t,1-t^2/fak(3)+t^4/fak(5)); hold off;
+</PRE>
+<P>The result is the following picture</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/sin2.gif" ALIGN="BOTTOM" BORDER="0" width="399" height="333"></P>
+<H2><A NAME="715"></A>Using Expressions</H2>
+<P>Many functions of EULER can use expressions as input. This makes it easy for the casual user to get results.</P>
+<P>E.g., if we wanting to solve the equation cos(x)=x, we can use</P>
+<PRE>&gt;longformat;
+&gt;t=1; root(&quot;cos(t)-t&quot;,t)
+        0.7390851332152
+</PRE>
+<P>In the case of the function root, the variable name may be arbitrary. There could also be other variables, which
+must be global variables. t is set to the computed value. The second parameter must be the name of the variable.</P>
+<P>root is a special function for command line use. However, there are other methods to solve equations. The bisection
+methods needs two points, where the function has opposite sign.</P>
+<PRE>&gt;bisect(&quot;cos(x)-x&quot;,0,1)
+        0.7390851332157 
+</PRE>
+<P>This time the variable must be named x. We must provide the two points of opposite sign to bisect. Other methods
+are the faster secant method and the Newton method, which needs the derivative.</P>
+<PRE>&gt;secant(&quot;cos(x)-x&quot;,0,1)
+        0.7390851332152 
+&gt;newton(&quot;cos(x)-x&quot;,&quot;-sin(x)-1&quot;,0)
+        0.7390851332152
+</PRE>
+<P>In the case of the cos function, iterating the function converges to the fixed point.</P>
+<PRE>&gt;iterate(&quot;cos(x)&quot;,1)
+        0.7390851332143 
+&gt;niterate(&quot;cos(x)&quot;,1,10)
+        0.5403023058681 
+        0.8575532158464 
+        0.6542897904978 
+        0.7934803587426 
+        0.7013687736228 
+        0.7639596829007 
+        0.7221024250267 
+        0.7504177617638 
+        0.7314040424225 
+        0.7442373549006 
+</PRE>
+<P>We can view the history with niterate. The convergence is very slow.</P>
+<P>We remark, that expressions can also be used for a quick draw of a function.</P>
+<PRE>&gt;fplot(&quot;x^3-x&quot;,-1,1);
+&gt;f3dplot(&quot;(x^3-x*y)/2&quot;);
+</PRE>
+<P>Even a differential equation can be solved this way! Try</P>
+<PRE>&gt;x=linspace(0,2*pi,100); y=heun(&quot;sin(x)*y&quot;,x,1); xplot(x,y);
+</PRE>
+<P>(Another implemented solver is the Runge-Kutta method, optionally with adaptive step size). Or an integration
+can be computed using</P>
+<PRE>&gt;romberg(&quot;exp(-x^2)/sqrt(pi)&quot;,-10,10)
+            1
+</PRE>
+<P>1 is the exact value of this integral from -infinity to +infinity.</P>
+<P>Another example is the minimum of a function, which can be computed with</P>
+<PRE>&gt;fmin(&quot;x^3-x&quot;,0,1)
+      0.57735 
+&gt;x=1; root(&quot;3*x^2-1&quot;,x)
+      0.57735 
+</PRE>
+<H2><A NAME="720"></A>Complex functions</H2>
+<P>We wish to visualize a complex function.</P>
+<PRE>&gt;phi=linspace(0,2*pi,500);
+&gt;z=exp(1i*phi);
+</PRE>
+<P>Thus z are points on the unit circle. In fact, we just went once around it. Let us see, if the point in z are
+indeed on the unit circle.</P>
+<PRE>&gt;max(abs(z)), min(abs(z)),
+      1.0000000
+      1.0000000
+</PRE>
+<P>They are! Now let us see, how these points are mapped under the exp function.</P>
+<PRE>&gt;w=exp(z);
+&gt;xplot(re(w),im(w));
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/compl0.gif" ALIGN="BOTTOM" BORDER="0" width="370" height="373"></P>
+<P>This plot connects the points re(w[i]) and im(w[i]) by lines. By the way, we could have used xplot(w) simply
+for the same purpose. We see, that the plot is distorted. Thus we choose a more appropriate plot region.</P>
+<PRE>&gt;setplot(0,3,-1.5,1.5);
+&gt;xplot(re(w),im(w));
+&gt;title(&quot;exp(z) for |z|=1&quot;);
+</PRE>
+<P>We compare the picture with the first three terms of the complex power series of exp(z).</P>
+<PRE>&gt;w1=1+z+z^2/2;
+&gt;hold on; color(2); plot(re(w1),im(w1)); hold off;
+</PRE>
+<P>Finally, we get the following picture</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/compl1.gif" ALIGN="BOTTOM" BORDER="0" width="376" height="379"></P>
+<P>This visualizes, how a parametric plot of the mapped unit circle looks like.</P>
+<P>To make a plot of the exp function near the unit circle, we need to define a grid of values. First of all, we
+establish the r and phi values</P>
+<PRE>&gt;r=(-1:0.1:1)'; phi=linspace(0,2*pi,60);
+&gt;z=r+1i*phi; w=exp(z);
+&gt;cplot(w); xplot();
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/compl2.gif" ALIGN="BOTTOM" BORDER="0" width="349" height="345"></P>
+<P>We defined two matrices of x and y values of grid points (r,phi) and mapped them with exp. We made them visible
+with cplot. Note, that cplot does not add axis ticks. We had to do this ourselves.</P>
+<P>We can now see, how exp distorts these values, using</P>
+<PRE>&gt;cplot(exp(w)); xplot();
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/compl3.gif" ALIGN="BOTTOM" BORDER="0" width="351" height="348"></P>
+<H2><A NAME="730"></A>A Differential Equation</H2>
+<P>We take the second order differential equation y''=2cos(x)-y. There is a numerical solver implemented in EULER,
+which uses the method of Heun.</P>
+<PRE>&gt;help heun
+function heun (ffunction,t,y0)
+## y=heun(&quot;f&quot;,t,y0,...) solves the differential equation y'=f(t,y).
+## f(t,y,...) must be a function. 
+## y0 is the starting value.
+</PRE>
+<P>To use it, we need to write a function, which implements f(t,y). It has two parameters, t and y. y can be a
+vector. In our case, we solve the equivalent equation y1'=2cos(x)-y2, y2'=y1.</P>
+<PRE>&gt;function f(t,y)
+$return [2*cos(t)-y[2],y[1]];
+$endfunction
+</PRE>
+<P>This function was simply entered interactively. Now lets compute a solution at discrete points t of the initial
+value problem y(0)=0, y'(0)=0.</P>
+<PRE>&gt;t=linspace(0,2*pi,100);
+&gt;s=heun(&quot;f&quot;,t,[0,0]);
+&gt;xplot(t,s);
+&gt;title(&quot;y''=2*cos(x)-y, plot of y,y'&quot;);
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/dgl1.gif" ALIGN="BOTTOM" BORDER="0" width="345" height="358"></P>
+<P>This is a plot of the solution and its first derivative. Since the exact solution is known, we can compute the
+maximal error.</P>
+<PRE>&gt;max(s[2]-t*sin(t))
+        0.00022
+</PRE>
+<P>Next we try to solve the boundary value problem y(0)=0, y(1)=1. We use the shooting method. So we write a function,
+which computes y(1) in dependence of y'(0).</P>
+<PRE>&gt;function g(a)
+$t=linspace(0,1,100);
+$s=heun(&quot;f&quot;,t,[a,0]);
+$return s[2,cols(s)];
+$endfunction
+</PRE>
+<P>Then</P>
+<PRE>&gt;g(0)
+        0.84147
+&gt;g(1)
+        1.68294
+</PRE>
+<P>So y'(0) must be chosen between 0 and 1. We use an implemented root finder, the secant method. We seek the root
+of the following function.</P>
+<PRE>&gt;function h(a)
+$return g(a)-1
+$endfunction
+</PRE>
+<P>The secant method work like this.</P>
+<PRE>&gt;help secant
+function secant (ffunction,a,b)
+## secant(&quot;f&quot;,a,b,...) uses the secant method to find a root of f in [a,b]
+</PRE>
+<P>So we find the solution with</P>
+<PRE>&gt;y1=secant(&quot;h&quot;,-1,0)
+        0.18840
+</PRE>
+<P>Indeed</P>
+<PRE>&gt;g(y1)
+        1.00000
+</PRE>
+<P>Lets have a look at this solution.</P>
+<PRE>&gt;t=linspace(0,2*pi,100);
+&gt;s=heun(&quot;f&quot;,t,[y1,0]);
+&gt;xplot(t,s[2]);
+&gt;title(&quot;y''=2*cos(x)-y, y[0]=0, y[1]=1&quot;);
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/dgl2.gif" ALIGN="BOTTOM" BORDER="0" width="342" height="361"></P>
+<H2><A NAME="740"></A>Bezier curve and surface</H2>
+<P>We compute the Bezier polynomials first.</P>
+<PRE>&gt;t=0:0.01:1;
+&gt;n=(0:5)';</PRE>
+<P CLASS="NotNarrowed">&gt;S=bin(5,n)*t^n*(1-t)^(5-n);
+<PRE></PRE>
+<P>We need to explain this. By the rules for operands or functions with two parameters, S has as many rows as n,
+and as many columns as t. The expression is evaluated correctly using corresponding values.</P>
+<PRE>&gt;size(S)
+      6.0000000    101.0000000
+&gt;xplot(t,S);
+&gt;title(&quot;The Bezier polynomials&quot;);
+</PRE>
+<P ALIGN="CENTER"><IMG SRC="images/bezier1.gif" ALIGN="BOTTOM" BORDER="0" width="354" height="361"></P>
+<P>Now we generate a Bezier polynomial to the points 1,3,4,4,3,1. The x-coordinates are simply equally spaced from
+0 to 1.</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/bezier2.gif" ALIGN="BOTTOM" BORDER="0" width="339" height="362"></P>
+<P>This has been done with the following commands.</P>
+<PRE>&gt;v=[1,3,4,4,3,1]; xplot(linspace(0,1,5),v);
+&gt;hold on; color(2); plot(t,v.S); color(1); hold off;
+&gt;title(&quot;Bezier polynomial to a grid&quot;);
+</PRE>
+<P>We can also get a surface. We use random z-coordinates and an equally spaced grid for x and y. However, the
+graph looks clearer, if we decrease the number of points in t a little bit. To redefine all of the above, we can
+simply recall the commands (or paste them).</P>
+<PRE>&gt;t=0:0.1:1;
+&gt;n=(0:5)';
+&gt;S=bin(5,n)*t^n*(1-t)^(5-n);
+&gt;Z=random(6,6);
+&gt;triangles(1); mesh(S'.Z.S);
+&gt;title(&quot;A Random Surface&quot;);
+</PRE>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/bezier3.gif" ALIGN="BOTTOM" BORDER="0" width="314" height="324"></P>
+<P>Another view, using central projection.</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/bezier4.gif" ALIGN="MIDDLE" BORDER="0" width="270" height="261"></P>
+<P>To view the surface from another view, we must define the x and y coordinates properly and call framedsolid
+with the scaling parameter of 1. I had to play with the view parameters to produce a nice look. triangles(1) makes
+3D plots look better. This can be done with the following code.</P>
+<PRE>&gt;view(3,1.5,0.5,0.5);
+&gt;framedsolid(t',t,S'.Z.S,1);
+&gt;title(&quot;Another view&quot;);
+</PRE>
+<H2><A NAME="750"></A>The Fast Fourier Transform</H2>
+<P>What it the fastest way to compute sum z^n/n^2 for all |z|=1? This is a case for the Fast Fourier Transform
+(FFT). So</P>
+<PRE>&gt;a=1/(1:1024)^2;
+&gt;w=fft(a);
+&gt;xplot(w); title(&quot;sum z^n/n^2, |z|=1&quot;);
+</PRE>
+<P>results in a plot of these values.</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/fft1.gif" ALIGN="BOTTOM" BORDER="0" width="350" height="363"></P>
+<P>Also</P>
+<PRE>&gt;longformat; w[1]
+       1.643957981030+       0.000000000000i 
+&gt;pi^2/6
+       1.644934066848
+</PRE>
+<P>w[1] is sum 1/n^2 and thus about equal to pi^2/6.</P>
+<P>Lets take a simpler example.</P>
+<PRE>&gt;z=exp(2*1i*pi/8); z^8
+        1.00000+   -2.45030e-16i
+</PRE>
+<P>z is the 8-th unit root. Now evaluate 1+x+2*x^2 for x=1,z,z^2,...,z^7 simultaneously.</P>
+<PRE>&gt;w=polyval([1,1,2,0,0,0,0,0],z^(0:7))
+Column 1 to 2:
+        4.00000+        0.00000i         1.70711+        2.70711i 
+Column 3 to 4:
+       -1.00000+        1.00000i         0.29289+       -1.29289i 
+Column 5 to 6:
+        2.00000+   -3.67545e-16i         0.29289+        1.29289i 
+Column 7 to 8:
+       -1.00000+       -1.00000i         1.70711+       -2.70711i 
+&gt;fft([1,1,2,0,0,0,0,0])
+Column 1 to 2:
+        4.00000+        0.00000i         1.70711+        2.70711i 
+Column 3 to 4:
+       -1.00000+        1.00000i         0.29289+       -1.29289i 
+Column 5 to 6:
+        2.00000+    1.22515e-16i         0.29289+        1.29289i 
+Column 7 to 8:
+       -1.00000+       -1.00000i         1.70711+       -2.70711i 
+</PRE>
+<P>This is exactly the same. FFT does the inverse. So ifft(w) yields [1,1,2,0,0,0,0,0].</P>
+<P>What has this to do with trigonometric sums? Let us start with a trigonometric sum and evaluate it at equidistant
+points.</P>
+<PRE>&gt;d=2*pi/16; t=0:d:2*pi-d; s=1+sin(t)+2*cos(t)+3*sin(5*t);
+&gt;ifft(s)
+Column 1 to 2:
+        1.00000+        0.00000i         1.00000+       -0.50000i 
+Column 3 to 4:
+   -5.18102e-16+   -1.12612e-15i     2.52999e-16+   -8.88178e-16i 
+Column 5 to 6:
+    8.02039e-16+   -2.52673e-16i     6.52961e-17+       -1.50000i 
+Column 7 to 8:
+    8.07853e-16+    4.28197e-16i     5.55112e-17+    1.08247e-15i 
+Column 9 to 10:
+   -8.32667e-16+   -6.12574e-17i    -1.11022e-16+   -9.99201e-16i 
+Column 11 to 12:
+    8.20540e-16+   -4.58826e-16i    -8.29415e-16+        1.50000i 
+Column 13 to 14:
+    8.63296e-16+    1.91416e-16i     6.02979e-16+    7.77156e-16i 
+Column 15 to 16:
+   -4.44158e-16+    1.09549e-15i         1.00000+        0.50000i 
+</PRE>
+<P>The relevant coefficients are clearly visible. Thus a[0] is 1, a[16]+a[1] is 2 and (a[16]-a[1])/i is 1, (a[12]-a[6])/i
+is 3. This is taking the real part of the polynomial.</P>
+<P>FFT is usually used to make a frequency decomposition of a signal.</P>
+<PRE>&gt;t=linspace(0,2*pi,1023); size(t)
+        1.00000     1024.00000
+&gt;s=sin(50*t)+sin(100*t)*2;
+&gt;s=s+normal(size(s));
+&gt;xplot(s);
+</PRE>
+<P>We have a signal composed of frequencies 50 and 100. To it, we added noise in the form of a normal distributed
+random variable. In the plot, the signal is almost invisible.</P>
+<P>The signal looks like this.</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/fft2.gif" ALIGN="BOTTOM" BORDER="0" width="348" height="351"></P>
+<P>This is really a noisy signal.</P>
+<PRE>&gt;xplot(abs(fft(s)));
+</PRE>
+<P>However, the discrete fourier transform clearly shows the relevant frequencies.</P>
+<P ALIGN="CENTER" CLASS="NotNarrowed">
+<IMG SRC="images/fft3.gif" ALIGN="BOTTOM" BORDER="0" width="361" height="350"></P>
+<H2><A NAME="760"></A>Solving Linear Systems</H2>
+<P>We try to solve a 20x20 linear system, using the interval Gauss method, starting with an interval matrix A and
+an interval vector b, we solve A.x=b. I.e., we compute an inclusion of all possible solutions of A1.x=b1, where
+A1, b1 have all components in A, b respectively.</P>
+<PRE>&gt;A=~random(20,20)~; b=~normal(20,1)~; x=A\b,
+         ~-8.82886,-8.31189~
+           ~6.75804,6.86954~
+           ~3.88369,4.21000~
+           ~1.77887,1.93779~
+         ~-1.10686,-1.06680~
+         ~-1.63162,-1.49419~
+       ~-12.37560,-12.36436~
+           ~6.57582,6.58060~
+         ~-3.99866,-3.98221~
+         ~12.02685,12.03148~
+         ~10.92949,10.93122~
+           ~7.32614,7.32686~
+           ~3.32568,3.32682~
+         ~-5.00561,-5.00428~
+         ~-0.58250,-0.58215~
+         ~-7.73372,-7.73332~
+         ~-3.28384,-3.28366~
+         ~-0.49704,-0.49702~
+         ~-2.53221,-2.53217~
+         ~-3.84874,-3.84874~
+&gt;max(diameter(x)'),
+       0.51697
+</PRE>
+<P>The computed vector x is an inclusion of the correct solution of A.x=b. However, we are not satisfied with this
+inclusion. To improve it, we use an approximate solution x. Then we compute the residuum r=A.x-b and solve A.y=r
+in an interval manner. We then set x=x-r. This yields an inclusion of the correct solution, which is at most 0.00002
+wide.</P>
+<PRE>&gt;x=middle(A)\middle(b); x=x-A\residuum(A,x,b);
+&gt;max(diameter(x)'),
+       0.00002
+&gt;x[1],
+         ~-8.57038,-8.57036~
+</PRE>
+<P>To do this, it was not really necessary to compute the residuum exactly. We could have used x=x-A\(A.x-b). But
+if A is badly conditioned, this will give a worse result.</P>
+<P>Let us demonstrate the exact scalar product.</P>
+<PRE>&gt;t=exp(random(1,100)*40); x=-t|t|1;
+&gt;longformat; sum(x),
+      6.567650591472
+&gt;accuload(x),
+      1.000000000000
+</PRE>
+<P>It is clear that the sum over the elements of x is 1. And accuload correctly computes this sum. You may also
+use the following method.</P>
+<PRE>&gt;{y,i}=sort(abs(x)); sum(x[flipx(i)]),
+      1.000000000000
+</PRE>
+<P>This sorts x in descending absolute values and adds them. However accuload is just as fast and it will also
+handle scalar products.</P>
+<PRE>&gt;y=t|t|1; x.y',
+  -9.27123614247e+18
+&gt;accuload(x,y),
+      1.000000000000
+</PRE>
+<P>The Hilbert matrix is badly conditioned. Let us try the 8x8 Hilbert matrix. To avoid round-off in input, hilb
+multiplies it with a factor. So H is exactly representable in the computer up to 28 rows.</P>
+<PRE>&gt;H=hilb(8); b=sum(H); x=H\b,
+      1.000000000001
+      0.999999999955
+      1.000000000648
+      0.999999996236
+      1.000000010663
+      0.999999984321
+      1.000000011500
+      0.999999996676
+</PRE>
+<P>We get a considerable deviation from the correct solution (1,...,1)'. One residual iteration removes this error.</P>
+<PRE>&gt;r=residuum(H,x,b); x=x-H\r,
+      1.000000000000
+      1.000000000000
+      1.000000000000
+      1.000000000000
+      1.000000000000
+      1.000000000000
+      1.000000000000
+      1.000000000000
+</PRE>
+<P>To compute an inclusion, we use the interval Gauss method to compute an interval inclusion of the residuum.</P>
+<PRE>&gt;x=H\b; x=x-H\~r~,
+         ~0.999999996598,1.000000003402~
+         ~0.999999995447,1.000000004553~
+         ~0.999999997545,1.000000002455~
+         ~0.999999999070,1.000000000930~
+         ~0.999999999703,1.000000000297~
+         ~0.999999999925,1.000000000075~
+         ~0.999999999984,1.000000000016~
+         ~0.999999999996,1.000000000004~
+</PRE>
+<P>This is sort of disappointing. And it may fail, if the Gauss algorithm decides that H may be singular. Let us
+use another method to improve x.</P>
+<PRE>&gt;R=inv(H); M=~-residuum(R,H,id(8))~; f=~residuum(R,b,0)~;
+&gt;longestformat; xn=residuum(M,x,-f), shortformat;
+   ~9.9999999999999956e-01,1.0000000000000002e+00~
+   ~9.9999999999999944e-01,1.0000000000000007e+00~
+   ~9.9999999999999878e-01,1.0000000000000011e+00~
+   ~9.9999999999999811e-01,1.0000000000000018e+00~
+   ~9.9999999999999589e-01,1.0000000000000040e+00~
+   ~9.9999999999999800e-01,1.0000000000000020e+00~
+   ~9.9999999999999922e-01,1.0000000000000007e+00~
+   ~9.9999999999999956e-01,1.0000000000000004e+00~
+</PRE>
+<P>What we have done is an iteration step with a pseudo inverse R. R is close to the inverse of H. We then computed
+an inclusion of R.b-(I-R.H).x in an interval manner. Since H is exact, it is crucial to use an exact scalar product
+for I-R.H. Otherwise, the inclusions are not satisfying. We have also proved that the above vector contains the
+exact solution and that H is regular, because xn is properly contained in x. (This is a Theorem, which the reader
+may found in papers of Rump.)</P>
+<PRE>&gt;xn &lt;&lt; x,
+       1.00000
+       1.00000
+       1.00000
+       1.00000
+       1.00000
+       1.00000
+       1.00000
+       1.00000
+</PRE>
+<P>In INTERVAL.E there is a solver for interval LGS. Using this,</P>
+<PRE>&gt;load &quot;interval&quot;;
+&gt;h=hilb(8); b=sum(h);
+&gt;longestformat; ilgs(h,b), shortformat;
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+   ~9.9999999999999978e-01,1.0000000000000002e+00~
+</PRE>
+<P>we get a good inclusion, plus a proof that the interval contains a solution and that hilb(8) is regular. 
+<H2><A NAME="765"></A>Exact evaluation</H2>
+<P>EULER can evaluate expressions more exactly, using residual iterations. As an example, we take the polynomial</P>
+<PRE>&gt;longformat;
+&gt;p=[-945804881,1753426039,-1083557822,223200658]
+Column 1 to 2:
+             -945804881              1753426039 
+Column 3 to 4:
+            -1083557822               223200658 
+</PRE>
+<P>We evaluate it at a special point.</P>
+<PRE>&gt;polyval(p,1.61801916)
+    -1.160660758615e-07 
+</PRE>
+<P>However this answer is completely wrong. We get a better result with</P>
+<PRE>&gt;xpolyval(p,1.61801916)
+    -1.708110500122e-12 
+</PRE>
+<P>An inclusion can be derived with interval methods.</P>
+<PRE>&gt;load &quot;interval&quot;
+This file contains the following interval methods, all producing
+guaranteed bounds.
+idgl, a simple DLG solver.
+ilgs, a linear system solver.
+iinv, computes an inclusion of the inverse.
+ipolyval, a polynomial evaluation.
+inewton, interval Newton method.
+inewton2, Newton method in several dimensions.
+&gt;ipolyval(p,1.61801916)
+   ~-1.7081105002e-12,-1.70811050003e-12~ 
+</PRE>
+<P>Next, we evaluate an expression.</P>
+<PRE>&gt;x=10864; y=18817; 9*x^4-y^4+2*y^2,
+                      2 
+</PRE>
+<P>This answer is wrong. To get a correct answer, we transform the problem into a linear system. This is simple.
+We can use x[1]=x, x[2]=x[1]*x, etc.</P>
+<PRE>&gt;A=id(9);
+&gt;A[2,1]=-x; A[3,2]=-x; A[4,3]=-x;
+&gt;A[6,5]=-y; A[7,6]=-y; A[8,7]=-y;
+&gt;A[9,4]=-9; A[9,8]=1; A[9,6]=-2;
+&gt;b=[x 0 0 0 y 0 0 0 0]';
+&gt;v=xlusolve(A,b); v[9]
+                      1 
+</PRE>
+<P>This is the correct answer. ilgs provides an inclusion.</P>
+<PRE>&gt;v=ilgs(A,b); v[9]
+ ~0.99999999999999978,1.0000000000000002~ 
+</PRE>
+<H2><A NAME="770"></A>Interval methods</H2>
+<P>We compute an interval inclusion of the integral of sin from 0 to pi. First we set up a vector of intervals
+covering [0,pi].</P>
+<PRE>&gt;shortformat; t=linspace(0,pi,1000);
+&gt;n=cols(t); i=~t[1:n-1],t[2:n]~; i[1:3]
+Column 1 to 2:
+           ~0.00000,0.00314~           ~0.00314,0.00628~
+Column 3 to 3:
+           ~0.00628,0.00942~
+</PRE>
+<P>Then we sum up</P>
+<PRE>&gt;h=pi/1000; sum(sin(i))*h
+           ~1.99685,2.00315~
+</PRE>
+<P>This is an inclusion. We could try to get a better one with the Simpson method.</P>
+<PRE>&gt;f=4-mod(1:n,2)*2; f[1]=1; f[n]=1; f[1:6], f[n-5:n],
+Column 1 to 4:
+       1.00000       4.00000       2.00000       4.00000
+Column 5 to 6:
+       2.00000       4.00000
+Column 1 to 4:
+       4.00000       2.00000       4.00000       2.00000
+Column 5 to 6:
+       4.00000       1.00000
+&gt;longestformat; r=sum(f*sin(~t~))*h/3
+   ~2.0000000000008753e+00,2.0000000000013367e+00~
+</PRE>
+<P>This is not an inclusion. we have to add an error term. The 4-th derivative of sin is bounded by 1, so we get</P>
+<PRE>&gt;r-~-1,1~*~pi~/180*h^4
+   ~1.9999999999991747e+00,2.0000000000030371e+00~
+</PRE>
+<P>This is an inclusion of the integral.</P>
+<P>Let us now demonstrate an interval differential equation solver.</P>
+<PRE>&gt;load &quot;interval&quot;
+&gt;help idgl
+function idgl (fff,x,y0)
+## Compute the solution of y'=fff(t,y0,...) at points t with
+## y(t[1])=y0.
+## The result is an interval vector of values.
+## Additional arguments are passed to fff.
+</PRE>
+<P>The function idgl contained in idgl.e will compute an interval inclusion for the solution using a very primitive
+Euler polygon method. We have to enter the differential equation, here y'=t*y^2.</P>
+<PRE>&gt;function f(t,y)
+$return t*y^2;
+$endfunction
+</PRE>
+<P>Now we set the initial value y(0)=1 and the step size to 1/1000.</P>
+<PRE>&gt;x=0:0.001:1;
+&gt;y=idgl(&quot;f&quot;,x,1);
+&gt;y[cols(y)]
+           ~1.99604,2.00399~
+</PRE>
+<P>This is an inclusion of y(1). The correct value is 2. The solution is 1/(1-t^2).</P>
+<PRE>&gt;s=1/(1-x^2/2);
+&gt;nonzeros(!(s &lt;&lt;= y))
+</PRE>
+<P>Thus y contains the correct solution.</P>
+<P>Let us demonstrate the interval Newton method.</P>
+<PRE>&gt;load &quot;interval&quot;
+&gt;help inewton
+function inewton (ffunc,fder,x)
+## Computes an interval inclusion of the zero of ffunc.
+## fder is an inclusion of the derivative of ffunc.
+## The initial interval x must already contain a zero.
+</PRE>
+<P>We have to enter a function and its derivative.</P>
+<PRE>&gt;function f(x)
+$return x^5-3*x-1
+$endfunction
+&gt;function f1(x)
+$return 5*x^4-3
+$endfunction
+</PRE>
+<P>inewton does the rest.</P>
+<PRE>&gt;longestformat; inewton(&quot;f&quot;,&quot;f1&quot;,~1,2~), shortformat;
+   ~1.3887919844072540e+00,1.3887919844072545e+00~
+</PRE>
+<P>We have also proved that the interval [1,2] contains exactly one solution of f(x)=0.</P>
+<P>You could also pass expressions in x to inewton.</P>
+<PRE>&gt;inewton(&quot;x^5-3*x-1&quot;,&quot;5*x^4-3&quot;,~1,2~)
+</PRE>
+<P>A similar Newton method works in several dimensions.</P>
+<PRE>function f(x)
+    return [x[1]*x[2]*x[3]-1,x[1]-2*x[2],x[2]^2-x[3]-2]
+endfunction
+
+function Jf(x)
+    return [x[2]*x[3],x[1]*x[3],x[1]*x[2];
+        1,-2,0;
+        0,2*x[2],-1]
+endfunction
+</PRE>
+<P>This is a function in three dimensions and its Jacobian.</P>
+<PRE>longestformat;
+x=newton2(&quot;f&quot;,&quot;Jf&quot;,[1,1,1]); f(x),
+Column 1 to 2:
+   2.2204460492503131e-16       0.0000000000000000
+Column 3 to 3:
+   4.4408920985006262e-16
+inewton2(&quot;f&quot;,&quot;Jf&quot;,[1,1,1]),
+Column 1 to 1:
+   ~2.9831157345242825e+00,2.9831157345242847e+00~
+Column 2 to 2:
+   ~1.4915578672621415e+00,1.4915578672621421e+00~
+Column 3 to 3:
+   ~2.2474487139158886e-01,2.2474487139158927e-01~
+shortformat;
+</PRE>
+<P>newton2 is just a two dimensional analog of the Newton method. It converges against x. f(x) is indeed a small
+value. inewton2 produces a verified interval inclusion of the solution.
+
+</BODY>
+
+</HTML>

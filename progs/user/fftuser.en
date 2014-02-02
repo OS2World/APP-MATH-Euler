@@ -1,0 +1,39 @@
+>ftzufo=3;                                       
+>stuetzpkte=72;                                  
+>                                                
+>function fract(x)                               
+$return 1+x-round(x+0.5,0)                       
+$endfunction                                     
+>                                                
+>function inint(t)                               
+$useglobal                                       
+$return round(fract(t)*stuetzpkte,0)/stuetzpkte  
+$endfunction                                     
+>                                                
+>function sinint(t)                              
+$useglobal                                       
+$return sin((inint(t))*2*pi)                     
+$endfunction                                     
+>                                                
+>t=[0:1727]/864;f=sinint(t);xplot(t,f);          
+>c=fft(f); p=20*log(abs(c)/864);                 
+>xplot((0:863)/2,p(1:864));xgrid([1,72]);   
+>                                           
+>stuetzpkte=72;ftzufs=3;ftres=256;                                            
+>                                                                            
+>function inint(t)                                                           
+$useglobal                                                                   
+$return mod(round(t/(ftzufs*ftres),0),stuetzpkte)/stuetzpkte                 
+$endfunction                                                                 
+>                                                                            
+>function sinint(t)                                                          
+$useglobal                                                                   
+$return sin((inint(t))*2*pi)                                                 
+$endfunction                                                                 
+>                                                                            
+>t=[0:432]/2*ftres;f=sinint(t);xplot(t*20e-3/(ftres*stuetzpkte*ftzufs),f);   
+>                                                                            
+>t=[0:110592];f=sinint(t);xplot(t,f);                                        
+>c=fft(f); p=20*log(abs(c)/55296);                                           
+>xplot((0:4095)/144,p(2:4097));ygrid(-0.01);                                 
+

@@ -1,0 +1,54 @@
+% In this notebook, we demonstrate a random walk. We will also
+% do a Monte Carlo simulation to evaluate a certain probability.
+% 
+% First we fix the length of the walk and the probability to go
+% upward +1 in each step (in the other steps you go downward -1).
+>n=500; p=0.48;
+% The next statement generates a random walk. First the random
+% number is tested against p. Then we have rescale the (0,1) to
+% (-1,1) and finally we take the cumulative sum.
+>A=cumsum(2*(random(1,n)<=p)-1);
+% We can plot this walk easily.
+>setplot(0,n-1,-4*sqrt(n),4*sqrt(n));
+>xplot(0:n-1,A); wait(20);
+% The last value is binomially distributed with the following
+% mean value.
+>m=n*p-n*(1-p)
+% And this standard deviation.
+>d=sqrt(n*p*(1-p))
+% Here is a 99 percent confidence interval.
+>h=invnormaldis(0.995)*d; [m-h,m+h]
+% We now write a function to repeat this procedure m times and
+% test, wether the random walk ever exceeds a certain limit. This
+% could be done in a single statement, but it would need more
+% memory.
+>function test (n,p,m,lim=20)
+$c=0;
+$loop 1 to m;
+$c=c+any(cumsum(2*(random(1,n)<=p)-1)>=lim);
+$end
+$return c/m;
+$endfunction
+% Set the following value to something lower, if you have a slow
+% machine (less than Pentium).
+>m=1000;
+% First we test a random walk of length 500 against exceeding
+% the default limit 20. We repeat the test m times and get a chance
+% of about 13 percent.
+>test(500,0.48,m)
+% We can compute the true probability with the following function.
+% 
+% By numerical reasons, this function will become inaccurate for
+% large n and may even yield 0 instead of 1 then.
+>function prob (n,p,l)
+$nu=n/2+l/2:n;
+$a=sum(bin(n,nu)*p^nu*(1-p)^(n-nu));
+$nu=n/2+l/2+1:n;
+$return sum(bin(n,nu)*p^(n+l-nu)*(1-p)^(nu-l))+a
+$endfunction
+>prob(500,0.48,20)
+% Here is another example with the probability of a true random
+% walk (p=0.5) to exceed 20 in a path of length 500.
+>test(500,0.5,m,20)
+>prob(500,0.5,20)
+>

@@ -1,0 +1,172 @@
+% In this notebook, we demonstrate statistical tests and distributions,
+% as implemented in the file STATIST.E. We load this file first.
+>load "statist"
+% Assume the following measurements. We wish to compute the mean
+% value and the measured standard deviation.
+>M=[1000,1004,998,997,1002];
+>mean(M)
+>dev(M)
+% Next we plot the normal distribution with this mean and deviation.
+>fplot("qnormal(x,mean(M),dev(M))",990,1010); wait(20);
+% We wish to compute the probability that a value is bigger than
+% 1005, assuming the measured distribution. To do this, we have
+% to normalize the value and compute the normal distribution quantile
+% of this value.
+>1-normaldis((1005-mean(M))/dev(M))
+% So the probability is 4.7 percent.
+% 
+% Next we assume measured sizes of men in cm. We set data ranges
+% 155.5-159.5, 159.5-163.5 and so on.
+>r=155.5:4:190.5; v=[22,71,136,169,139,71,32,8];
+% We can use xplotrange to plot these measurements. The function
+% expects the end values of the ranges and the measurements. So
+% r must be one longer than v.
+>xplotrange(r,v); wait(20);
+% Next we take as measurement point the middle of each range and
+% compute the mean value and the deviation of all data.
+>l=(r[1:8]+r[2:9])/2;
+>{m,d}=meandev(l,v); m, d,
+% meandev computes the mean value of measurements r with multiplicities
+% v.
+>{m1,d1}=meandev([100,200],[1,99]); m1, d1,
+% We can add a plot of the expected distribution with this mean
+% value and deviation over the true size measurements.
+>hold on; linewidth(3);
+>fplot("qnormal(x,m,d)*sum(v)*4",min(r),max(r));
+>linewidth(1); hold off; shg;
+% Next we test the distribution against the normal distribution.
+% This uses a chi^2 test.
+>testnormal(r,sum(v),v,m,d)
+% This error probablity for rejection is much to high. So we do
+% not reject the hypothesis of normal distribution.
+% 
+% In comparision, we try the same with a sample of the built in
+% random number generator.
+>p=normal(1,1000); testnormal(0:10,1000,count(p*2.5+5,10),5,2.5)
+% This will sometimes lead to rejection. To put up a real test,
+% we repeat this test 1000 times and reject, if p<0.05. This should
+% lead to about 5 percent rejections.
+>function test (m=1000)
+$n=0;
+$loop 1 to m;
+$if testnormal(0:10,100,count(normal(1,100)*2.5+5,10),5,2.5)<0.05;
+$n=n+1;
+$endif;
+$end;
+$return n/m;
+$endfunction
+>test
+% Next we test dice throws to the equidistribution. Assuming 600
+% throws, we got some values.
+>chitest([90,103,114,101,103,89],dup(100,6)')
+% So we do not reject equi-distribution.
+% 
+% Next we generate 1000 dice throws and do the same.
+>n=1000; t=random([1,n*6]); chitest(count(t*6,6),dup(n,6)')
+% A result less than 0.05 leads to the assumption of a false dice.
+% This may happen every 20-th time.
+% 
+% Next we test for the mean value 100 with the t-test.
+>s=100+normal([1,100])*10;
+>ttest(mean(s),dev(s),10,100)
+% The function accepts the mean, the deviation and the number
+% of data, and the mean value to test for.
+% 
+% Finally, we check two measurements for the same mean. We reject
+% if the result is <0.05.
+>tcomparedata(normal(1,10),normal(1,10))
+% If bias one distribution, we get more rejections. Repeat this
+% test several times to see the effect.
+>tcomparedata(normal(1,10),normal(1,10)+1)
+% In the next example, we generate 100 times 20 random dice throws
+% and count the ones in it. There must be 20/6=3.3 ones on average.
+>R=random(100,20); R=sum(R*6<=1)'; mean(R)
+% We now compare the number of ones with the binomial distribution.
+% First we plot the distribution of ones.
+>t=count(R,21); xplotrange(0:21,t); wait(20);
+% Then we compute the expected values.
+>n=0:20; b=bin(20,n)*(1/6)^n*(5/6)^(20-n)*100;
+% We now collect several numbers to get categories, which are
+% big enough.
+>t1=sum(t[1:2])|t[3:7]|sum(t[8:21]);
+>b1=sum(b[1:2])|b[3:7]|sum(b[8:21]);
+% The chitest rejects our result, if its result is <0.05.
+>chitest(t1,b1)
+% This may happen any 20-th time. So we repeat the test 100 times
+% and should get 5 percent rejections.
+>function test (m=100)
+$n=0;
+$b=bin(20,0:20)*(1/6)^(0:20)*(5/6)^(20-(0:20))*100;
+$loop 1 to m;
+$t=count(sum(random(100,20)*6<=1)',21);
+$c=chitest(sum(t[1:2])|t[3:7]|sum(t[8:21]), ..
+$sum(b[1:2])|b[3:7]|sum(b[8:21]));
+$if c<0.05; n=n+1; endif;
+$end;
+$return n/m;
+$endfunction
+>test
+% The following example contains results of two groups of persons
+% (male and female, say) in voting any of six parties.
+>A=[23,37,43,52,67,74;27,39,41,49,63,77]
+% We wish to test for independence of the votes from the sex.
+>tabletest(A)
+% We now demonstrate how to read and write data to a file.
+>a=random(1,100); mean(a), dev(a),
+% To write it, we use the printformat function.
+>open("test.dat","w"); printformat(a'); close();
+% To read it, we use the getvector function, which accepts almost
+% any data format.
+>open("test.dat","r"); a=getvector(100); close();
+>mean(a), dev(a),
+% Next we use a variance analysis (F-test) to test three samples
+% of normally distributed data for same mean value.
+>x1=[109,111,98,119,91,118,109,99,115,109,94]; mean(x1),
+>x2=[120,124,115,139,114,110,113,120,117]; mean(x2),
+>x3=[120,112,115,110,105,134,105,130,121,111]; mean(x3)
+>varanalysis(x1,x2,x3)
+% This means, we reject the hypothesis of same mean value.
+% 
+% We can compute the binomial distribution. First there is the
+% binomialsum function, which returns the probability of i or
+% less hits out of n trials.
+>binsum(410,1000,0.4)
+% The normalum function approximates the same with the normal
+% distribution and is much faster.
+>normalsum(410,1000,0.4)
+% This is the direct way. But normalsum uses some tricks to avoid
+% overflow and is faster.
+>p=0.4; i=0:410; n=1000; sum(bin(n,i)*p^i*(1-p)^(n-i))
+% invbinsum computes the inverse of binomialsum.
+>invbinsum(0.75,1000,0.4)
+% In Bridge there may be 5 outstanding cards (out of 52) in two
+% hands (26 cards). Let us compute the probability of a distribution
+% worse than 3:2 (e.g. 0:5, 1:4, 4:1 or 5:0).
+>2*hypergeomsum(1,5,13,26)
+% An application is the medin test, which is to reject data samples
+% with different mean distribution by testing with the median
+% of the united sample.
+>a=[56,66,68,49,61,53,45,58,54];
+>b=[72,81,51,73,69,78,59,67,65,71,68,71];
+>mediantest(a,b)
+% Another test on equality is the rank test. This is much sharper
+% than the median test.
+>ranktest(a,b)
+% In the following example, both distributions have the same mean.
+>ranktest(random(1,100),random(1,50)*3-1)
+% Let us now try to simulate two treatments a and b applied to
+% different persons.
+>a=[8.0,7.4,5.9,9.4,8.6,8.2,7.6,8.1,6.2,8.9];
+>b=[6.8,7.1,6.8,8.3,7.9,7.2,7.4,6.8,6.8,8.1];
+% The signum test decides, wether a is better than b.
+>signtest(a,b)
+% This is to much error. We cannot reject that a not better than
+% b.
+% 
+% The Wilcoxon test is sharper than this test, but relies on the
+% quantitative value of the differences.
+>wilcoxon(a,b)
+% Two tests with internally generated series.
+>wilcoxon(normal(1,20),normal(1,20)-1)
+>wilcoxon(normal(1,20),normal(1,20))
+>

@@ -1,0 +1,118 @@
+% This notebook introduces you into interval arithmetic.
+% 
+% An interval [2,3] is entered with the following notation.
+>~2,3~
+% Operators between intervals yield an interval result. The
+% interval contains all possible results, when the operator
+% is applied to arguments inside the intervals.
+>~2,3~*~4,7~
+% Note that the following are different. The first one
+% contains all squares of elements in [-1,1], the second
+% contains all s*t, where -1 <= s,t <=1.
+>~-1,1~^2, ~-1,1~*~-1,1~,
+% One may use the one point interval [s,s], but ~s~ is
+% different from it. The latter is an interval around s.
+>~2,2~, ~2~,
+% Let us make an example. The 10-th partial sum of the
+% Taylor series of exp is the following polynomial.
+>p=1/fak(0:10)
+% Let us evaluate this polynomial in -2.
+>longformat; polyval(p,-2)
+% The following is the correct result for the infinite series.
+>exp(-2)
+% We can get an inclusion with the remainder term in
+% interval notation. Note that we have to use ~p~
+% because p is not exactly represented in the computer.
+% But we can use the one point interval [-2,-2].
+>polyval(~p~,~-2,-2~)+~-1,1~*2^11/fak(11)
+% Some more terms. Note that fak(21) is exactly representable
+% in the computer.
+>n=20; polyval(~1/fak(0:n)~,~-2,-2~)+~-1,1~*2^(n+1)/fak(n+1)
+% You can see that interval arithmetic is a means of seeing
+% how good a result really is.
+% 
+% Another example is the interval newton method. It is contained
+% in the INTERVAL.E file. We need to load this file.
+>load "interval"
+% Furthermore, we need a function f and its derivative
+% f1.c
+>function f(x)
+$return cos(x)-x
+$endfunction
+>function f1(x)
+$return -sin(x)-1
+$endfunction
+% Then we can start the interval Newton method and
+% get an inclusion of the result.
+>inewton("f","f1",~0,1~)
+% The usual Newton method delivers the same result.
+>newton("f","f1",1)
+% The Newton method accepts expressions in x for the
+% function or for its derivative.
+>newton("cos(x)-x","-sin(x)-1",1)
+>inewton("cos(x)-x","-sin(x)-1",1)
+% Let us try a multidimensional example.
+>function f(x)
+$return [x[1]^2+x[2]^2-1,x[1]^2/2+2*x[2]^2-1]
+$endfunction
+% To see how this function looks like, let us plot
+% the contour lines of 0 of its components.
+% 
+% First we set up an array of x,y-values.
+>x=-2:0.05:2; y=x';
+% Then we plot the contour lines.
+>contour(x^2+y^2-1,0); hold on; contour(x^2/2+2*y^2-1,0); hold off;
+% Finally, we add a grid.
+>setplot(-2,2,-2,2); xplot(); setplot();
+% We need a derivative matrix.
+>function df(x)
+$return [2*x[1],2*x[2];x[1],4*x[2]]
+$endfunction
+% Now we are ready to get an inclusion of the
+% intersection points (The zeros of f).
+>inewton2("f","df",[~0.5,1~,~0.5,1~])
+>newton2("f","df",[1,1])
+>load "broyden"
+% The Broyden method from UTIL.E does the same,
+% but does not deliver a guaranteed inclusion.
+% However, it does not need the derivative.
+>broyden("f",[1,1])
+% Let us make another example.
+% 
+% We search the interest rate of 26 payments.
+>p=-1050|dup(100,12)'|dup(120,24)'|1000;
+% We can plot the values with xmark.
+>style("m*"); xmark(1:38,p);
+% To solve the equation p(x), we define the function and
+% the derivative.
+>function g(x,p)
+$return polyval(p,x);
+$endfunction
+% We pass p as a parameter to g and g1.
+>function g1(x,p)
+$return polyval(polydif(p),x);
+$endfunction
+% The polynomial p has a zero close to 0.9, as
+% you can see.
+>fplot("g",0,1;p);
+% The Newton method yields a result, but we do
+% not know how accurate it is.
+>(1/newton("g","g1",1,p)-1)*100
+% An interval method shows that the result is very accurate.
+>(1/(inewton("g","g1",1,p))-1)*100
+% We now solve a differential equation. The method
+% is very elementary, but we get an inclusion of the
+% solution.
+% 
+% The equation is y'=y/x^2. We enter it as a function.
+>function D(x,y)
+$return y/x^2
+$endfunction
+% We can now start the solver and get a very rough
+% inclusion, the step size is 0.1.
+>x=1:0.1:5; y=idgl("D",x,1); xplot(x,left(y)_right(y));
+% With a step size of 0.01, the inclusion is better. For
+% a change, we ener the equation as an expression.
+>x=1:0.01:5; y=idgl("y/x^2",x,1); xplot(x,left(y)_right(y));
+>
+>
